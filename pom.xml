@@ -17,6 +17,11 @@
 	<name>EDiary</name>
 	<description>Electronic school diary application</description>
 
+	<modules>
+		<module>HeadManager</module>
+		<module>Notificator</module>
+	</modules>
+
 	<properties>
 		<java.version>21</java.version>
 		<revision>0.1</revision>
@@ -32,9 +37,6 @@
 		<jetbrains-annotations.version>24.1.0</jetbrains-annotations.version>
 	</properties>
 
-	<modules>
-		<module>HeadManager</module>
-	</modules>
 
 	<dependencies>
 		<dependency>
