@@ -20,6 +20,7 @@
 	<modules>
 		<module>HeadManager</module>
 		<module>Notificator</module>
+		<module>UserManager</module>
 	</modules>
 
 	<properties>
