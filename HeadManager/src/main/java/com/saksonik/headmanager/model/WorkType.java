@@ -23,5 +23,5 @@ public class WorkType {
     private String name;
 
     @OneToMany(mappedBy = "workType")
-    List<Mark> marks;
+    private List<Mark> marks;
 }

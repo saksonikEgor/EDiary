@@ -20,5 +20,5 @@ public class StudyPeriod {
     private String name;
 
     @OneToMany(mappedBy = "studyPeriod")
-    List<Mark> marks;
+    private List<Mark> marks;
 }

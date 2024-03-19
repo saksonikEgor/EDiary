@@ -17,8 +17,8 @@ public class MarkType {
     private Integer markTypeId;
 
     @Column(name = "type", nullable = false)
-    String type;
+    private String type;
 
     @OneToMany(mappedBy = "markType")
-    List<Mark> marks;
+    private List<Mark> marks;
 }

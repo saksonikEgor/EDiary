@@ -23,8 +23,8 @@ public class Subject {
     private List<User> teachers;
 
     @OneToMany(mappedBy = "subject")
-    List<LessonSchedule> lessonSchedules;
+    private List<LessonSchedule> lessonSchedules;
 
     @OneToMany(mappedBy = "subject")
-    List<Mark> marks;
+    private List<Mark> marks;
 }

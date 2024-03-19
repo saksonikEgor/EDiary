@@ -27,8 +27,8 @@ public class Class {
     private ClassList classList;
 
     @OneToMany(mappedBy = "clazz")
-    List<Meeting> meetings;
+    private List<Meeting> meetings;
 
     @OneToMany(mappedBy = "clazz")
-    List<LessonSchedule> lessonSchedules;
+    private List<LessonSchedule> lessonSchedules;
 }

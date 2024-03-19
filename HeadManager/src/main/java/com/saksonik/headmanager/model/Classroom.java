@@ -20,8 +20,8 @@ public class Classroom {
     private String name;
 
     @OneToMany(mappedBy = "classroom")
-    List<Meeting> meetings;
+    private List<Meeting> meetings;
 
     @OneToMany(mappedBy = "classroom")
-    List<LessonSchedule> lessonSchedules;
+    private List<LessonSchedule> lessonSchedules;
 }

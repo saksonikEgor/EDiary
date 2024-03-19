@@ -17,7 +17,7 @@ public class ClassList {
     private Integer classListId;
 
     @OneToMany(mappedBy = "classList")
-    List<User> students;
+    private List<User> students;
 
     @OneToOne()
     @JoinColumn(name = "class_id", referencedColumnName = "class_id")

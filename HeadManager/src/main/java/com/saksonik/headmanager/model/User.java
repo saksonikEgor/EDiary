@@ -16,8 +16,8 @@ public class User {
     @Column(name = "user_id")
     private Integer userId;
 
-    @OneToMany(mappedBy = "roles_users")
-    List<UserRole> userRoles;
+    @OneToMany(mappedBy = "user")
+    private List<UserRole> userRoles;
 
     @ManyToMany
     @JoinTable(
@@ -38,19 +38,19 @@ public class User {
     )
     private List<Subject> subjects;
 
-    @OneToMany(mappedBy = "classes")
-    List<Class> classesForTeacher;
+    @OneToMany(mappedBy = "classroomTeacher")
+    private List<Class> classesForTeacher;
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "student_id")
     private ClassList classList;
 
     @OneToMany(mappedBy = "teacher")
-    List<LessonSchedule> lessonSchedules;
+    private List<LessonSchedule> lessonSchedules;
 
     @OneToMany(mappedBy = "student")
-    List<Mark> marksOfStudent;
+    private List<Mark> marksOfStudent;
 
     @OneToMany(mappedBy = "teacher")
-    List<Mark> marksOfTeacher;
+    private List<Mark> marksOfTeacher;
 }
