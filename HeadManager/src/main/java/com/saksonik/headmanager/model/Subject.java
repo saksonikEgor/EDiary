@@ -35,6 +35,10 @@ public class Subject {
     @ToString.Exclude
     private List<Mark> marks;
 
+    @ManyToMany(mappedBy = "subjects")
+    @ToString.Exclude
+    private List<Class> classes;
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

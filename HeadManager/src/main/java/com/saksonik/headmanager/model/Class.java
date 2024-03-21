@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,6 +38,15 @@ public class Class {
     @OneToMany(mappedBy = "clazz")
     @ToString.Exclude
     private List<LessonSchedule> lessonSchedules;
+
+    @ToString.Exclude
+    @ManyToMany
+    @JoinTable(
+            name = "subjects_classes",
+            joinColumns = @JoinColumn(name = "class_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id")
+    )
+    private List<Subject> subjects;
 
     @Override
     public final boolean equals(Object o) {
