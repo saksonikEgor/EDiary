@@ -23,6 +23,7 @@
 		<module>UserManager</module>
 		<module>Authenticator</module>
 		<module>DiscoveryServer</module>
+		<module>Gateway</module>
 	</modules>
 
 	<properties>
