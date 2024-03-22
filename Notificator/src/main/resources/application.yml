@@ -1,1 +1,3 @@
-application-name: Notificator
+spring:
+  application:
+    name: Notificator

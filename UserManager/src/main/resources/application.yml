@@ -1,1 +1,3 @@
-application-name: UserManager
+spring:
+  application:
+    name: UserManager
