@@ -3,14 +3,14 @@ spring:
     name: DiscoveryServer
 
 server:
-  port: 8000
+  port: 8761
 
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
     service-url:
-      defaultZone: http://localhost:8000/eureka
+      defaultZone: http://localhost:8761/eureka
 
 logging:
   pattern:
