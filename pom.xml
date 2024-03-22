@@ -22,6 +22,7 @@
 		<module>Notificator</module>
 		<module>UserManager</module>
 		<module>Authenticator</module>
+		<module>DiscoveryServer</module>
 	</modules>
 
 	<properties>
