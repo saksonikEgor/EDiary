@@ -1,10 +1,12 @@
 spring:
   application:
-    name: UserManager
+    name: USER-MANAGER
   datasource:
     url: jdbc:postgresql://localhost:5432/Users
     username: egor
     password: postgres
+
+jwt-secret-key: secret_key
 
 server:
   port: 0

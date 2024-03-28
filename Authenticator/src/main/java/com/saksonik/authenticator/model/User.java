@@ -1,4 +1,4 @@
-package com.saksonik.usermanager.model;
+package com.saksonik.authenticator.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;

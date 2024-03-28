@@ -1,6 +1,10 @@
 spring:
   application:
-    name: Notificator
+    name: NOTIFICATOR
+  datasource:
+    url: jdbc:postgresql://localhost:5432/Notifications
+    username: egor
+    password: postgres
 
 server:
   port: 0

@@ -1,6 +1,10 @@
 spring:
   application:
-    name: Authenticator
+    name: AUTHENTICATOR
+  datasource:
+    url: jdbc:postgresql://localhost:5432/Users
+    username: egor
+    password: postgres
 
 server:
   port: 0
@@ -9,6 +13,10 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+
+jwt:
+  secret: MiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpP
+  expiration: 86400
 
 logging:
   pattern:

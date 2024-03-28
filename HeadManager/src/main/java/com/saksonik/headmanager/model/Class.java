@@ -28,8 +28,9 @@ public class Class {
     @JoinColumn(name = "classroom_teacher_id", referencedColumnName = "user_id")
     private User classroomTeacher;
 
-    @OneToOne(mappedBy = "clazz")
-    private ClassList classList;
+    @OneToMany(mappedBy = "clazz")
+    @ToString.Exclude
+    private List<StudentDistribution> studentDistributions;
 
     @OneToMany(mappedBy = "clazz")
     @ToString.Exclude

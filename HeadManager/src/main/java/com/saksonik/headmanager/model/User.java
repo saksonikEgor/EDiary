@@ -49,9 +49,9 @@ public class User {
     @ToString.Exclude
     private List<Class> classesForTeacher;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "student_id")
-    private ClassList classList;
+    private StudentDistribution studentDistribution;
 
     @OneToMany(mappedBy = "teacher")
     @ToString.Exclude

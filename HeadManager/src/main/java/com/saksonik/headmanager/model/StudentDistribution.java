@@ -4,27 +4,25 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.List;
 import java.util.Objects;
 
-@Entity
-@Table(name = "class_lists")
 @Getter
 @Setter
+@Entity
+@Table(name = "student_distribution")
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClassList {
+public class StudentDistribution {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "class_list_id")
-    private Integer classListId;
+    @Column(name = "student_distribution_id")
+    private Integer studentDistributionId;
 
-    @OneToMany(mappedBy = "classList")
-    @ToString.Exclude
-    private List<User> students;
+    @OneToOne(mappedBy = "studentDistribution")
+    private User student;
 
-    @OneToOne()
+    @ManyToOne
     @JoinColumn(name = "class_id", referencedColumnName = "class_id")
     private Class clazz;
 
@@ -39,8 +37,8 @@ public class ClassList {
                 ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
                 : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        ClassList classList = (ClassList) o;
-        return getClassListId() != null && Objects.equals(getClassListId(), classList.getClassListId());
+        StudentDistribution that = (StudentDistribution) o;
+        return getStudentDistributionId() != null && Objects.equals(getStudentDistributionId(), that.getStudentDistributionId());
     }
 
     @Override

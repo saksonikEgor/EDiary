@@ -1,6 +1,10 @@
 spring:
   application:
-    name: HeadManager
+    name: HEAD-MANAGER
+  datasource:
+    url: jdbc:postgresql://localhost:5432/Management
+    username: egor
+    password: postgres
 
 server:
   port: 0
