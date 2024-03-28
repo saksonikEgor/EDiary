@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    @Query("select s from User s join s.classList cl where cl.clazz.classId = :classId")
+    @Query("select s from User s join s.studentDistribution sd where sd.clazz.classId = :classId")
     List<User> findAllStudentsByClassId(@Param("classId") int classId);
 
 //    @Query("select p from User p join p.children c where c.userId = :childId")

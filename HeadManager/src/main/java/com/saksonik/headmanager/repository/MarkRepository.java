@@ -15,7 +15,7 @@ import java.util.List;
 public interface MarkRepository extends JpaRepository<Mark, Integer> {
     List<Mark> findAllByStudentAndSubjectAndStudyPeriod(User student, Subject subject, StudyPeriod studyPeriod);
 
-    @Query("select m from Mark m join m.student.classList.clazz c " +
+    @Query("select m from Mark m join m.student.studentDistribution.clazz c " +
             "where m.teacher = :teacher and c.classId = :classId and m.subject = :subject and m.studyPeriod = :studyPeriod")
     List<Mark> findAllByTeacherAndClassIdAndSubjectAndStudyPeriod(
             @Param("teacher") User teacher,

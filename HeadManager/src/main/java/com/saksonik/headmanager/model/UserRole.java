@@ -15,12 +15,9 @@ import java.util.Objects;
 @NoArgsConstructor
 public class UserRole {
     @Id
-    @Column(name = "role_id")
-    private Integer roleId;
-
-    @Id
-    @Column(name = "user_id")
-    private Integer userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "roles_users_id")
+    private Integer rolesUsersId;
 
     @Column(name = "active", nullable = false)
     private Boolean active;
@@ -45,7 +42,7 @@ public class UserRole {
                 : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
         UserRole userRole = (UserRole) o;
-        return getRoleId() != null && Objects.equals(getRoleId(), userRole.getRoleId());
+        return getRolesUsersId() != null && Objects.equals(getRolesUsersId(), userRole.getRolesUsersId());
     }
 
     @Override
