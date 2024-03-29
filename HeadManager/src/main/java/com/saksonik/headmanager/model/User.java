@@ -6,6 +6,7 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -17,7 +18,7 @@ import java.util.Objects;
 public class User {
     @Id
     @Column(name = "user_id")
-    private Integer userId;
+    private UUID userId;
 
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
