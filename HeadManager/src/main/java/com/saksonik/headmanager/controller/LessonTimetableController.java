@@ -1,6 +1,6 @@
 package com.saksonik.headmanager.controller;
 
-import com.saksonik.headmanager.dto.lessonTimetable.LessonTimetableDTO;
+import com.saksonik.headmanager.dto.LessonTimetableDTO;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.LessonSchedule;
 import com.saksonik.headmanager.model.User;

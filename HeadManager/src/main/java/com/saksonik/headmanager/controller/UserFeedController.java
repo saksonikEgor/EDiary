@@ -1,6 +1,6 @@
 package com.saksonik.headmanager.controller;
 
-import com.saksonik.headmanager.dto.userfeed.UserfeedDTO;
+import com.saksonik.headmanager.dto.UserfeedDTO;
 import com.saksonik.headmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

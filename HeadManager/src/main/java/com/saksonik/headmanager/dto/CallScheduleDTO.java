@@ -1,4 +1,4 @@
-package com.saksonik.headmanager.dto.callSchedule;
+package com.saksonik.headmanager.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

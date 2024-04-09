@@ -1,4 +1,4 @@
-package com.saksonik.headmanager.dto.profile;
+package com.saksonik.headmanager.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
