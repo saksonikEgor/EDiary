@@ -22,6 +22,7 @@ public class ProfileController {
     //TODO  передавать в хедере токен
     //TODO  обработать исключение userIsNotFound
     //TODO  добавить логику для админа
+    //TODO  добавить post запрос на изменение данных в профиле
     @GetMapping
     public ResponseEntity<UserDTO> getProfile(@RequestHeader("User-Id") UUID userId) {
         String role = SecurityContextHolder.getContext()

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -16,5 +17,15 @@ public class StudyPeriodService {
 
     public List<StudyPeriod> findAll() {
         return studyPeriodRepository.findAll();
+    }
+
+    public StudyPeriod findCurrentStudyPeriod() {
+        return studyPeriodRepository.findCurrentStudyPeriod(LocalDate.now())
+                .orElseThrow(() -> new IllegalStateException("Study period not found"));
+    }
+
+    public StudyPeriod findStudyPeriodByName(String name) {
+        return studyPeriodRepository.findByName(name)
+                .orElseThrow(() -> new IllegalStateException("Study period not found"));
     }
 }

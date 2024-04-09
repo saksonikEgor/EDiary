@@ -28,6 +28,7 @@ public class LessonTimetableController {
     private final LessonScheduleService lessonScheduleService;
     private final ClassService classService;
 
+    //TODO  добавить post запрос на изменение расписания занятий (для админа)
     //TODO  подумать нужны ли тут роли
     //TODO  добавить обработку исключения classNotFound
     //TODO  добавить обработку исключения wrongData

@@ -23,6 +23,9 @@ public class MarkType {
     @Column(name = "type", nullable = false)
     private String type;
 
+    @Column(name = "weight")
+    private Integer weight;
+
     @OneToMany(mappedBy = "markType")
     @ToString.Exclude
     private List<Mark> marks;

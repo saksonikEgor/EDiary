@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,6 +23,12 @@ public class StudyPeriod {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "start", nullable = false)
+    private LocalDate start;
+
+    @Column(name = "end", nullable = false)
+    private LocalDate end;
 
     @OneToMany(mappedBy = "studyPeriod")
     @ToString.Exclude

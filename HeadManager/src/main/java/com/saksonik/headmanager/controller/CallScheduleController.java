@@ -19,6 +19,7 @@ import java.util.List;
 public class CallScheduleController {
     private final ScheduledCallService scheduledCallService;
 
+    //TODO  добавить post запрос на изменение расписания звонков (для админа)
     @GetMapping
     public ResponseEntity<CallScheduleDTO> getCallSchedule() {
         List<ScheduledCall> calls = scheduledCallService.findAll();

@@ -25,6 +25,7 @@ public class MeetingScheduleController {
     private final ClassService classService;
 
     //TODO  проверить иммет ли юзер права
+    //TODO  добавить post запрос на добавления новых собраний
     @GetMapping("/{id}")
     public ResponseEntity<MeetingScheduleDTO> getMeetingsScheduleByClass(
             @RequestHeader("User-Id") UUID userId,
