@@ -40,6 +40,10 @@ public class Class {
     @ToString.Exclude
     private List<LessonSchedule> lessonSchedules;
 
+    @ManyToMany(mappedBy = "classesForTeacher")
+    @ToString.Exclude
+    private List<User> teachers;
+
     @ToString.Exclude
     @ManyToMany
     @JoinTable(

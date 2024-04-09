@@ -20,6 +20,18 @@ public class User {
     @Column(name = "user_id")
     private UUID userId;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "surname")
+    private String surname;
+
+    @Column(name = "patronymic")
+    private String patronymic;
+
+    @Transient
+    private String fullName = surname + " " + name + " " + patronymic;
+
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     private List<UserRole> userRoles;
@@ -46,9 +58,19 @@ public class User {
     @ToString.Exclude
     private List<Subject> subjects;
 
-    @OneToMany(mappedBy = "classroomTeacher")
+    @ManyToMany
+    @JoinTable (
+            name = "teachers_classes",
+            joinColumns = @JoinColumn(name = "teacher_id"),
+            inverseJoinColumns = @JoinColumn(name = "class_id")
+    )
     @ToString.Exclude
     private List<Class> classesForTeacher;
+
+    @OneToMany(mappedBy = "classroomTeacher")
+    @ToString.Exclude
+    private List<Class> classesForClassroomTeacher;
+
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "student_id")
