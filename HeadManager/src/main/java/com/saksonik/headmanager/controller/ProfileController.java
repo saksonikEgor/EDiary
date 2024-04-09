@@ -23,7 +23,7 @@ public class ProfileController {
     //TODO  обработать исключение userIsNotFound
     //TODO  добавить логику для админа
     @GetMapping
-    public ResponseEntity<UserDTO> profile(@RequestHeader("User-Id") UUID userId) {
+    public ResponseEntity<UserDTO> getProfile(@RequestHeader("User-Id") UUID userId) {
         String role = SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getAuthorities()
@@ -49,7 +49,7 @@ public class ProfileController {
                         .getClazz().getName());
             }
             case "ROLE_PARENT" -> userDTO.setChildren(user.getChildren().stream()
-                    .map(u -> new UserDTO.Child(
+                    .map(u -> new UserDTO.ChildDTO(
                             u.getFullName(),
                             u.getStudentDistribution().getClazz().getName()))
                     .toList()

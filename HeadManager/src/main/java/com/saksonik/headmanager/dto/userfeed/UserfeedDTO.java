@@ -10,17 +10,17 @@ import java.util.UUID;
 public class UserfeedDTO {
     private UUID id;
     private String role;
-    private List<Class> classes;
-    private List<Child> children;
+    private List<ClassDTO> classes;
+    private List<ChildDTO> children;
 
     @AllArgsConstructor
-    public static class Class {
+    public static class ClassDTO {
         private Integer classId;
         private String name;
     }
 
     @AllArgsConstructor
-    public static class Child {
+    public static class ChildDTO {
         private UUID childId;
         private String fullName;
         private String className;

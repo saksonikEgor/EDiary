@@ -13,7 +13,7 @@ public class UserDTO {
     private String fullName;
 //    private String email;
 //    private String phone;
-    private List<Child> children;
+    private List<ChildDTO> children;
     private List<String> parents;
     private String classForStudent;
     private List<String> classesForTeacher;
@@ -21,7 +21,7 @@ public class UserDTO {
     private List<String> subjects;
 
     @AllArgsConstructor
-    public static class Child {
+    public static class ChildDTO {
         private String fullName;
         private String className;
     }

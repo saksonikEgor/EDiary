@@ -40,7 +40,7 @@ public class UserFeedController {
             case "ROLE_PARENT" -> userfeedDTO.setChildren(userService.findUserById(userId)
                     .getChildren()
                     .stream()
-                    .map(user -> new UserfeedDTO.Child(
+                    .map(user -> new UserfeedDTO.ChildDTO(
                             user.getUserId(),
                             user.getFullName(),
                             user.getStudentDistribution().getClazz().getName()))
@@ -49,7 +49,7 @@ public class UserFeedController {
             case "ROLE_TEACHER" -> userfeedDTO.setClasses(userService.findUserById(userId)
                     .getClassesForTeacher()
                     .stream()
-                    .map(c -> new UserfeedDTO.Class(c.getClassId(), c.getName()))
+                    .map(c -> new UserfeedDTO.ClassDTO(c.getClassId(), c.getName()))
                     .toList()
             );
 //            case "ROLE_ADMIN" -> {
