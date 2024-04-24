@@ -21,7 +21,7 @@ public class WorkType {
     private Integer workTypeId;
 
     @Column(name = "weight", nullable = false)
-    private Integer weight;
+    private Float weight;
 
     @Column(name = "name", nullable = false)
     private String name;

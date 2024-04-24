@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class NotificatorController {
     @GetMapping("/n")
     public String get() {
-        return "n";
+        System.out.println("/n");
+        return "Success!";
     }
 }

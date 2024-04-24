@@ -21,7 +21,7 @@ public class LessonSchedule {
     private Integer lessonScheduleId;
 
     @Column(name = "lesson_date", nullable = false)
-    private OffsetDateTime lessonDate;
+    private OffsetDateTime lessonDateTime;
 
     @ManyToOne
     @JoinColumn(name = "classroom_id", referencedColumnName = "classroom_id")

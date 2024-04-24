@@ -1,6 +1,7 @@
 package com.saksonik.headmanager.service;
 
 import com.saksonik.headmanager.model.Meeting;
+import com.saksonik.headmanager.model.User;
 import com.saksonik.headmanager.repository.MeetingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,5 +17,9 @@ public class MeetingService {
 
     public List<Meeting> findAll() {
         return meetingRepository.findAll();
+    }
+
+    public List<Meeting> findAllByClassroomTeacher(User classroomTeacher) {
+        return meetingRepository.findAllByClassroomTeacher(classroomTeacher);
     }
 }
