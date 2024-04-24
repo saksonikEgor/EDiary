@@ -7,12 +7,12 @@ spring:
     password: postgres
 
 server:
-  port: 0
+  port: 8082
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
 
 logging:
   pattern:

@@ -9,12 +9,12 @@ spring:
 jwt-secret-key: secret_key
 
 server:
-  port: 0
+  port: 8085
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
 
 logging:
   pattern:

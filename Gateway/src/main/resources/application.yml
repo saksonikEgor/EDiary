@@ -3,6 +3,13 @@ spring:
     name: GATEWAY
   cloud:
     gateway:
+#      auth 8081
+#      head 8082
+#      notificator 8083
+#      kc 8180
+
+
+
 #      routes:
 #        - id: head-manager
 #          uri: lb://HEAD-MANAGER
@@ -38,10 +45,10 @@ jwt:
 server:
   port: 8765
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
 
 logging:
   pattern:
