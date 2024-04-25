@@ -1,5 +1,6 @@
 package com.saksonik.notificator.email;
 
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -15,8 +16,7 @@ public class EmailService {
     private String emailSender;
     private final JavaMailSender mailSender;
 
-    @SneakyThrows
-    public void sendMassage(String receiver, String name, String text) {
+    public void sendMassage(String receiver, String name, String text) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 

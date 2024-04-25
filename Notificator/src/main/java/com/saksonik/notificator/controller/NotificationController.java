@@ -22,6 +22,7 @@ public class NotificationController {
     private final NotificationService notificationService;
     private final EmailService emailService;
 
+    //TODO  remove this
     @GetMapping("/test")
     public ResponseEntity<Void> sendMassage(@RequestBody String text, @RequestParam String to) {
         emailService.sendMassage(to, "Some message", text);

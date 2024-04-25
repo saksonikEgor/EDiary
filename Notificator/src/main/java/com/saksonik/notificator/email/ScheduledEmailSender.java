@@ -2,6 +2,7 @@ package com.saksonik.notificator.email;
 
 import com.saksonik.notificator.model.Notification;
 import com.saksonik.notificator.service.NotificationService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -28,7 +29,11 @@ public class ScheduledEmailSender {
 
         for (Notification notification : notifications) {
             log.info("Sending notification: {}", notification);
-            emailService.sendMassage(notification.getEmail(), MESSAGE_NAME, notification.getDescription());
+            try {
+                emailService.sendMassage(notification.getEmail(), MESSAGE_NAME, notification.getDescription());
+            } catch (MessagingException e) {
+                log.error("Failed to send notification: {}", notification, e);
+            }
         }
 
         notificationService.removeAl(notifications);
