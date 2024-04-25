@@ -7,6 +7,7 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "notifications")
@@ -22,7 +23,7 @@ public class Notification {
     private Integer notification_id;
 
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private UUID userId;
 
     @Column(name = "email", nullable = false)
     @Email
