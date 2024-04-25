@@ -17,43 +17,19 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
 
     @Transactional
-    public void add(NotificationDTO notificationDTO) {
-        notificationRepository.save(createNotification(notificationDTO));
-    }
-
-    @Transactional
-    public void addAll(List<NotificationDTO> notificationDTOList) {
+    public void add(List<NotificationDTO> notificationDTOList) {
         notificationRepository.saveAll(notificationDTOList.stream()
                 .map(this::createNotification)
                 .toList());
     }
 
     @Transactional
-    public void remove(int id) {
-        notificationRepository.deleteById(id);
-    }
-
-    @Transactional
-    public void removeAll(List<Integer> ids) {
+    public void remove(List<Integer> ids) {
         notificationRepository.deleteAllById(ids);
     }
 
     @Transactional
-    public void update(NotificationDTO notificationDTO) {
-        Notification notification = notificationRepository.findById(notificationDTO.id())
-                .orElseThrow(() -> new NotificationNotFoundException("Notification with id "
-                        + notificationDTO.id() + " not found"));
-
-        notification.setUserId(notificationDTO.userId());
-        notification.setEmail(notificationDTO.email());
-        notification.setNoticeDate(notificationDTO.date());
-        notification.setDescription(notificationDTO.description());
-
-        notificationRepository.save(notification);
-    }
-
-    @Transactional
-    public void updateAll(List<NotificationDTO> notificationDTOList) {
+    public void update(List<NotificationDTO> notificationDTOList) {
         Map<Integer, NotificationDTO> notificationDTOMap = new HashMap<>();
         notificationDTOList.forEach(notificationDTO -> notificationDTOMap.put(notificationDTO.id(), notificationDTO));
 

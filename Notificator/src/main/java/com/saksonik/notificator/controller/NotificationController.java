@@ -44,19 +44,19 @@ public class NotificationController {
 
     @PostMapping
     public ResponseEntity<Void> createNotification(@RequestBody List<NotificationDTO> notificationDTOList) {
-        notificationService.addAll(notificationDTOList);
+        notificationService.add(notificationDTOList);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping()
     public ResponseEntity<Void> deleteNotification(@RequestBody List<Integer> ids) {
-        notificationService.removeAll(ids);
+        notificationService.remove(ids);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping()
     public ResponseEntity<Void> updateNotification(@RequestBody List<NotificationDTO> notificationDTOList) {
-        notificationService.updateAll(notificationDTOList);
+        notificationService.update(notificationDTOList);
         return ResponseEntity.ok().build();
     }
 
