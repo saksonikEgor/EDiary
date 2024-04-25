@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.*;
 
 @Service
@@ -26,6 +27,15 @@ public class NotificationService {
     @Transactional
     public void remove(List<Integer> ids) {
         notificationRepository.deleteAllById(ids);
+    }
+
+    public List<Notification> getNotificationsWithADateBeforeCurrent() {
+        return notificationRepository.findAllByNoticeDateIsBefore(OffsetDateTime.now());
+    }
+
+    @Transactional
+    public void removeAl(List<Notification> notifications) {
+        notificationRepository.deleteAll(notifications);
     }
 
     @Transactional
