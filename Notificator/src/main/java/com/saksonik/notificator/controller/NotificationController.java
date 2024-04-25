@@ -2,6 +2,7 @@ package com.saksonik.notificator.controller;
 
 import com.saksonik.notificator.dto.APIErrorDTO;
 import com.saksonik.notificator.dto.NotificationDTO;
+import com.saksonik.notificator.email.EmailService;
 import com.saksonik.notificator.exception.NotificationNotFoundException;
 import com.saksonik.notificator.service.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,13 @@ import java.util.UUID;
 @Slf4j
 public class NotificationController {
     private final NotificationService notificationService;
+    private final EmailService emailService;
+
+    @GetMapping("/test")
+    public ResponseEntity<Void> sendMassage(@RequestBody String text, @RequestParam String to) {
+        emailService.sendMassage(to, "Some message", text);
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping
     public ResponseEntity<List<NotificationDTO>> getAllNotifications() {
@@ -34,35 +42,17 @@ public class NotificationController {
                 .toList());
     }
 
-//    @PostMapping
-//    public ResponseEntity<Void> createNotification(@RequestBody NotificationDTO notificationDTO) {
-//        notificationService.add(notificationDTO);
-//        return ResponseEntity.ok().build();
-//    }
-
     @PostMapping
     public ResponseEntity<Void> createNotification(@RequestBody List<NotificationDTO> notificationDTOList) {
         notificationService.addAll(notificationDTOList);
         return ResponseEntity.ok().build();
     }
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<Void> deleteNotification(@PathVariable Integer id) {
-//        notificationService.remove(id);
-//        return ResponseEntity.ok().build();
-//    }
-
     @DeleteMapping()
     public ResponseEntity<Void> deleteNotification(@RequestBody List<Integer> ids) {
         notificationService.removeAll(ids);
         return ResponseEntity.ok().build();
     }
-
-//    @PutMapping()
-//    public ResponseEntity<Void> updateNotification(@RequestBody NotificationDTO notificationDTO) {
-//        notificationService.update(notificationDTO);
-//        return ResponseEntity.ok().build();
-//    }
 
     @PutMapping()
     public ResponseEntity<Void> updateNotification(@RequestBody List<NotificationDTO> notificationDTOList) {
