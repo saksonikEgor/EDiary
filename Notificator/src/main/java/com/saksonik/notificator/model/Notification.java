@@ -20,7 +20,7 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id")
-    private Integer notification_id;
+    private Integer notificationId;
 
     @Column(name = "user_id", nullable = false)
     private UUID userId;
@@ -47,7 +47,7 @@ public class Notification {
                 : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
         Notification that = (Notification) o;
-        return getNotification_id() != null && Objects.equals(getNotification_id(), that.getNotification_id());
+        return getNotificationId() != null && Objects.equals(getNotificationId(), that.getNotificationId());
     }
 
     @Override
