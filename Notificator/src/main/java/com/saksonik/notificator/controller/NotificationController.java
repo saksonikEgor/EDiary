@@ -3,7 +3,6 @@ package com.saksonik.notificator.controller;
 import com.saksonik.notificator.dto.APIErrorDTO;
 import com.saksonik.notificator.dto.NotificationDTO;
 import com.saksonik.notificator.exception.NotificationNotFoundException;
-import com.saksonik.notificator.model.Notification;
 import com.saksonik.notificator.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,11 +34,11 @@ public class NotificationController {
                 .toList());
     }
 
-    @PostMapping
-    public ResponseEntity<Void> createNotification(@RequestBody NotificationDTO notificationDTO) {
-        notificationService.add(notificationDTO);
-        return ResponseEntity.ok().build();
-    }
+//    @PostMapping
+//    public ResponseEntity<Void> createNotification(@RequestBody NotificationDTO notificationDTO) {
+//        notificationService.add(notificationDTO);
+//        return ResponseEntity.ok().build();
+//    }
 
     @PostMapping
     public ResponseEntity<Void> createNotification(@RequestBody List<NotificationDTO> notificationDTOList) {
@@ -47,11 +46,11 @@ public class NotificationController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteNotification(@PathVariable Integer id) {
-        notificationService.remove(id);
-        return ResponseEntity.ok().build();
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deleteNotification(@PathVariable Integer id) {
+//        notificationService.remove(id);
+//        return ResponseEntity.ok().build();
+//    }
 
     @DeleteMapping()
     public ResponseEntity<Void> deleteNotification(@RequestBody List<Integer> ids) {
@@ -59,11 +58,11 @@ public class NotificationController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping()
-    public ResponseEntity<Void> updateNotification(@RequestBody NotificationDTO notificationDTO) {
-        notificationService.update(notificationDTO);
-        return ResponseEntity.ok().build();
-    }
+//    @PutMapping()
+//    public ResponseEntity<Void> updateNotification(@RequestBody NotificationDTO notificationDTO) {
+//        notificationService.update(notificationDTO);
+//        return ResponseEntity.ok().build();
+//    }
 
     @PutMapping()
     public ResponseEntity<Void> updateNotification(@RequestBody List<NotificationDTO> notificationDTOList) {
@@ -73,7 +72,7 @@ public class NotificationController {
 
     @PatchMapping("/{userId}")
     public ResponseEntity<Void> updateEmail(@PathVariable UUID userId,
-                                                   @RequestBody String email) {
+                                            @RequestBody String email) {
         notificationService.updateEmail(userId, email);
         return ResponseEntity.ok().build();
     }
