@@ -4,6 +4,9 @@ import com.saksonik.headmanager.model.ScheduledCall;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ScheduledCallRepository extends JpaRepository<ScheduledCall, Integer> {
+    List<ScheduledCall> findAllByLessonNumberContaining(List<Integer> lessonNumbers);
 }

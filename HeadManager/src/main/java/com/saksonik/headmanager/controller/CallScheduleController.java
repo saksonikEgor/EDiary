@@ -5,10 +5,7 @@ import com.saksonik.headmanager.model.ScheduledCall;
 import com.saksonik.headmanager.service.ScheduledCallService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,7 +16,6 @@ import java.util.List;
 public class CallScheduleController {
     private final ScheduledCallService scheduledCallService;
 
-    //TODO  добавить post запрос на изменение расписания звонков (для админа)
     @GetMapping
     public ResponseEntity<CallScheduleDTO> getCallSchedule() {
         List<ScheduledCall> calls = scheduledCallService.findAll();
@@ -33,6 +29,11 @@ public class CallScheduleController {
                         .toList()
                 )
         );
+    }
 
+    @PostMapping
+    public ResponseEntity<Void> createCallSchedule(@RequestBody CallScheduleDTO callScheduleDTO) {
+        scheduledCallService.update(callScheduleDTO);
+        return ResponseEntity.ok().build();
     }
 }
