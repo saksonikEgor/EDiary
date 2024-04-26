@@ -21,7 +21,7 @@ public class Meeting {
     private Integer meetingId;
 
     @Column(name = "meeting_date", nullable = false)
-    private OffsetDateTime meetingDate;
+    private OffsetDateTime meetingDateTime;
 
     @Column(name = "description")
     private String description;

@@ -1,10 +1,14 @@
 package com.saksonik.headmanager.controller;
 
 import com.saksonik.headmanager.dto.MeetingScheduleDTO;
+import com.saksonik.headmanager.dto.meetings.CreateMeetingRequest;
+import com.saksonik.headmanager.dto.meetings.MeetingResponse;
 import com.saksonik.headmanager.model.Class;
+import com.saksonik.headmanager.model.Classroom;
 import com.saksonik.headmanager.model.Meeting;
 import com.saksonik.headmanager.model.User;
 import com.saksonik.headmanager.service.ClassService;
+import com.saksonik.headmanager.service.ClassroomService;
 import com.saksonik.headmanager.service.MeetingService;
 import com.saksonik.headmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +27,11 @@ public class MeetingScheduleController {
     private final MeetingService meetingService;
     private final UserService userService;
     private final ClassService classService;
+    private final ClassroomService classroomService;
 
     //TODO  проверить иммет ли юзер права
     //TODO  добавить post запрос на добавления новых собраний
+    //TODO  подумать мб разрешить этот метод только для админа
     @GetMapping("/{id}")
     public ResponseEntity<MeetingScheduleDTO> getMeetingsScheduleByClass(
             @RequestHeader("User-Id") UUID userId,
@@ -51,7 +57,7 @@ public class MeetingScheduleController {
                             .map(meeting -> new MeetingScheduleDTO.MeetingDTO(
                                     meeting.getClazz().getName(),
                                     meeting.getClassroom().getName(),
-                                    meeting.getMeetingDate(),
+                                    meeting.getMeetingDateTime(),
                                     meeting.getDescription()))
                             .toList());
         }
@@ -81,10 +87,29 @@ public class MeetingScheduleController {
                 .map(meeting -> new MeetingScheduleDTO.MeetingDTO(
                         meeting.getClazz().getName(),
                         meeting.getClassroom().getName(),
-                        meeting.getMeetingDate(),
+                        meeting.getMeetingDateTime(),
                         meeting.getDescription()))
                 .toList());
 
         return ResponseEntity.ok(meetingScheduleDTO);
+    }
+
+    //TODO  проверить иммет ли юзер права
+    @PostMapping
+    public ResponseEntity<MeetingResponse> createMeeting(
+            @RequestHeader("User-Id") UUID userId,
+            @RequestBody CreateMeetingRequest request) {
+        User user = userService.findUserById(userId);
+        Class c = classService.findById(request.classId());
+        Classroom classroom = classroomService.findById(request.classroomId());
+
+        Meeting meeting = meetingService.create(request, c, classroom);
+
+        return ResponseEntity.ok(new MeetingResponse(
+                meeting.getMeetingId(),
+                meeting.getMeetingDateTime(),
+                meeting.getDescription(),
+                meeting.getClazz().getName(),
+                meeting.getClassroom().getName()));
     }
 }
