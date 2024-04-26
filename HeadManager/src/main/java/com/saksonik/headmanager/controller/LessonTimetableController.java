@@ -1,7 +1,8 @@
 package com.saksonik.headmanager.controller;
 
-import com.saksonik.headmanager.dto.LessonTimetableRequest;
+import com.saksonik.headmanager.dto.CreateLessonTimetableRequest;
 import com.saksonik.headmanager.dto.LessonTimetableResponse;
+import com.saksonik.headmanager.dto.UpdateLessonTimetableRequest;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.*;
 import com.saksonik.headmanager.service.*;
@@ -120,8 +121,8 @@ public class LessonTimetableController {
     @PostMapping("/{id}")
     public ResponseEntity<LessonTimetableResponse> createTimetableForDay(
             @PathVariable("id") Integer classId,
-            @RequestBody LessonTimetableRequest request) {
-        List<LessonTimetableRequest.LessonDTO> lessons = request.getLessons();
+            @RequestBody CreateLessonTimetableRequest request) {
+        List<CreateLessonTimetableRequest.LessonDTO> lessons = request.getLessons();
 
         Class c = classService.findById(classId);
         Map<UUID, User> teachers = new HashMap<>();
@@ -131,27 +132,78 @@ public class LessonTimetableController {
 
         userService.findAllByIds(lessons
                         .stream()
-                        .map(LessonTimetableRequest.LessonDTO::getTeacherId)
+                        .map(CreateLessonTimetableRequest.LessonDTO::getTeacherId)
                         .toList())
                 .forEach(u -> teachers.put(u.getUserId(), u));
         classroomService.findAllByIds(lessons
                         .stream()
-                        .map(LessonTimetableRequest.LessonDTO::getClassRoomId)
+                        .map(CreateLessonTimetableRequest.LessonDTO::getClassRoomId)
                         .toList())
                 .forEach(cr -> classrooms.put(cr.getClassroomId(), cr));
         subjectService.findAllByIds(lessons
                         .stream()
-                        .map(LessonTimetableRequest.LessonDTO::getSubjectId)
+                        .map(CreateLessonTimetableRequest.LessonDTO::getSubjectId)
                         .toList())
                 .forEach(s -> subjects.put(s.getSubjectId(), s));
         scheduledCallService.findAllByIds(lessons
                         .stream()
-                        .map(LessonTimetableRequest.LessonDTO::getScheduledCallId)
+                        .map(CreateLessonTimetableRequest.LessonDTO::getScheduledCallId)
                         .toList())
                 .forEach(sc -> scheduledCalls.put(sc.getLessonNumber(), sc));
 
         List<LessonSchedule> createdLessons = lessonScheduleService.createTimetableForClass(
                 c, request, teachers, subjects, classrooms, scheduledCalls);
+
+        List<LessonTimetableResponse.DayDTO.LessonDTO> lessonsResponse = createdLessons.stream()
+                .map(l -> new LessonTimetableResponse.DayDTO.LessonDTO(
+                        l.getScheduledCall().getLessonNumber(),
+                        l.getClassroom().getName(),
+                        l.getTeacher().getFullName(),
+                        l.getSubject().getName(),
+                        l.getScheduledCall().getStart(),
+                        l.getScheduledCall().getEnd(),
+                        l.getLessonDate()))
+                .toList();
+
+        var day = new LessonTimetableResponse.DayDTO();
+        day.setLessons(lessonsResponse);
+        day.setDate(lessonsResponse.getFirst().getDate());
+
+        return ResponseEntity.ok(new LessonTimetableResponse(List.of(day)));
+    }
+
+    @PatchMapping()
+    public ResponseEntity<LessonTimetableResponse> updateTimetableForDay(@RequestBody UpdateLessonTimetableRequest request) {
+        List<UpdateLessonTimetableRequest.LessonDTO> lessons = request.getLessons();
+
+        Map<UUID, User> teachers = new HashMap<>();
+        Map<Integer, Classroom> classrooms = new HashMap<>();
+        Map<Integer, Subject> subjects = new HashMap<>();
+        Map<Integer, ScheduledCall> scheduledCalls = new HashMap<>();
+
+        userService.findAllByIds(lessons
+                        .stream()
+                        .map(UpdateLessonTimetableRequest.LessonDTO::getTeacherId)
+                        .toList())
+                .forEach(u -> teachers.put(u.getUserId(), u));
+        classroomService.findAllByIds(lessons
+                        .stream()
+                        .map(UpdateLessonTimetableRequest.LessonDTO::getClassRoomId)
+                        .toList())
+                .forEach(cr -> classrooms.put(cr.getClassroomId(), cr));
+        subjectService.findAllByIds(lessons
+                        .stream()
+                        .map(UpdateLessonTimetableRequest.LessonDTO::getSubjectId)
+                        .toList())
+                .forEach(s -> subjects.put(s.getSubjectId(), s));
+        scheduledCallService.findAllByIds(lessons
+                        .stream()
+                        .map(UpdateLessonTimetableRequest.LessonDTO::getScheduledCallId)
+                        .toList())
+                .forEach(sc -> scheduledCalls.put(sc.getLessonNumber(), sc));
+
+        List<LessonSchedule> createdLessons = lessonScheduleService.updateTimetables(
+                request, teachers, subjects, classrooms, scheduledCalls);
 
         List<LessonTimetableResponse.DayDTO.LessonDTO> lessonsResponse = createdLessons.stream()
                 .map(l -> new LessonTimetableResponse.DayDTO.LessonDTO(
