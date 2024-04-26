@@ -1,4 +1,4 @@
-package com.saksonik.headmanager.dto;
+package com.saksonik.headmanager.dto.lessonTimetable;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,14 +10,13 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class UpdateLessonTimetableRequest {
+public class CreateLessonTimetableRequest {
     private LocalDate date;
     private List<LessonDTO> lessons;
 
     @AllArgsConstructor
     @Getter
     public static class LessonDTO {
-        private Integer lessonId;
         private Integer classRoomId;
         private UUID teacherId;
         private Integer subjectId;

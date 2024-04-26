@@ -1,6 +1,6 @@
 package com.saksonik.headmanager.controller;
 
-import com.saksonik.headmanager.dto.CallScheduleDTO;
+import com.saksonik.headmanager.dto.callSchedule.CallScheduleDTO;
 import com.saksonik.headmanager.model.ScheduledCall;
 import com.saksonik.headmanager.service.ScheduledCallService;
 import lombok.RequiredArgsConstructor;

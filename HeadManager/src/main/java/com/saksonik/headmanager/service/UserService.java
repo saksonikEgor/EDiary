@@ -1,8 +1,10 @@
 package com.saksonik.headmanager.service;
 
+import com.saksonik.headmanager.exception.UserNotExistException;
 import com.saksonik.headmanager.model.User;
 import com.saksonik.headmanager.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +24,7 @@ public class UserService {
 
     public User findUserById(UUID userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotExistException("User not found with id: " + userId));
     }
 
     public List<User> findAllByIds(List<UUID> userIds) {

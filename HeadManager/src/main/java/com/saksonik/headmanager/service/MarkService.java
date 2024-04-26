@@ -1,5 +1,7 @@
 package com.saksonik.headmanager.service;
 
+import com.saksonik.headmanager.dto.marks.CreateMarkRequest;
+import com.saksonik.headmanager.exception.MarkNotExistException;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.*;
 import com.saksonik.headmanager.repository.MarkRepository;
@@ -7,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +19,11 @@ import java.util.Set;
 @Transactional(readOnly = true)
 public class MarkService {
     private final MarkRepository markRepository;
+
+    public Mark findById(Integer id) {
+        return markRepository.findById(id)
+                .orElseThrow(() -> new MarkNotExistException("Mark not found with id: " + id));
+    }
 
     public List<Mark> findAll() {
         return markRepository.findAll();
@@ -40,6 +48,24 @@ public class MarkService {
                 subject,
                 studyPeriod
         );
+    }
+
+    public Mark createMark(CreateMarkRequest request, User student, User teacher, Subject subject, MarkType markType,
+                           WorkType workType, StudyPeriod studyPeriod) {
+        Mark mark = new Mark();
+
+        mark.setCreatedAt(OffsetDateTime.now());
+        mark.setLastModifiedAt(OffsetDateTime.now());
+        mark.setDate(request.date());
+        mark.setDescription(request.description());
+        mark.setStudent(student);
+        mark.setSubject(subject);
+        mark.setTeacher(teacher);
+        mark.setMarkType(markType);
+        mark.setWorkType(workType);
+        mark.setStudyPeriod(studyPeriod);
+
+        return markRepository.save(mark);
     }
 
     public Float calculateAvg(List<Mark> marks) {

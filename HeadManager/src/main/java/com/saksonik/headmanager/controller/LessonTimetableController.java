@@ -1,8 +1,8 @@
 package com.saksonik.headmanager.controller;
 
-import com.saksonik.headmanager.dto.CreateLessonTimetableRequest;
-import com.saksonik.headmanager.dto.LessonTimetableResponse;
-import com.saksonik.headmanager.dto.UpdateLessonTimetableRequest;
+import com.saksonik.headmanager.dto.lessonTimetable.CreateLessonTimetableRequest;
+import com.saksonik.headmanager.dto.lessonTimetable.LessonTimetableResponse;
+import com.saksonik.headmanager.dto.lessonTimetable.UpdateLessonTimetableRequest;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.*;
 import com.saksonik.headmanager.service.*;

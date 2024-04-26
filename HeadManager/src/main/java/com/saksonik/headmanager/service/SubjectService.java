@@ -1,5 +1,6 @@
 package com.saksonik.headmanager.service;
 
+import com.saksonik.headmanager.exception.SubjectNotExistException;
 import com.saksonik.headmanager.model.Subject;
 import com.saksonik.headmanager.repository.SubjectRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,11 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class SubjectService {
     private final SubjectRepository subjectRepository;
+
+    public Subject findById(Integer id) {
+        return subjectRepository.findById(id)
+                .orElseThrow(() -> new SubjectNotExistException("Subject with id " + id + " not found"));
+    }
 
     public List<Subject> findAll() {
         return subjectRepository.findAll();

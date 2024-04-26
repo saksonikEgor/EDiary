@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Objects;
@@ -26,6 +27,9 @@ public class Mark {
 
     @Column(name = "last_modified_at", nullable = false)
     private OffsetDateTime lastModifiedAt = OffsetDateTime.now(ZoneOffset.UTC);
+
+    @Column(name = "date", nullable = false)
+    private LocalDate date;
 
     @Column(name = "description", nullable = false)
     private String description;

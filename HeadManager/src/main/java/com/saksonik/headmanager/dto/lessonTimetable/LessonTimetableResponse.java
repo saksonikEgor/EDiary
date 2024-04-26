@@ -1,4 +1,4 @@
-package com.saksonik.headmanager.dto;
+package com.saksonik.headmanager.dto.lessonTimetable;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
