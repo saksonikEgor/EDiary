@@ -45,4 +45,7 @@ public class ScheduledCallService {
 
         scheduledCallRepository.saveAll(numberToCall.values());
     }
+    public List<ScheduledCall> findAllByIds(List<Integer> ids) {
+        return scheduledCallRepository.findAllById(ids);
+    }
 }

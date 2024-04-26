@@ -17,4 +17,8 @@ public class SubjectService {
     public List<Subject> findAll() {
         return subjectRepository.findAll();
     }
+
+    public List<Subject> findAllByIds(List<Integer> ids) {
+        return subjectRepository.findAllById(ids);
+    }
 }

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -21,7 +21,7 @@ public class LessonSchedule {
     private Integer lessonScheduleId;
 
     @Column(name = "lesson_date", nullable = false)
-    private OffsetDateTime lessonDateTime;
+    private LocalDate lessonDate;
 
     @ManyToOne
     @JoinColumn(name = "classroom_id", referencedColumnName = "classroom_id")

@@ -17,4 +17,8 @@ public class ClassroomService {
     public List<Classroom> findAll() {
         return classroomRepository.findAll();
     }
+
+    public List<Classroom> findAllByIds(List<Integer> ids) {
+        return classroomRepository.findAllById(ids);
+    }
 }

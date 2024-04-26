@@ -24,4 +24,8 @@ public class UserService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+    public List<User> findAllByIds(List<UUID> userIds) {
+        return userRepository.findAllById(userIds);
+    }
 }

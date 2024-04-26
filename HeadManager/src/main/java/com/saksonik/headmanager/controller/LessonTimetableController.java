@@ -1,12 +1,10 @@
 package com.saksonik.headmanager.controller;
 
-import com.saksonik.headmanager.dto.LessonTimetableDTO;
+import com.saksonik.headmanager.dto.LessonTimetableRequest;
+import com.saksonik.headmanager.dto.LessonTimetableResponse;
 import com.saksonik.headmanager.model.Class;
-import com.saksonik.headmanager.model.LessonSchedule;
-import com.saksonik.headmanager.model.User;
-import com.saksonik.headmanager.service.ClassService;
-import com.saksonik.headmanager.service.LessonScheduleService;
-import com.saksonik.headmanager.service.UserService;
+import com.saksonik.headmanager.model.*;
+import com.saksonik.headmanager.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @CrossOrigin
@@ -27,13 +23,16 @@ public class LessonTimetableController {
     private final UserService userService;
     private final LessonScheduleService lessonScheduleService;
     private final ClassService classService;
+    private final ClassroomService classroomService;
+    private final SubjectService subjectService;
+    private final ScheduledCallService scheduledCallService;
 
     //TODO  добавить post запрос на изменение расписания занятий (для админа)
     //TODO  подумать нужны ли тут роли
     //TODO  добавить обработку исключения classNotFound
     //TODO  добавить обработку исключения wrongData
     @GetMapping("/{id}")
-    public ResponseEntity<LessonTimetableDTO> getTimetableByClassForWeek(
+    public ResponseEntity<LessonTimetableResponse> getTimetableByClassForWeek(
             @PathVariable("id") Integer classId,
             @RequestParam("year") Integer year,
             @RequestParam("monty") Integer month,
@@ -50,19 +49,19 @@ public class LessonTimetableController {
                         c, firstDayOfWeek, lastDayOfWeek
                 );
 
-        List<LessonTimetableDTO.DayDTO.LessonDTO> lessonDTOS = lessons.stream()
-                .map(lesson -> new LessonTimetableDTO.DayDTO.LessonDTO(
+        List<LessonTimetableResponse.DayDTO.LessonDTO> lessonDTOS = lessons.stream()
+                .map(lesson -> new LessonTimetableResponse.DayDTO.LessonDTO(
                         lesson.getScheduledCall().getLessonNumber(),
                         lesson.getClassroom().getName(),
                         lesson.getTeacher().getFullName(),
                         lesson.getSubject().getName(),
                         lesson.getScheduledCall().getStart(),
                         lesson.getScheduledCall().getEnd(),
-                        lesson.getLessonDateTime().toLocalDate())
+                        lesson.getLessonDate())
                 )
                 .toList();
 
-        List<LessonTimetableDTO.DayDTO> week = buildWeekByDays(firstDayOfWeek, lastDayOfWeek);
+        List<LessonTimetableResponse.DayDTO> week = buildWeekByDays(firstDayOfWeek, lastDayOfWeek);
 
         lessonDTOS.forEach(l -> week.stream()
                 .filter(d -> d.getDate().equals(l.getDate()))
@@ -70,14 +69,14 @@ public class LessonTimetableController {
                 .get()
                 .addLesson(l));
 
-        return ResponseEntity.ok(new LessonTimetableDTO(week));
+        return ResponseEntity.ok(new LessonTimetableResponse(week));
     }
 
     //TODO  проверить что у бзера есть права на это
     //TODO  добавить обработку исключения teacherNotFound
     //TODO  добавить обработку исключения wrongData
     @GetMapping
-    public ResponseEntity<LessonTimetableDTO> getTimetableByTeacherForWeek(
+    public ResponseEntity<LessonTimetableResponse> getTimetableByTeacherForWeek(
             @RequestHeader("User-Id") UUID teacherId,
             @RequestParam("year") Integer year,
             @RequestParam("monty") Integer month,
@@ -94,19 +93,19 @@ public class LessonTimetableController {
                         teacher, firstDayOfWeek, lastDayOfWeek
                 );
 
-        List<LessonTimetableDTO.DayDTO.LessonDTO> lessonDTOS = lessons.stream()
-                .map(lesson -> new LessonTimetableDTO.DayDTO.LessonDTO(
+        List<LessonTimetableResponse.DayDTO.LessonDTO> lessonDTOS = lessons.stream()
+                .map(lesson -> new LessonTimetableResponse.DayDTO.LessonDTO(
                         lesson.getScheduledCall().getLessonNumber(),
                         lesson.getClassroom().getName(),
                         lesson.getTeacher().getFullName(),
                         lesson.getSubject().getName(),
                         lesson.getScheduledCall().getStart(),
                         lesson.getScheduledCall().getEnd(),
-                        lesson.getLessonDateTime().toLocalDate())
+                        lesson.getLessonDate())
                 )
                 .toList();
 
-        List<LessonTimetableDTO.DayDTO> week = buildWeekByDays(firstDayOfWeek, lastDayOfWeek);
+        List<LessonTimetableResponse.DayDTO> week = buildWeekByDays(firstDayOfWeek, lastDayOfWeek);
 
         lessonDTOS.forEach(l -> week.stream()
                 .filter(d -> d.getDate().equals(l.getDate()))
@@ -114,15 +113,70 @@ public class LessonTimetableController {
                 .get()
                 .addLesson(l));
 
-        return ResponseEntity.ok(new LessonTimetableDTO(week));
+        return ResponseEntity.ok(new LessonTimetableResponse(week));
     }
 
-    private List<LessonTimetableDTO.DayDTO> buildWeekByDays(LocalDate firstDayOfWeek, LocalDate lastDayOfWeek) {
-        List<LessonTimetableDTO.DayDTO> week = new ArrayList<>();
+    //TODO  добавить обработку исключений
+    @PostMapping("/{id}")
+    public ResponseEntity<LessonTimetableResponse> createTimetableForDay(
+            @PathVariable("id") Integer classId,
+            @RequestBody LessonTimetableRequest request) {
+        List<LessonTimetableRequest.LessonDTO> lessons = request.getLessons();
+
+        Class c = classService.findById(classId);
+        Map<UUID, User> teachers = new HashMap<>();
+        Map<Integer, Classroom> classrooms = new HashMap<>();
+        Map<Integer, Subject> subjects = new HashMap<>();
+        Map<Integer, ScheduledCall> scheduledCalls = new HashMap<>();
+
+        userService.findAllByIds(lessons
+                        .stream()
+                        .map(LessonTimetableRequest.LessonDTO::getTeacherId)
+                        .toList())
+                .forEach(u -> teachers.put(u.getUserId(), u));
+        classroomService.findAllByIds(lessons
+                        .stream()
+                        .map(LessonTimetableRequest.LessonDTO::getClassRoomId)
+                        .toList())
+                .forEach(cr -> classrooms.put(cr.getClassroomId(), cr));
+        subjectService.findAllByIds(lessons
+                        .stream()
+                        .map(LessonTimetableRequest.LessonDTO::getSubjectId)
+                        .toList())
+                .forEach(s -> subjects.put(s.getSubjectId(), s));
+        scheduledCallService.findAllByIds(lessons
+                        .stream()
+                        .map(LessonTimetableRequest.LessonDTO::getScheduledCallId)
+                        .toList())
+                .forEach(sc -> scheduledCalls.put(sc.getLessonNumber(), sc));
+
+        List<LessonSchedule> createdLessons = lessonScheduleService.createTimetableForClass(
+                c, request, teachers, subjects, classrooms, scheduledCalls);
+
+        List<LessonTimetableResponse.DayDTO.LessonDTO> lessonsResponse = createdLessons.stream()
+                .map(l -> new LessonTimetableResponse.DayDTO.LessonDTO(
+                        l.getScheduledCall().getLessonNumber(),
+                        l.getClassroom().getName(),
+                        l.getTeacher().getFullName(),
+                        l.getSubject().getName(),
+                        l.getScheduledCall().getStart(),
+                        l.getScheduledCall().getEnd(),
+                        l.getLessonDate()))
+                .toList();
+
+        var day = new LessonTimetableResponse.DayDTO();
+        day.setLessons(lessonsResponse);
+        day.setDate(lessonsResponse.getFirst().getDate());
+
+        return ResponseEntity.ok(new LessonTimetableResponse(List.of(day)));
+    }
+
+    private List<LessonTimetableResponse.DayDTO> buildWeekByDays(LocalDate firstDayOfWeek, LocalDate lastDayOfWeek) {
+        List<LessonTimetableResponse.DayDTO> week = new ArrayList<>();
         LocalDate date = firstDayOfWeek;
 
         while (!date.isAfter(lastDayOfWeek)) {
-            var day = new LessonTimetableDTO.DayDTO();
+            var day = new LessonTimetableResponse.DayDTO();
             day.setDate(date);
             week.add(day);
             date = date.plusDays(1);

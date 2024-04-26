@@ -11,15 +11,20 @@ import java.util.List;
 
 @Repository
 public interface LessonScheduleRepository extends JpaRepository<LessonSchedule, Integer> {
-    List<LessonSchedule> findAllByClazzIsAndLessonDateBeforeAndLessonDateTimeAfter(
+    List<LessonSchedule> findAllByClazzIsAndLessonDateBeforeAndLessonDateAfter(
             Class clazz,
             LocalDate before,
             LocalDate after
     );
 
-    List<LessonSchedule> findAllByTeacherIsAndLessonDateBeforeAndLessonDateTimeAfter(
+    List<LessonSchedule> findAllByTeacherIsAndLessonDateBeforeAndLessonDateAfter(
             User teacher,
             LocalDate before,
             LocalDate after
+    );
+
+    List<LessonSchedule> findAllByClazzIsAndLessonDateIs(
+            Class clszz,
+            LocalDate date
     );
 }
