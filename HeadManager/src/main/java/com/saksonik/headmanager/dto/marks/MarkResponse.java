@@ -3,7 +3,7 @@ package com.saksonik.headmanager.dto.marks;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
-public record CreateMarkResponse(
+public record MarkResponse(
         Integer markId,
         OffsetDateTime createdAt,
         OffsetDateTime updatedAt,

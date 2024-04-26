@@ -1,6 +1,7 @@
 package com.saksonik.headmanager.service;
 
 import com.saksonik.headmanager.dto.marks.CreateMarkRequest;
+import com.saksonik.headmanager.dto.marks.UpdateMarkRequest;
 import com.saksonik.headmanager.exception.MarkNotExistException;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.*;
@@ -50,6 +51,7 @@ public class MarkService {
         );
     }
 
+    @Transactional
     public Mark createMark(CreateMarkRequest request, User student, User teacher, Subject subject, MarkType markType,
                            WorkType workType, StudyPeriod studyPeriod) {
         Mark mark = new Mark();
@@ -64,6 +66,17 @@ public class MarkService {
         mark.setMarkType(markType);
         mark.setWorkType(workType);
         mark.setStudyPeriod(studyPeriod);
+
+        return markRepository.save(mark);
+    }
+
+    @Transactional
+    public Mark updateMark(Integer markId, UpdateMarkRequest request, MarkType markType, WorkType workType) {
+        Mark mark = findById(markId);
+
+        mark.setDescription(request.description());
+        mark.setMarkType(markType);
+        mark.setWorkType(workType);
 
         return markRepository.save(mark);
     }

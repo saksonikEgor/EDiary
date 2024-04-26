@@ -1,8 +1,9 @@
 package com.saksonik.headmanager.controller;
 
 import com.saksonik.headmanager.dto.marks.CreateMarkRequest;
-import com.saksonik.headmanager.dto.marks.CreateMarkResponse;
+import com.saksonik.headmanager.dto.marks.MarkResponse;
 import com.saksonik.headmanager.dto.marks.MarksDTO;
+import com.saksonik.headmanager.dto.marks.UpdateMarkRequest;
 import com.saksonik.headmanager.model.*;
 import com.saksonik.headmanager.service.*;
 import lombok.RequiredArgsConstructor;
@@ -120,7 +121,7 @@ public class MarkController {
 
     //TODO  проверить роль
     @PostMapping
-    public ResponseEntity<CreateMarkResponse> createMark(
+    public ResponseEntity<MarkResponse> createMark(
             @RequestHeader("User-Id") UUID teacherId,
             @RequestBody CreateMarkRequest request) {
         User teacher = userService.findUserById(teacherId);
@@ -132,7 +133,33 @@ public class MarkController {
 
         Mark mark = markService.createMark(request, student, teacher, subject, markType, workType, studyPeriod);
 
-        return ResponseEntity.ok(new CreateMarkResponse(
+        return ResponseEntity.ok(new MarkResponse(
+                mark.getMarkId(),
+                mark.getCreatedAt(),
+                mark.getLastModifiedAt(),
+                mark.getDate(),
+                mark.getDescription(),
+                mark.getStudent().getFullName(),
+                mark.getTeacher().getFullName(),
+                mark.getSubject().getName(),
+                mark.getWorkType().getName(),
+                mark.getMarkType().getType(),
+                mark.getStudyPeriod().getName()
+        ));
+    }
+
+    //TODO  проверить роль и что данный учитель редактикует свою же оценку
+    @PatchMapping("/{id}")
+    public ResponseEntity<MarkResponse> updateMark(
+            @RequestHeader("User-Id") UUID teacherId,
+            @PathVariable("id") Integer markId,
+            @RequestBody UpdateMarkRequest request) {
+        WorkType workType = workTypeService.findById(request.workTypeId());
+        MarkType markType = markTypeService.findById(request.markTypeId());
+
+        Mark mark = markService.updateMark(markId, request, markType, workType);
+
+        return ResponseEntity.ok(new MarkResponse(
                 mark.getMarkId(),
                 mark.getCreatedAt(),
                 mark.getLastModifiedAt(),
