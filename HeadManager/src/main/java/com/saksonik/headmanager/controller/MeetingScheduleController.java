@@ -3,6 +3,7 @@ package com.saksonik.headmanager.controller;
 import com.saksonik.headmanager.dto.MeetingScheduleDTO;
 import com.saksonik.headmanager.dto.meetings.CreateMeetingRequest;
 import com.saksonik.headmanager.dto.meetings.MeetingResponse;
+import com.saksonik.headmanager.dto.meetings.UpdateMeetingRequest;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.Classroom;
 import com.saksonik.headmanager.model.Meeting;
@@ -111,5 +112,30 @@ public class MeetingScheduleController {
                 meeting.getDescription(),
                 meeting.getClazz().getName(),
                 meeting.getClassroom().getName()));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<MeetingResponse> updateMeeting(
+            @RequestHeader("User-Id") UUID userId,
+            @PathVariable("id") Integer meetingId,
+            @RequestBody UpdateMeetingRequest request) {
+        Classroom classroom = classroomService.findById(request.classroomId());
+
+        Meeting meeting = meetingService.update(meetingId, request, classroom);
+
+        return ResponseEntity.ok(new MeetingResponse(
+                meeting.getMeetingId(),
+                meeting.getMeetingDateTime(),
+                meeting.getDescription(),
+                meeting.getClazz().getName(),
+                meeting.getClassroom().getName()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMeeting(
+            @RequestHeader("User-Id") UUID userId,
+            @PathVariable("id") Integer meetingId) {
+        meetingService.delete(meetingId);
+        return ResponseEntity.ok().build();
     }
 }

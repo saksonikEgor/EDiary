@@ -1,6 +1,7 @@
 package com.saksonik.headmanager.service;
 
 import com.saksonik.headmanager.dto.meetings.CreateMeetingRequest;
+import com.saksonik.headmanager.dto.meetings.UpdateMeetingRequest;
 import com.saksonik.headmanager.exception.MeetingNotExistException;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.Classroom;
@@ -42,5 +43,22 @@ public class MeetingService {
         meeting.setDescription(request.description());
 
         return meetingRepository.save(meeting);
+    }
+
+    @Transactional
+    public Meeting update(Integer meetingId, UpdateMeetingRequest request, Classroom classroom) {
+        Meeting meeting = findById(meetingId);
+
+        meeting.setClassroom(classroom);
+        meeting.setMeetingDateTime(request.dateTime());
+        meeting.setDescription(request.description());
+
+        return meetingRepository.save(meeting);
+    }
+
+    @Transactional
+    public void delete(Integer meetingId) {
+        Meeting meeting = findById(meetingId);
+        meetingRepository.delete(meeting);
     }
 }
