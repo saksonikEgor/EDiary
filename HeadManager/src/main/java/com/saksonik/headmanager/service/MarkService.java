@@ -81,6 +81,11 @@ public class MarkService {
         return markRepository.save(mark);
     }
 
+    @Transactional
+    public void deleteMarkById(Integer id) {
+        markRepository.delete(findById(id));
+    }
+
     public Float calculateAvg(List<Mark> marks) {
         Set<WorkType> workTypes = new HashSet<>();
         float workTypeWeightSum = 0;

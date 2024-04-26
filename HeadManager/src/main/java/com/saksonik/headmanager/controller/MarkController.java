@@ -174,6 +174,16 @@ public class MarkController {
         ));
     }
 
+    //TODO  проверить роль и что данный учитель удаляет свою же оценку
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMark(
+            @RequestHeader("User-Id") UUID teacherId,
+            @PathVariable("id") Integer markId
+    ) {
+        markService.deleteMarkById(markId);
+        return ResponseEntity.ok().build();
+    }
+
     private List<MarksDTO.SubjectDTO> buildSubjectDTOs(List<Mark> marks) {
         Map<Subject, List<Mark>> subjectMarks = new HashMap<>();
 
