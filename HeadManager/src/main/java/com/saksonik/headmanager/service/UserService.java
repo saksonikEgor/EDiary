@@ -4,7 +4,6 @@ import com.saksonik.headmanager.exception.notExist.UserNotExistException;
 import com.saksonik.headmanager.model.User;
 import com.saksonik.headmanager.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
