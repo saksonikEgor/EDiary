@@ -1,13 +1,16 @@
 package com.saksonik.headmanager.service;
 
-import com.saksonik.headmanager.dto.callSchedule.CallScheduleDTO;
+import com.saksonik.headmanager.dto.callSchedule.ScheduledCallDTO;
+import com.saksonik.headmanager.exception.alreadyExist.ScheduledCallIsAlreadyExistException;
+import com.saksonik.headmanager.exception.notExist.ScheduledCallNotExistException;
 import com.saksonik.headmanager.model.ScheduledCall;
 import com.saksonik.headmanager.repository.ScheduledCallRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,29 +25,41 @@ public class ScheduledCallService {
         return calls;
     }
 
+    public ScheduledCall findById(Integer id) {
+        return scheduledCallRepository.findById(id)
+                .orElseThrow(() -> new ScheduledCallNotExistException("Scheduled Call Not Found"));
+    }
+
     @Transactional
-    public void update(CallScheduleDTO callScheduleDTO) {
-        Map<Integer, ScheduledCall> numberToCall = new HashMap<>();
-
-        scheduledCallRepository.findAllByLessonNumberContaining(callScheduleDTO.getCalls()
-                        .stream()
-                        .map(CallScheduleDTO.CallDTO::getNumber)
-                        .toList())
-                .forEach(call -> numberToCall.put(call.getLessonNumber(), call));
-
-        for (CallScheduleDTO.CallDTO callDTO : callScheduleDTO.getCalls()) {
-            ScheduledCall call = numberToCall.computeIfAbsent(callDTO.getNumber(), k -> {
-                ScheduledCall scheduledCall = new ScheduledCall();
-                scheduledCall.setLessonNumber(k);
-                return scheduledCall;
-            });
-
-            call.setEnd(callDTO.getEnd());
-            call.setStart(callDTO.getStart());
+    public ScheduledCall create(ScheduledCallDTO scheduledCallDTO) {
+        if (scheduledCallRepository.findById(scheduledCallDTO.callNumber()).isPresent()) {
+            throw new ScheduledCallIsAlreadyExistException("Scheduled Call Already Exist");
         }
 
-        scheduledCallRepository.saveAll(numberToCall.values());
+        ScheduledCall scheduledCall = new ScheduledCall();
+
+        scheduledCall.setLessonNumber(scheduledCallDTO.callNumber());
+        scheduledCall.setStart(scheduledCallDTO.start());
+        scheduledCall.setEnd(scheduledCallDTO.end());
+
+        return scheduledCallRepository.save(scheduledCall);
     }
+
+    @Transactional
+    public ScheduledCall update(ScheduledCallDTO scheduledCallDTO) {
+        ScheduledCall scheduledCall = findById(scheduledCallDTO.callNumber());
+
+        scheduledCall.setStart(scheduledCallDTO.start());
+        scheduledCall.setEnd(scheduledCallDTO.end());
+
+        return scheduledCallRepository.save(scheduledCall);
+    }
+
+    @Transactional
+    public void delete(Integer id) {
+        scheduledCallRepository.delete(findById(id));
+    }
+
     public List<ScheduledCall> findAllByIds(List<Integer> ids) {
         return scheduledCallRepository.findAllById(ids);
     }
