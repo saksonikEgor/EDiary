@@ -1,6 +1,7 @@
 package com.saksonik.headmanager.controller;
 
 import com.saksonik.headmanager.dto.callSchedule.CallScheduleDTO;
+import com.saksonik.headmanager.exception.NoAuthorityException;
 import com.saksonik.headmanager.model.ScheduledCall;
 import com.saksonik.headmanager.service.ScheduledCallService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,14 @@ public class CallScheduleController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createCallSchedule(@RequestBody CallScheduleDTO callScheduleDTO) {
+    public ResponseEntity<Void> createCallSchedule(
+            @RequestBody CallScheduleDTO callScheduleDTO
+//            @RequestParam String role
+    ) {
+//        if (!role.equals("ROLE_ADMIN")) {
+//            throw new NoAuthorityException("Not allowed to create call schedule");
+//        }
+
         scheduledCallService.update(callScheduleDTO);
         return ResponseEntity.ok().build();
     }

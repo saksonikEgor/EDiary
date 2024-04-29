@@ -1,6 +1,6 @@
 package com.saksonik.headmanager.service;
 
-import com.saksonik.headmanager.exception.UserNotExistException;
+import com.saksonik.headmanager.exception.notExist.UserNotExistException;
 import com.saksonik.headmanager.model.User;
 import com.saksonik.headmanager.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

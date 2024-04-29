@@ -1,10 +1,11 @@
 package com.saksonik.headmanager.controller;
 
 import com.saksonik.headmanager.dto.UserfeedDTO;
+import com.saksonik.headmanager.exception.NoAuthorityException;
 import com.saksonik.headmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -21,14 +22,17 @@ public class UserFeedController {
     //TODO  обработать исключение userIsNotFound
     //TODO  добавить логику для админа
     @GetMapping
-    public ResponseEntity<UserfeedDTO> getUserFeed(@RequestHeader("User-Id") UUID userId) {
-        String role = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getAuthorities()
-                .stream()
-                .findAny()
-                .get()
-                .getAuthority();
+    public ResponseEntity<UserfeedDTO> getUserFeed(
+            @RequestHeader("User-Id") UUID userId,
+            @RequestHeader("Role") String role
+    ) {
+//        String role = SecurityContextHolder.getContext()
+//                .getAuthentication()
+//                .getAuthorities()
+//                .stream()
+//                .findAny()
+//                .get()
+//                .getAuthority();
 
         UserfeedDTO userfeedDTO = new UserfeedDTO();
         userfeedDTO.setId(userId);
@@ -52,6 +56,7 @@ public class UserFeedController {
                     .map(c -> new UserfeedDTO.ClassDTO(c.getClassId(), c.getName()))
                     .toList()
             );
+            case null, default -> throw new NoAuthorityException("Not allowed to access this meeting");
 //            case "ROLE_ADMIN" -> {
 //            }
         }

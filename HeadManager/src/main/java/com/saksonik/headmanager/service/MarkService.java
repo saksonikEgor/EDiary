@@ -2,7 +2,7 @@ package com.saksonik.headmanager.service;
 
 import com.saksonik.headmanager.dto.marks.CreateMarkRequest;
 import com.saksonik.headmanager.dto.marks.UpdateMarkRequest;
-import com.saksonik.headmanager.exception.MarkNotExistException;
+import com.saksonik.headmanager.exception.notExist.MarkNotExistException;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.*;
 import com.saksonik.headmanager.repository.MarkRepository;

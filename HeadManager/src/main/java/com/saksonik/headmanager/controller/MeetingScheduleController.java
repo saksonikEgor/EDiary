@@ -4,6 +4,7 @@ import com.saksonik.headmanager.dto.MeetingScheduleDTO;
 import com.saksonik.headmanager.dto.meetings.CreateMeetingRequest;
 import com.saksonik.headmanager.dto.meetings.MeetingResponse;
 import com.saksonik.headmanager.dto.meetings.UpdateMeetingRequest;
+import com.saksonik.headmanager.exception.NoAuthorityException;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.Classroom;
 import com.saksonik.headmanager.model.Meeting;
@@ -14,7 +15,7 @@ import com.saksonik.headmanager.service.MeetingService;
 import com.saksonik.headmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,15 +37,16 @@ public class MeetingScheduleController {
     @GetMapping("/{id}")
     public ResponseEntity<MeetingScheduleDTO> getMeetingsScheduleByClass(
             @RequestHeader("User-Id") UUID userId,
+            @RequestHeader("Role") String role,
             @PathVariable("id") Integer classId
     ) {
-        String role = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getAuthorities()
-                .stream()
-                .findAny()
-                .get()
-                .getAuthority();
+//        String role = SecurityContextHolder.getContext()
+//                .getAuthentication()
+//                .getAuthorities()
+//                .stream()
+//                .findAny()
+//                .get()
+//                .getAuthority();
 
         MeetingScheduleDTO meetingScheduleDTO = new MeetingScheduleDTO();
         meetingScheduleDTO.setRole(role);
@@ -61,6 +63,7 @@ public class MeetingScheduleController {
                                     meeting.getMeetingDateTime(),
                                     meeting.getDescription()))
                             .toList());
+            case null, default -> throw new NoAuthorityException("Not allowed to access this meeting");
         }
         return ResponseEntity.ok(meetingScheduleDTO);
     }
@@ -68,15 +71,16 @@ public class MeetingScheduleController {
     //TODO  проверить иммет ли юзер права
     @GetMapping
     public ResponseEntity<MeetingScheduleDTO> getMeetingsScheduleForClassroomTeacher(
-            @RequestHeader("User-Id") UUID userId
+            @RequestHeader("User-Id") UUID userId,
+            @RequestHeader("Role") String role
     ) {
-        String role = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getAuthorities()
-                .stream()
-                .findAny()
-                .get()
-                .getAuthority();
+//        String role = SecurityContextHolder.getContext()
+//                .getAuthentication()
+//                .getAuthorities()
+//                .stream()
+//                .findAny()
+//                .get()
+//                .getAuthority();
 
         MeetingScheduleDTO meetingScheduleDTO = new MeetingScheduleDTO();
         meetingScheduleDTO.setRole(role);

@@ -1,13 +1,14 @@
 package com.saksonik.headmanager.controller;
 
 import com.saksonik.headmanager.dto.UserDTO;
+import com.saksonik.headmanager.exception.NoAuthorityException;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.Subject;
 import com.saksonik.headmanager.model.User;
 import com.saksonik.headmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -24,14 +25,17 @@ public class ProfileController {
     //TODO  добавить логику для админа
     //TODO  добавить post запрос на изменение данных в профиле
     @GetMapping
-    public ResponseEntity<UserDTO> getProfile(@RequestHeader("User-Id") UUID userId) {
-        String role = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getAuthorities()
-                .stream()
-                .findAny()
-                .get()
-                .getAuthority();
+    public ResponseEntity<UserDTO> getProfile(
+            @RequestHeader("User-Id") UUID userId,
+            @RequestHeader("Role") String role
+    ) {
+//        String role = SecurityContextHolder.getContext()
+//                .getAuthentication()
+//                .getAuthorities()
+//                .stream()
+//                .findAny()
+//                .get()
+//                .getAuthority();
 
         User user = userService.findUserById(userId);
 
@@ -67,6 +71,7 @@ public class ProfileController {
             case "ROLE_CLASSROOM-TEACHER" -> userDTO.setClassesForClassroomTeacher(user.getClassesForClassroomTeacher().stream()
                     .map(Class::getName)
                     .toList());
+            case null, default -> throw new NoAuthorityException("Not allowed to access this meeting");
 //            case "ROLE_ADMIN" -> {
 //            }
         }

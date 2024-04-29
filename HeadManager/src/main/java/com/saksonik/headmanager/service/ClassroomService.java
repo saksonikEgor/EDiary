@@ -1,6 +1,6 @@
 package com.saksonik.headmanager.service;
 
-import com.saksonik.headmanager.exception.ClassroomNotExistException;
+import com.saksonik.headmanager.exception.notExist.ClassroomNotExistException;
 import com.saksonik.headmanager.model.Classroom;
 import com.saksonik.headmanager.repository.ClassroomRepository;
 import lombok.RequiredArgsConstructor;

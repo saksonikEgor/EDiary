@@ -1,6 +1,6 @@
 package com.saksonik.headmanager.service;
 
-import com.saksonik.headmanager.exception.SubjectNotExistException;
+import com.saksonik.headmanager.exception.notExist.SubjectNotExistException;
 import com.saksonik.headmanager.model.Subject;
 import com.saksonik.headmanager.repository.SubjectRepository;
 import lombok.RequiredArgsConstructor;

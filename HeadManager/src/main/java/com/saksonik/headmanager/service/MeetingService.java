@@ -2,7 +2,7 @@ package com.saksonik.headmanager.service;
 
 import com.saksonik.headmanager.dto.meetings.CreateMeetingRequest;
 import com.saksonik.headmanager.dto.meetings.UpdateMeetingRequest;
-import com.saksonik.headmanager.exception.MeetingNotExistException;
+import com.saksonik.headmanager.exception.notExist.MeetingNotExistException;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.Classroom;
 import com.saksonik.headmanager.model.Meeting;

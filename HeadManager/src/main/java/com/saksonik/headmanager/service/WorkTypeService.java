@@ -1,6 +1,6 @@
 package com.saksonik.headmanager.service;
 
-import com.saksonik.headmanager.exception.WorkTypeNotExistException;
+import com.saksonik.headmanager.exception.notExist.WorkTypeNotExistException;
 import com.saksonik.headmanager.model.WorkType;
 import com.saksonik.headmanager.repository.WorkTypeRepository;
 import lombok.RequiredArgsConstructor;

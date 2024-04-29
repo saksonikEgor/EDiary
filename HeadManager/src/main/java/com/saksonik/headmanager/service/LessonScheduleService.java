@@ -2,8 +2,8 @@ package com.saksonik.headmanager.service;
 
 import com.saksonik.headmanager.dto.lessonTimetable.CreateLessonTimetableRequest;
 import com.saksonik.headmanager.dto.lessonTimetable.UpdateLessonTimetableRequest;
-import com.saksonik.headmanager.exception.LessonScheduleIsAlreadyExistException;
-import com.saksonik.headmanager.exception.LessonSchedulesIsNotExistException;
+import com.saksonik.headmanager.exception.alreadyExist.LessonScheduleIsAlreadyExistException;
+import com.saksonik.headmanager.exception.notExist.LessonSchedulesIsNotExistException;
 import com.saksonik.headmanager.exception.WrongLessonTimetableCredentialsException;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.*;

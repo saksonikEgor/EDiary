@@ -1,6 +1,6 @@
 package com.saksonik.headmanager.service;
 
-import com.saksonik.headmanager.exception.MarkTypeNotExistException;
+import com.saksonik.headmanager.exception.notExist.MarkTypeNotExistException;
 import com.saksonik.headmanager.model.MarkType;
 import com.saksonik.headmanager.repository.MarkTypeRepository;
 import lombok.RequiredArgsConstructor;
