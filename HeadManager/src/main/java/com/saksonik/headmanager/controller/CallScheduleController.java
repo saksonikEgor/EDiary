@@ -61,7 +61,7 @@ public class CallScheduleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCallSchedule(@PathVariable("id") UUID callNumber) {
+    public ResponseEntity<Void> deleteCallSchedule(@PathVariable("id") Integer callNumber) {
         scheduledCallService.delete(callNumber);
         return ResponseEntity.noContent().build();
     }

@@ -8,5 +8,5 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface ScheduledCallRepository extends JpaRepository<ScheduledCall, UUID> {
+public interface ScheduledCallRepository extends JpaRepository<ScheduledCall, Integer> {
 }

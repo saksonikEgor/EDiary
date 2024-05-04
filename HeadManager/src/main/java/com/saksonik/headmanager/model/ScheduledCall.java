@@ -18,11 +18,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScheduledCall {
-    //TODO  сделать integer
     @Id
-    @UuidGenerator(style = UuidGenerator.Style.TIME)
     @Column(name = "lesson_number_id")
-    private UUID lessonNumber;
+    private Integer lessonNumber;
 
     @Column(name = "start_time", nullable = false)
     private LocalTime start;

@@ -26,7 +26,7 @@ public class ScheduledCallService {
         return calls;
     }
 
-    public ScheduledCall findById(UUID id) {
+    public ScheduledCall findById(Integer id) {
         return scheduledCallRepository.findById(id)
                 .orElseThrow(() -> new ScheduledCallNotExistException("Scheduled Call Not Found"));
     }
@@ -57,11 +57,11 @@ public class ScheduledCallService {
     }
 
     @Transactional
-    public void delete(UUID id) {
+    public void delete(Integer id) {
         scheduledCallRepository.delete(findById(id));
     }
 
-    public List<ScheduledCall> findAllByIds(List<UUID> ids) {
+    public List<ScheduledCall> findAllByIds(List<Integer> ids) {
         return scheduledCallRepository.findAllById(ids);
     }
 }
