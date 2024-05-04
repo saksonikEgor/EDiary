@@ -1,6 +1,7 @@
 package com.saksonik.headmanager.controller;
 
 import com.saksonik.headmanager.dto.UserDTO;
+import com.saksonik.headmanager.dto.profile.CreateProfileRequest;
 import com.saksonik.headmanager.exception.NoAuthorityException;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.Subject;
@@ -77,6 +78,16 @@ public class ProfileController {
         }
 
         return ResponseEntity.ok(userDTO);
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> createProfile(
+            @RequestHeader("User-Id") UUID userId,
+            @RequestHeader("Role") String role,
+            @RequestBody CreateProfileRequest createProfileRequest
+    ) {
+        userService.save(createProfileRequest);
+        return ResponseEntity.ok().build();
     }
 
 

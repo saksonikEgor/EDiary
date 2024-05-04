@@ -6,6 +6,7 @@ import com.saksonik.headmanager.exception.WrongLessonTimetableCredentialsExcepti
 import com.saksonik.headmanager.exception.alreadyExist.LessonScheduleIsAlreadyExistException;
 import com.saksonik.headmanager.exception.alreadyExist.MeetingIsAlreadyExistException;
 import com.saksonik.headmanager.exception.alreadyExist.ScheduledCallIsAlreadyExistException;
+import com.saksonik.headmanager.exception.alreadyExist.UserIsAlreadyExistException;
 import com.saksonik.headmanager.exception.notExist.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,11 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(ScheduledCallIsAlreadyExistException.class)
     public ResponseEntity<APIErrorResponse> ds(ScheduledCallIsAlreadyExistException exception) {
         return handleException(exception, HttpStatus.NOT_ACCEPTABLE, "Расписание звонка уже существует");
+    }
+
+    @ExceptionHandler(UserIsAlreadyExistException.class)
+    public ResponseEntity<APIErrorResponse> ds(UserIsAlreadyExistException exception) {
+        return handleException(exception, HttpStatus.NOT_ACCEPTABLE, "Пользователь уже существует");
     }
 
     @ExceptionHandler(ClassNotExistException.class)
