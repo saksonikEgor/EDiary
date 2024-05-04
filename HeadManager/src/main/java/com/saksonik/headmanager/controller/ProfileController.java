@@ -89,8 +89,4 @@ public class ProfileController {
         userService.save(createProfileRequest);
         return ResponseEntity.ok().build();
     }
-
-
-    //TODO  добавить создание изменение и удаление профиля
-
 }
