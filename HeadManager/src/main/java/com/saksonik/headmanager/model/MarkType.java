@@ -6,6 +6,7 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "mark_types")
@@ -16,9 +17,8 @@ import java.util.Objects;
 @NoArgsConstructor
 public class MarkType {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mark_type_id")
-    private Integer markTypeId;
+    private UUID markTypeId;
 
     @Column(name = "type", nullable = false)
     private String type;

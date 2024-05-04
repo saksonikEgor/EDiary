@@ -1,9 +1,10 @@
 package com.saksonik.headmanager.dto.callSchedule;
 
 import java.time.LocalTime;
+import java.util.UUID;
 
 public record ScheduledCallDTO(
-        Integer callNumber,
+        UUID callNumber,
         LocalTime start,
         LocalTime end
 ) {

@@ -5,10 +5,8 @@ import com.saksonik.headmanager.dto.meetings.CreateMeetingRequest;
 import com.saksonik.headmanager.dto.meetings.MeetingResponse;
 import com.saksonik.headmanager.dto.meetings.UpdateMeetingRequest;
 import com.saksonik.headmanager.exception.NoAuthorityException;
+import com.saksonik.headmanager.model.*;
 import com.saksonik.headmanager.model.Class;
-import com.saksonik.headmanager.model.Classroom;
-import com.saksonik.headmanager.model.Meeting;
-import com.saksonik.headmanager.model.User;
 import com.saksonik.headmanager.service.ClassService;
 import com.saksonik.headmanager.service.ClassroomService;
 import com.saksonik.headmanager.service.MeetingService;
@@ -37,8 +35,8 @@ public class MeetingScheduleController {
     @GetMapping("/{id}")
     public ResponseEntity<MeetingScheduleDTO> getMeetingsScheduleByClass(
             @RequestHeader("User-Id") UUID userId,
-            @RequestHeader("Role") String role,
-            @PathVariable("id") Integer classId
+            @PathVariable("id") UUID classId,
+            @RequestHeader("Role") String role
     ) {
 //        String role = SecurityContextHolder.getContext()
 //                .getAuthentication()
@@ -82,6 +80,7 @@ public class MeetingScheduleController {
 //                .get()
 //                .getAuthority();
 
+
         MeetingScheduleDTO meetingScheduleDTO = new MeetingScheduleDTO();
         meetingScheduleDTO.setRole(role);
 
@@ -121,7 +120,7 @@ public class MeetingScheduleController {
     @PatchMapping("/{id}")
     public ResponseEntity<MeetingResponse> updateMeeting(
             @RequestHeader("User-Id") UUID userId,
-            @PathVariable("id") Integer meetingId,
+            @PathVariable("id") UUID meetingId,
             @RequestBody UpdateMeetingRequest request) {
         Classroom classroom = classroomService.findById(request.classroomId());
 
@@ -138,7 +137,7 @@ public class MeetingScheduleController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMeeting(
             @RequestHeader("User-Id") UUID userId,
-            @PathVariable("id") Integer meetingId) {
+            @PathVariable("id") UUID meetingId) {
         meetingService.delete(meetingId);
         return ResponseEntity.ok().build();
     }

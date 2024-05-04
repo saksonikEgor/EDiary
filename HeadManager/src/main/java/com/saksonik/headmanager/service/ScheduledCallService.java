@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +21,12 @@ public class ScheduledCallService {
 
     public List<ScheduledCall> findAll() {
         List<ScheduledCall> calls = scheduledCallRepository.findAll();
-        calls.sort(Comparator.comparingInt(ScheduledCall::getLessonNumber));
+        calls.sort(Comparator.comparing(ScheduledCall::getLessonNumber));
 
         return calls;
     }
 
-    public ScheduledCall findById(Integer id) {
+    public ScheduledCall findById(UUID id) {
         return scheduledCallRepository.findById(id)
                 .orElseThrow(() -> new ScheduledCallNotExistException("Scheduled Call Not Found"));
     }
@@ -56,11 +57,11 @@ public class ScheduledCallService {
     }
 
     @Transactional
-    public void delete(Integer id) {
+    public void delete(UUID id) {
         scheduledCallRepository.delete(findById(id));
     }
 
-    public List<ScheduledCall> findAllByIds(List<Integer> ids) {
+    public List<ScheduledCall> findAllByIds(List<UUID> ids) {
         return scheduledCallRepository.findAllById(ids);
     }
 }

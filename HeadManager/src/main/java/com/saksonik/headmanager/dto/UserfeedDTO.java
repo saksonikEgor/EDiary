@@ -15,7 +15,7 @@ public class UserfeedDTO {
 
     @AllArgsConstructor
     public static class ClassDTO {
-        private Integer classId;
+        private UUID classId;
         private String name;
     }
 

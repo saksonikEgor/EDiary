@@ -8,9 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
-public interface MeetingRepository extends JpaRepository<Meeting, Integer> {
+public interface MeetingRepository extends JpaRepository<Meeting, UUID> {
 //    List<Meeting> findAllByClazz(Class clazz);
 
     @Query("select m from Meeting m where m.clazz.classroomTeacher = :classroomTeacher")

@@ -14,6 +14,7 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ import java.util.Set;
 public class MarkService {
     private final MarkRepository markRepository;
 
-    public Mark findById(Integer id) {
+    public Mark findById(UUID id) {
         return markRepository.findById(id)
                 .orElseThrow(() -> new MarkNotExistException("Mark not found with id: " + id));
     }
@@ -71,7 +72,7 @@ public class MarkService {
     }
 
     @Transactional
-    public Mark updateMark(Integer markId, UpdateMarkRequest request, MarkType markType, WorkType workType) {
+    public Mark updateMark(UUID markId, UpdateMarkRequest request, MarkType markType, WorkType workType) {
         Mark mark = findById(markId);
 
         mark.setDescription(request.description());
@@ -82,7 +83,7 @@ public class MarkService {
     }
 
     @Transactional
-    public void deleteMarkById(Integer id) {
+    public void deleteMarkById(UUID id) {
         markRepository.delete(findById(id));
     }
 

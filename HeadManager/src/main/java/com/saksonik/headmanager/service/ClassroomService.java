@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ import java.util.List;
 public class ClassroomService {
     private final ClassroomRepository classroomRepository;
 
-    public Classroom findById(Integer id) {
+    public Classroom findById(UUID id) {
         return classroomRepository.findById(id)
                 .orElseThrow(() -> new ClassroomNotExistException("Classroom not found with id " + id));
     }
@@ -24,7 +25,7 @@ public class ClassroomService {
         return classroomRepository.findAll();
     }
 
-    public List<Classroom> findAllByIds(List<Integer> ids) {
+    public List<Classroom> findAllByIds(List<UUID> ids) {
         return classroomRepository.findAllById(ids);
     }
 }

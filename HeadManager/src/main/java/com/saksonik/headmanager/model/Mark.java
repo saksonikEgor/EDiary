@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "marks")
@@ -18,9 +19,8 @@ import java.util.Objects;
 @NoArgsConstructor
 public class Mark {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "mark_id")
-    private Integer markId;
+    private UUID markId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt = OffsetDateTime.now(ZoneOffset.UTC);

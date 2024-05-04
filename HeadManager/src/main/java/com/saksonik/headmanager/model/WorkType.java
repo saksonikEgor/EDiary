@@ -6,6 +6,7 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "work_types")
@@ -16,9 +17,8 @@ import java.util.Objects;
 @NoArgsConstructor
 public class WorkType {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "work_type_id")
-    private Integer workTypeId;
+    private UUID workTypeId;
 
     @Column(name = "weight", nullable = false)
     private Float weight;

@@ -48,9 +48,9 @@ public class LessonScheduleService {
     @Transactional
     public List<LessonSchedule> createTimetableForClass(Class c, CreateLessonTimetableRequest request,
                                                         Map<UUID, User> teachers,
-                                                        Map<Integer, Subject> subjects,
-                                                        Map<Integer, Classroom> classrooms,
-                                                        Map<Integer, ScheduledCall> scheduledCalls) {
+                                                        Map<UUID, Subject> subjects,
+                                                        Map<UUID, Classroom> classrooms,
+                                                        Map<UUID, ScheduledCall> scheduledCalls) {
         if (!lessonScheduleRepository.findAllByClazzIsAndLessonDateIs(c, request.getDate()).isEmpty()) {
             throw new LessonScheduleIsAlreadyExistException("Lesson schedule already exists: " + request);
         }
@@ -85,15 +85,15 @@ public class LessonScheduleService {
     @Transactional
     public List<LessonSchedule> updateTimetables(UpdateLessonTimetableRequest request,
                                                  Map<UUID, User> teachers,
-                                                 Map<Integer, Subject> subjects,
-                                                 Map<Integer, Classroom> classrooms,
-                                                 Map<Integer, ScheduledCall> scheduledCalls) {
-        List<Integer> lessonIds = request.getLessons()
+                                                 Map<UUID, Subject> subjects,
+                                                 Map<UUID, Classroom> classrooms,
+                                                 Map<UUID, ScheduledCall> scheduledCalls) {
+        List<UUID> lessonIds = request.getLessons()
                 .stream()
                 .map(UpdateLessonTimetableRequest.LessonDTO::getLessonId)
                 .toList();
 
-        Map<Integer, LessonSchedule> existedLessons = new HashMap<>();
+        Map<UUID, LessonSchedule> existedLessons = new HashMap<>();
         lessonScheduleRepository.findAllById(lessonIds)
                 .forEach(l -> existedLessons.put(l.getLessonScheduleId(), l));
 

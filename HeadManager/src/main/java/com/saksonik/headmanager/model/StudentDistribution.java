@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,9 +16,8 @@ import java.util.Objects;
 @NoArgsConstructor
 public class StudentDistribution {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "student_distribution_id")
-    private Integer studentDistributionId;
+    private UUID studentDistributionId;
 
     @OneToOne(mappedBy = "studentDistribution")
     private User student;

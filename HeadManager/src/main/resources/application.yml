@@ -5,6 +5,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/Management
     username: egor
     password: postgres
+#  jpa:
+#    properties:
+#      hibernate.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
 
 server:
   port: 8082

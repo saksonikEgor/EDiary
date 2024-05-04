@@ -6,9 +6,9 @@ import java.util.UUID;
 public record CreateMarkRequest(
         UUID studentId,
         LocalDate date,
-        Integer subjectId,
-        Integer workTypeId,
-        Integer markTypeId,
+        UUID subjectId,
+        UUID workTypeId,
+        UUID markTypeId,
         String description
 ) {
 }

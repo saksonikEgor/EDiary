@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin
@@ -26,7 +27,7 @@ public class CallScheduleController {
                         c.getLessonNumber(),
                         c.getStart(),
                         c.getEnd()))
-                .sorted(Comparator.comparingInt(ScheduledCallDTO::callNumber))
+                .sorted(Comparator.comparing(ScheduledCallDTO::callNumber))
                 .toList());
     }
 
@@ -60,7 +61,7 @@ public class CallScheduleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCallSchedule(@PathVariable("id") Integer callNumber) {
+    public ResponseEntity<Void> deleteCallSchedule(@PathVariable("id") UUID callNumber) {
         scheduledCallService.delete(callNumber);
         return ResponseEntity.noContent().build();
     }

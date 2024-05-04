@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ import java.util.List;
 public class SubjectService {
     private final SubjectRepository subjectRepository;
 
-    public Subject findById(Integer id) {
+    public Subject findById(UUID id) {
         return subjectRepository.findById(id)
                 .orElseThrow(() -> new SubjectNotExistException("Subject with id " + id + " not found"));
     }
@@ -24,7 +25,7 @@ public class SubjectService {
         return subjectRepository.findAll();
     }
 
-    public List<Subject> findAllByIds(List<Integer> ids) {
+    public List<Subject> findAllByIds(List<UUID> ids) {
         return subjectRepository.findAllById(ids);
     }
 }

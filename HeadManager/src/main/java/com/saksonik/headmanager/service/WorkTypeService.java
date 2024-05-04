@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ import java.util.List;
 public class WorkTypeService {
     private final WorkTypeRepository workTypeRepository;
 
-    public WorkType findById(Integer id) {
+    public WorkType findById(UUID id) {
         return workTypeRepository.findById(id)
                 .orElseThrow(() -> new WorkTypeNotExistException("Work type with id " + id + " not found"));
     }

@@ -7,6 +7,7 @@ import org.hibernate.proxy.HibernateProxy;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "call_schedule")
@@ -18,7 +19,7 @@ import java.util.Objects;
 public class ScheduledCall {
     @Id
     @Column(name = "lesson_number_id")
-    private Integer lessonNumber;
+    private UUID lessonNumber;
 
     @Column(name = "start_time", nullable = false)
     private LocalTime start;

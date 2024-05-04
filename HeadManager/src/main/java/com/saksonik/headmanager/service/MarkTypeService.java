@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +16,7 @@ import java.util.List;
 public class MarkTypeService {
     private final MarkTypeRepository markTypeRepository;
 
-    public MarkType findById(Integer id) {
+    public MarkType findById(UUID id) {
         return markTypeRepository.findById(id)
                 .orElseThrow(() -> new MarkTypeNotExistException("Mark type with id " + id + " not found"));
     }

@@ -94,7 +94,7 @@ public class MarkController {
     public ResponseEntity<MarksDTO> getMarksByClassForTeacher(
             @RequestHeader("User-Id") UUID userId,
             @RequestHeader("Role") String role,
-            @PathVariable("id") Integer classId,
+            @PathVariable("id") UUID classId,
             @RequestParam(name = "period", required = false) String studyPeriodName
     ) {
 //        String role = SecurityContextHolder.getContext()
@@ -156,7 +156,7 @@ public class MarkController {
     @PatchMapping("/{id}")
     public ResponseEntity<MarkResponse> updateMark(
             @RequestHeader("User-Id") UUID userId,
-            @PathVariable("id") Integer markId,
+            @PathVariable("id") UUID markId,
             @RequestBody UpdateMarkRequest request) {
         WorkType workType = workTypeService.findById(request.workTypeId());
         MarkType markType = markTypeService.findById(request.markTypeId());
@@ -182,7 +182,7 @@ public class MarkController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMark(
             @RequestHeader("User-Id") UUID userId,
-            @PathVariable("id") Integer markId
+            @PathVariable("id") UUID markId
     ) {
         markService.deleteMarkById(markId);
         return ResponseEntity.ok().build();

@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface StudyPeriodRepository extends JpaRepository<StudyPeriod, Integer> {
+public interface StudyPeriodRepository extends JpaRepository<StudyPeriod, UUID> {
     @Query("select sp from StudyPeriod sp where sp.start <= :date and sp.end >= :date")
     Optional<StudyPeriod> findCurrentStudyPeriod(@Param("date") LocalDate date);
 

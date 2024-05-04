@@ -6,6 +6,7 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "classes_timetable")
@@ -16,9 +17,8 @@ import java.util.Objects;
 @NoArgsConstructor
 public class LessonSchedule {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "classes_timetable_id")
-    private Integer lessonScheduleId;
+    private UUID lessonScheduleId;
 
     @Column(name = "lesson_date", nullable = false)
     private LocalDate lessonDate;

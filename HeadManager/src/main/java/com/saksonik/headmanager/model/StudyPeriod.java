@@ -7,6 +7,7 @@ import org.hibernate.proxy.HibernateProxy;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "study_periods")
@@ -17,9 +18,8 @@ import java.util.Objects;
 @NoArgsConstructor
 public class StudyPeriod {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "study_period_id")
-    private Integer studyPeriodId;
+    private UUID studyPeriodId;
 
     @Column(name = "name", nullable = false)
     private String name;

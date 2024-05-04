@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -26,7 +27,7 @@ public class LessonTimetableResponse {
         @AllArgsConstructor
         @Getter
         public static class LessonDTO {
-            private Integer lessonNumber;
+            private UUID lessonNumber;
             private String classRoom;
             private String teacherFullName;
             private String subject;

@@ -6,6 +6,7 @@ import org.hibernate.proxy.HibernateProxy;
 
 import java.time.OffsetDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "meetings")
@@ -16,9 +17,8 @@ import java.util.Objects;
 @NoArgsConstructor
 public class Meeting {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "meeting_id")
-    private Integer meetingId;
+    private UUID meetingId;
 
     @Column(name = "meeting_date", nullable = false)
     private OffsetDateTime meetingDateTime;

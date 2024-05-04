@@ -34,7 +34,7 @@ public class LessonTimetableController {
     //TODO  добавить обработку исключения wrongData
     @GetMapping("/{id}")
     public ResponseEntity<LessonTimetableResponse> getTimetableByClassForWeek(
-            @PathVariable("id") Integer classId,
+            @PathVariable("id") UUID classId,
             @RequestParam("year") Integer year,
             @RequestParam("monty") Integer month,
             @RequestParam("day") Integer day
@@ -120,15 +120,15 @@ public class LessonTimetableController {
     //TODO  добавить обработку исключений
     @PostMapping("/{id}")
     public ResponseEntity<LessonTimetableResponse> createTimetableForDay(
-            @PathVariable("id") Integer classId,
+            @PathVariable("id") UUID classId,
             @RequestBody CreateLessonTimetableRequest request) {
         List<CreateLessonTimetableRequest.LessonDTO> lessons = request.getLessons();
 
         Class c = classService.findById(classId);
         Map<UUID, User> teachers = new HashMap<>();
-        Map<Integer, Classroom> classrooms = new HashMap<>();
-        Map<Integer, Subject> subjects = new HashMap<>();
-        Map<Integer, ScheduledCall> scheduledCalls = new HashMap<>();
+        Map<UUID, Classroom> classrooms = new HashMap<>();
+        Map<UUID, Subject> subjects = new HashMap<>();
+        Map<UUID, ScheduledCall> scheduledCalls = new HashMap<>();
 
         userService.findAllByIds(lessons
                         .stream()
@@ -177,9 +177,9 @@ public class LessonTimetableController {
         List<UpdateLessonTimetableRequest.LessonDTO> lessons = request.getLessons();
 
         Map<UUID, User> teachers = new HashMap<>();
-        Map<Integer, Classroom> classrooms = new HashMap<>();
-        Map<Integer, Subject> subjects = new HashMap<>();
-        Map<Integer, ScheduledCall> scheduledCalls = new HashMap<>();
+        Map<UUID, Classroom> classrooms = new HashMap<>();
+        Map<UUID, Subject> subjects = new HashMap<>();
+        Map<UUID, ScheduledCall> scheduledCalls = new HashMap<>();
 
         userService.findAllByIds(lessons
                         .stream()

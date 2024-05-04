@@ -17,10 +17,10 @@ public class UpdateLessonTimetableRequest {
     @AllArgsConstructor
     @Getter
     public static class LessonDTO {
-        private Integer lessonId;
-        private Integer classRoomId;
+        private UUID lessonId;
+        private UUID classRoomId;
         private UUID teacherId;
-        private Integer subjectId;
-        private Integer scheduledCallId;
+        private UUID subjectId;
+        private UUID scheduledCallId;
     }
 }

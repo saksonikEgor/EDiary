@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Table(name = "roles_users")
@@ -15,9 +16,8 @@ import java.util.Objects;
 @NoArgsConstructor
 public class UserRole {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "roles_users_id")
-    private Integer rolesUsersId;
+    private UUID rolesUsersId;
 
     @Column(name = "active", nullable = false)
     private Boolean active;

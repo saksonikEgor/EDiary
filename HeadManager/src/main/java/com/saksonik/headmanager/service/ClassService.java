@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +19,7 @@ public class ClassService {
         return classRepository.findAll();
     }
 
-    public Class findById(Integer id) {
+    public Class findById(UUID id) {
         return classRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Class not found"));
     }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ import java.util.List;
 public class MeetingService {
     private final MeetingRepository meetingRepository;
 
-    public Meeting findById(Integer id) {
+    public Meeting findById(UUID id) {
         return meetingRepository.findById(id)
                 .orElseThrow(() -> new MeetingNotExistException("Meeting not found"));
     }
@@ -46,7 +47,7 @@ public class MeetingService {
     }
 
     @Transactional
-    public Meeting update(Integer meetingId, UpdateMeetingRequest request, Classroom classroom) {
+    public Meeting update(UUID meetingId, UpdateMeetingRequest request, Classroom classroom) {
         Meeting meeting = findById(meetingId);
 
         meeting.setClassroom(classroom);
@@ -57,7 +58,7 @@ public class MeetingService {
     }
 
     @Transactional
-    public void delete(Integer meetingId) {
+    public void delete(UUID meetingId) {
         Meeting meeting = findById(meetingId);
         meetingRepository.delete(meeting);
     }
