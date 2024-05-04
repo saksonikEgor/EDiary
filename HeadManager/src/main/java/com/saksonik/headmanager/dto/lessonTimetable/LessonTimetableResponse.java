@@ -27,7 +27,7 @@ public class LessonTimetableResponse {
         @AllArgsConstructor
         @Getter
         public static class LessonDTO {
-            private UUID lessonNumber;
+            private Integer lessonNumber;
             private String classRoom;
             private String teacherFullName;
             private String subject;

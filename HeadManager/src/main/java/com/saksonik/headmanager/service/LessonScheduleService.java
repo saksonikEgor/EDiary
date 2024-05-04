@@ -50,7 +50,7 @@ public class LessonScheduleService {
                                                         Map<UUID, User> teachers,
                                                         Map<UUID, Subject> subjects,
                                                         Map<UUID, Classroom> classrooms,
-                                                        Map<UUID, ScheduledCall> scheduledCalls) {
+                                                        Map<Integer, ScheduledCall> scheduledCalls) {
         if (!lessonScheduleRepository.findAllByClazzIsAndLessonDateIs(c, request.getDate()).isEmpty()) {
             throw new LessonScheduleIsAlreadyExistException("Lesson schedule already exists: " + request);
         }
@@ -87,7 +87,7 @@ public class LessonScheduleService {
                                                  Map<UUID, User> teachers,
                                                  Map<UUID, Subject> subjects,
                                                  Map<UUID, Classroom> classrooms,
-                                                 Map<UUID, ScheduledCall> scheduledCalls) {
+                                                 Map<Integer, ScheduledCall> scheduledCalls) {
         List<UUID> lessonIds = request.getLessons()
                 .stream()
                 .map(UpdateLessonTimetableRequest.LessonDTO::getLessonId)

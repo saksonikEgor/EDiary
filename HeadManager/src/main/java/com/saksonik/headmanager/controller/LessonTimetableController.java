@@ -128,7 +128,7 @@ public class LessonTimetableController {
         Map<UUID, User> teachers = new HashMap<>();
         Map<UUID, Classroom> classrooms = new HashMap<>();
         Map<UUID, Subject> subjects = new HashMap<>();
-        Map<UUID, ScheduledCall> scheduledCalls = new HashMap<>();
+        Map<Integer, ScheduledCall> scheduledCalls = new HashMap<>();
 
         userService.findAllByIds(lessons
                         .stream()
@@ -179,7 +179,7 @@ public class LessonTimetableController {
         Map<UUID, User> teachers = new HashMap<>();
         Map<UUID, Classroom> classrooms = new HashMap<>();
         Map<UUID, Subject> subjects = new HashMap<>();
-        Map<UUID, ScheduledCall> scheduledCalls = new HashMap<>();
+        Map<Integer, ScheduledCall> scheduledCalls = new HashMap<>();
 
         userService.findAllByIds(lessons
                         .stream()

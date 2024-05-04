@@ -21,6 +21,6 @@ public class UpdateLessonTimetableRequest {
         private UUID classRoomId;
         private UUID teacherId;
         private UUID subjectId;
-        private UUID scheduledCallId;
+        private Integer scheduledCallId;
     }
 }
