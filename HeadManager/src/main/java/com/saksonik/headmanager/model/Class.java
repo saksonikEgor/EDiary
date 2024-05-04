@@ -2,6 +2,7 @@ package com.saksonik.headmanager.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Class {
     @Id
+    @UuidGenerator(style = UuidGenerator.Style.TIME)
     @Column(name = "class_id")
     private UUID classId;
 

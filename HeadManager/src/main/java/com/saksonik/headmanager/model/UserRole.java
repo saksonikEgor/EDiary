@@ -2,6 +2,7 @@ package com.saksonik.headmanager.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserRole {
     @Id
+    @UuidGenerator(style = UuidGenerator.Style.TIME)
     @Column(name = "roles_users_id")
     private UUID rolesUsersId;
 

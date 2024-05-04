@@ -2,6 +2,7 @@ package com.saksonik.headmanager.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDate;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class StudyPeriod {
     @Id
+    @UuidGenerator(style = UuidGenerator.Style.TIME)
     @Column(name = "study_period_id")
     private UUID studyPeriodId;
 
