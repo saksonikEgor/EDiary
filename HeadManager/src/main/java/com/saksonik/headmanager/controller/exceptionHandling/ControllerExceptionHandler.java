@@ -8,12 +8,14 @@ import com.saksonik.headmanager.exception.alreadyExist.MeetingIsAlreadyExistExce
 import com.saksonik.headmanager.exception.alreadyExist.ScheduledCallIsAlreadyExistException;
 import com.saksonik.headmanager.exception.alreadyExist.UserIsAlreadyExistException;
 import com.saksonik.headmanager.exception.notExist.*;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class ControllerExceptionHandler {
     @ExceptionHandler(LessonScheduleIsAlreadyExistException.class)
@@ -111,11 +113,15 @@ public class ControllerExceptionHandler {
             @NotNull HttpStatus status,
             String description
     ) {
-        return ResponseEntity.status(status).body(new APIErrorResponse(
+        APIErrorResponse response = new APIErrorResponse(
                 description,
                 String.valueOf(status.value()),
                 exception.getClass().getSimpleName(),
                 exception.getMessage()
-        ));
+        );
+
+        log.warn(exception.getMessage(), exception);
+
+        return ResponseEntity.status(status).body(response);
     }
 }

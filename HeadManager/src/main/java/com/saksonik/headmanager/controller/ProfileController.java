@@ -1,6 +1,6 @@
 package com.saksonik.headmanager.controller;
 
-import com.saksonik.headmanager.dto.UserDTO;
+import com.saksonik.headmanager.dto.profile.UserDTO;
 import com.saksonik.headmanager.dto.profile.CreateProfileRequest;
 import com.saksonik.headmanager.exception.NoAuthorityException;
 import com.saksonik.headmanager.model.Class;

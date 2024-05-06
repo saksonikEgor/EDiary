@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Расписание родительских собраний</title>
+</head>
+<body>
+<h1 th:text="'Расписание родительских собраний для ' + ${meetingSchedule.getClassName()}"></h1>
+
+<a data-th-href="@{/meeting-schedule/create/{classId}(classId=${meetingSchedule.getClassId()})}">Добавить новое собрание</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>Дата</th>
+        <th>Аудитория</th>
+        <th>Описание</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="meeting : ${meetingSchedule.meetings}">
+        <td th:text="${meeting.date}"></td>
+        <td th:text="${meeting.getClassroom}"></td>
+        <td th:text="${meeting.description}"></td>
+        <td>
+            <a data-th-href="@{/meeting-schedule/update/{classId}/{id}
+            (classId=${meetingSchedule.getClassId()},id=${meeting.getMeetingId()})}">Обновить</a>
+        </td>
+        <td>
+            <form method="post" data-th-action="@{/meeting-schedule/delete/{classId}/{id}
+            (classId=${meetingSchedule.getClassId()},id=${meeting.getMeetingId()})}">
+                <button type="submit">Удалить</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
