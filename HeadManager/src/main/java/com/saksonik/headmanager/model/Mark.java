@@ -6,6 +6,7 @@ import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Objects;
@@ -25,10 +26,10 @@ public class Mark {
     private UUID markId;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt = OffsetDateTime.now(ZoneOffset.UTC);
+    private LocalDateTime createdAt = LocalDateTime.now(ZoneOffset.UTC);
 
     @Column(name = "last_modified_at", nullable = false)
-    private OffsetDateTime lastModifiedAt = OffsetDateTime.now(ZoneOffset.UTC);
+    private LocalDateTime lastModifiedAt = LocalDateTime.now(ZoneOffset.UTC);
 
     @Column(name = "date", nullable = false)
     private LocalDate date;

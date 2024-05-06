@@ -20,9 +20,10 @@
 
 <form method="post" th:action="@{/meeting-schedule/create/{classId}(classId=${meeting.getClassId()})}"
       th:object="${meeting}">
+
     <label>
         Дата:<br>
-        <input type="datetime-local" name="date" data-th-value="${meeting?.dateTime}">
+        <input type="datetime-local" name="dateTime" th:value="${#dates.format(meeting.dateTime, 'yyyy-MM-dd HH:mm')}">
     </label><br>
 
     <label>

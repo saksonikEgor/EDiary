@@ -33,7 +33,6 @@ public class MeetingScheduleController {
     public Mono<String> getCreateMeetingPage(@ModelAttribute("meeting") CreateMeetingRequest meeting,
                                              @PathVariable("classId") UUID classId,
                                              Model model) {
-//        meeting.setClassId(classId);
         model.addAttribute("classId", classId);
         model.addAttribute("meeting", meeting);
 
@@ -50,14 +49,14 @@ public class MeetingScheduleController {
                                              Model model) {
         model.addAttribute("classId", classId);
 
-        headManagerClient.getMeetingById(meetingId)
-                .doOnNext(meeting -> model.addAttribute("meeting", meeting))
-                .block();
-
-        return headManagerClient.getAllClassrooms()
-                .collectList()
-                .doOnNext(classrooms -> model.addAttribute("classrooms", classrooms))
-                .thenReturn("meetings/update");
+        return headManagerClient.getMeetingById(meetingId)
+                .flatMap(meeting -> {
+                    model.addAttribute("meeting", meeting);
+                    return headManagerClient.getAllClassrooms()
+                            .collectList()
+                            .doOnNext(classrooms -> model.addAttribute("classrooms", classrooms))
+                            .thenReturn("meetings/update");
+                });
     }
 
     @PostMapping("/create/{classId}")
@@ -73,7 +72,11 @@ public class MeetingScheduleController {
                     .map(ObjectError::getDefaultMessage)
                     .toList());
             model.addAttribute("meeting", meeting);
-            return Mono.just("meetings/create/%s".formatted(classId));
+
+            return headManagerClient.getAllClassrooms()
+                    .collectList()
+                    .doOnNext(classrooms -> model.addAttribute("classrooms", classrooms))
+                    .thenReturn("meetings/create");
         } else {
             return headManagerClient.createMeeting(meeting)
                     .thenReturn("redirect:/meeting-schedule/list/%s".formatted(classId));
@@ -86,18 +89,25 @@ public class MeetingScheduleController {
                                       @ModelAttribute("payload") @Valid UpdateMeetingRequest payload,
                                       BindingResult bindingResult,
                                       Model model) {
+        log.info("Updating meeting {}", payload);
+
         if (bindingResult.hasErrors()) {
+            model.addAttribute("classId", classId);
+
             model.addAttribute("errors", bindingResult.getAllErrors()
                     .stream()
                     .map(ObjectError::getDefaultMessage)
                     .toList());
             model.addAttribute("payload", payload);
 
-            headManagerClient.getMeetingById(meetingId)
-                    .doOnNext(meeting -> model.addAttribute("meeting", meeting))
-                    .block();
-
-            return Mono.just("meetings/update/%s/%s".formatted(classId, meetingId));
+            return headManagerClient.getMeetingById(meetingId)
+                    .flatMap(meeting -> {
+                        model.addAttribute("meeting", meeting);
+                        return headManagerClient.getAllClassrooms()
+                                .collectList()
+                                .doOnNext(classrooms -> model.addAttribute("classrooms", classrooms))
+                                .thenReturn("meetings/update");
+                    });
         } else {
             return headManagerClient.updateMeeting(meetingId, payload)
                     .thenReturn("redirect:/meeting-schedule/list/%s".formatted(classId));

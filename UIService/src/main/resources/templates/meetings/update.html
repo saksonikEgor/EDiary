@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<a data-th-href="@{/meeting-schedule/list/{classId}(classId=${meeting.getClassId()})}">&larr; К расписанию родительских
+<a data-th-href="@{/meeting-schedule/list/{classId}(classId=${classId})}">&larr; К расписанию родительских
     собраний</a>
 
 <h1>Изменение родительского собрания</h1>
@@ -18,19 +18,19 @@
     </ul>
 </div>
 
-<form method="post" th:action="@{/meeting-schedule/update/{classId}/{id}(classId=${classId},id=${meeting.getMeetingId()})}"
-      th:object="${meeting}">
+<form method="post"
+      th:action="@{/meeting-schedule/update/{classId}/{id}(classId=${classId},id=${meeting.getMeetingId()})}"
+      th:object="${payload}">
     <label>
         Дата:<br>
-        <input type="datetime-local" name="date"
-               data-th-value="${payload != null ? payload.dateTime : meeting.date}">
+        <input type="datetime-local" name="dateTime" th:value="${#dates.format(payload.dateTime, 'yyyy-MM-dd HH:mm')}">
     </label><br>
     <label>
         Аудитория:<br>
         <select name="classroomId" data-th-value="${payload != null ? payload.classroomId : meeting.classroomId}">
             <option th:each="classroom : ${classrooms}"
-                    th:value="${classroom.id}"
-                    th:text="${classroom.name}">
+                    th:value="${classroom.id()}"
+                    th:text="${classroom.name()}">
             </option>
         </select>
     </label><br>

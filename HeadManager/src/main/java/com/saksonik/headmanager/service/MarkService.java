@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -57,8 +58,8 @@ public class MarkService {
                            WorkType workType, StudyPeriod studyPeriod) {
         Mark mark = new Mark();
 
-        mark.setCreatedAt(OffsetDateTime.now());
-        mark.setLastModifiedAt(OffsetDateTime.now());
+        mark.setCreatedAt(LocalDateTime.now());
+        mark.setLastModifiedAt(LocalDateTime.now());
         mark.setDate(request.date());
         mark.setDescription(request.description());
         mark.setStudent(student);

@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.proxy.HibernateProxy;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -23,7 +24,7 @@ public class Meeting {
     private UUID meetingId;
 
     @Column(name = "meeting_date", nullable = false)
-    private OffsetDateTime meetingDateTime;
+    private LocalDateTime meetingDateTime;
 
     @Column(name = "description")
     private String description;

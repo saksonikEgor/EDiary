@@ -3,6 +3,7 @@ package com.saksonik.headmanager.dto.marks;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -22,8 +23,8 @@ public class MarksDTO {
         public static class MarkDTO {
             private String workType;
             private String markType;
-            private OffsetDateTime createdAt;
-            private OffsetDateTime updatedAt;
+            private LocalDateTime createdAt;
+            private LocalDateTime updatedAt;
             private String description;
         }
     }

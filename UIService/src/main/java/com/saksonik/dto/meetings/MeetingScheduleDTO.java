@@ -3,6 +3,7 @@ package com.saksonik.dto.meetings;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +20,7 @@ public class MeetingScheduleDTO {
         private UUID meetingId;
         private UUID classroomId;
         private String classroom;
-        private OffsetDateTime date;
+        private LocalDateTime date;
         private String description;
     }
 }

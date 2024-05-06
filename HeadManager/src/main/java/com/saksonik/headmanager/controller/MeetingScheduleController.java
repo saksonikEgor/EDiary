@@ -86,6 +86,8 @@ public class MeetingScheduleController {
     @PatchMapping("/{id}")
     public ResponseEntity<MeetingResponse> updateMeeting(@PathVariable("id") UUID meetingId,
                                                          @RequestBody UpdateMeetingRequest request) {
+        log.info("Updating meeting {}", request);
+
         Classroom classroom = classroomService.findById(request.classroomId());
 
         Meeting meeting = meetingService.update(meetingId, request, classroom);
