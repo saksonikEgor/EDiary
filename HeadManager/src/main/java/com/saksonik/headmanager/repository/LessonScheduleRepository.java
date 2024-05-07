@@ -12,13 +12,13 @@ import java.util.UUID;
 
 @Repository
 public interface LessonScheduleRepository extends JpaRepository<LessonSchedule, UUID> {
-    List<LessonSchedule> findAllByClazzIsAndLessonDateBeforeAndLessonDateAfter(
+    List<LessonSchedule> findAllByClazzIsAndLessonDateBetween(
             Class clazz,
             LocalDate before,
             LocalDate after
     );
 
-    List<LessonSchedule> findAllByTeacherIsAndLessonDateBeforeAndLessonDateAfter(
+    List<LessonSchedule> findAllByTeacherIsAndLessonDateBetween(
             User teacher,
             LocalDate before,
             LocalDate after

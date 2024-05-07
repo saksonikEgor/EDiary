@@ -21,7 +21,6 @@ public class CallScheduleController {
     public Mono<String> getCallSchedule(Model model) {
         return headManagerClient.getCallSchedule()
                 .collectMap(ScheduledCallDTO::callNumber, call -> call)
-//                .collectSortedList(Comparator.comparingInt(ScheduledCallDTO::callNumber))
                 .doOnNext(callSchedule -> model.addAttribute("callSchedule", callSchedule))
                 .thenReturn("callSchedule/call-schedule");
     }

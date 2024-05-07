@@ -25,22 +25,22 @@ public class LessonScheduleService {
         return lessonScheduleRepository.findAll();
     }
 
-    public List<LessonSchedule> findAllByClazzIsAndLessonDateBeforeAndAndLessonDateTimeAfter(
+    public List<LessonSchedule> findAllByClazzIsAndLessonDateBetween(
             Class c,
             LocalDate firstDayOfWeek,
             LocalDate lastDayOfWeek
     ) {
-        return lessonScheduleRepository.findAllByClazzIsAndLessonDateBeforeAndLessonDateAfter(
+        return lessonScheduleRepository.findAllByClazzIsAndLessonDateBetween(
                 c, firstDayOfWeek, lastDayOfWeek
         );
     }
 
-    public List<LessonSchedule> findAllByTeacherIsAndLessonDateBeforeAndLessonDateTimeAfter(
+    public List<LessonSchedule> findAllByTeacherIsAndLessonDateBetween(
             User teacher,
             LocalDate before,
             LocalDate after
     ) {
-        return lessonScheduleRepository.findAllByTeacherIsAndLessonDateBeforeAndLessonDateAfter(
+        return lessonScheduleRepository.findAllByTeacherIsAndLessonDateBetween(
                 teacher, before, after
         );
     }

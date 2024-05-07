@@ -1,6 +1,8 @@
-package com.saksonik.headmanager.dto.lessonTimetable;
+package com.saksonik.dto.lessonTimetable;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -8,20 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class LessonTimetableResponse {
+public class LessonTimetableDTO {
     private LocalDate date;
-    private List<LessonDTO> lessons = new ArrayList<>();
-
-    public void addLesson(LessonDTO lesson) {
-        lessons.add(lesson);
-    }
+    private List<LessonDTO> lessons;
 
     @AllArgsConstructor
     @Getter
-    @ToString
     public static class LessonDTO {
         private Integer lessonNumber;
         private String classRoom;

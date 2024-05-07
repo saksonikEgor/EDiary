@@ -30,7 +30,7 @@ public class User {
     private String patronymic;
 
     @Transient
-    private String fullName = surname + " " + name + " " + patronymic;
+    private String fullName;
 
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
@@ -86,6 +86,10 @@ public class User {
     @OneToMany(mappedBy = "teacher")
     @ToString.Exclude
     private List<Mark> marksOfTeacher;
+
+    public void buildFullName() {
+        fullName = name + " " + surname + " " + patronymic;
+    }
 
     @Override
     public final boolean equals(Object o) {

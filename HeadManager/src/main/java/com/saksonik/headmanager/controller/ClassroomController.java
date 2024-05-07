@@ -1,8 +1,9 @@
 package com.saksonik.headmanager.controller;
 
-import com.saksonik.headmanager.dto.classroom.ClassroomResponse;
+import com.saksonik.headmanager.dto.classroom.ClassroomDTO;
 import com.saksonik.headmanager.service.ClassroomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,10 +19,10 @@ public class ClassroomController {
     private final ClassroomService classroomService;
 
     @GetMapping
-    public List<ClassroomResponse> getAllClassrooms() {
-        return classroomService.findAll()
+    public ResponseEntity<List<ClassroomDTO>> getAllClassrooms() {
+        return ResponseEntity.ok(classroomService.findAll()
                 .stream()
-                .map(c -> new ClassroomResponse(c.getClassroomId(), c.getName()))
-                .toList();
+                .map(c -> new ClassroomDTO(c.getClassroomId(), c.getName()))
+                .toList());
     }
 }
