@@ -7,12 +7,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-public class UserDTO {
+public class ProfileDTO {
     private String role;
     private UUID userId;
     private String fullName;
-//    private String email;
-//    private String phone;
     private List<ChildDTO> children;
     private List<String> parents;
     private String classForStudent;

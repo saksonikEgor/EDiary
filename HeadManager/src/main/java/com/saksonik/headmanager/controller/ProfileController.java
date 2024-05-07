@@ -1,7 +1,7 @@
 package com.saksonik.headmanager.controller;
 
-import com.saksonik.headmanager.dto.profile.UserDTO;
 import com.saksonik.headmanager.dto.profile.CreateProfileRequest;
+import com.saksonik.headmanager.dto.profile.ProfileDTO;
 import com.saksonik.headmanager.exception.NoAuthorityException;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.Subject;
@@ -9,7 +9,6 @@ import com.saksonik.headmanager.model.User;
 import com.saksonik.headmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -21,26 +20,12 @@ import java.util.UUID;
 public class ProfileController {
     private final UserService userService;
 
-    //TODO  передавать в хедере токен
-    //TODO  обработать исключение userIsNotFound
-    //TODO  добавить логику для админа
-    //TODO  добавить post запрос на изменение данных в профиле
-    @GetMapping
-    public ResponseEntity<UserDTO> getProfile(
-            @RequestHeader("User-Id") UUID userId,
-            @RequestHeader("Role") String role
-    ) {
-//        String role = SecurityContextHolder.getContext()
-//                .getAuthentication()
-//                .getAuthorities()
-//                .stream()
-//                .findAny()
-//                .get()
-//                .getAuthority();
-
+    @GetMapping("/{userId}")
+    public ResponseEntity<ProfileDTO> getProfile(@PathVariable("userId") UUID userId,
+                                                 @RequestHeader("role") String role) {
         User user = userService.findUserById(userId);
 
-        UserDTO userDTO = new UserDTO();
+        ProfileDTO userDTO = new ProfileDTO();
         userDTO.setFullName(user.getFullName());
         userDTO.setUserId(userId);
         userDTO.setRole(role);
@@ -55,7 +40,7 @@ public class ProfileController {
                         .getClazz().getName());
             }
             case "ROLE_PARENT" -> userDTO.setChildren(user.getChildren().stream()
-                    .map(u -> new UserDTO.ChildDTO(
+                    .map(u -> new ProfileDTO.ChildDTO(
                             u.getFullName(),
                             u.getStudentDistribution().getClazz().getName()))
                     .toList()
@@ -69,23 +54,18 @@ public class ProfileController {
                         .map(Subject::getName)
                         .toList());
             }
-            case "ROLE_CLASSROOM-TEACHER" -> userDTO.setClassesForClassroomTeacher(user.getClassesForClassroomTeacher().stream()
-                    .map(Class::getName)
-                    .toList());
+            case "ROLE_CLASSROOM-TEACHER" ->
+                    userDTO.setClassesForClassroomTeacher(user.getClassesForClassroomTeacher().stream()
+                            .map(Class::getName)
+                            .toList());
             case null, default -> throw new NoAuthorityException("Not allowed to access this meeting");
-//            case "ROLE_ADMIN" -> {
-//            }
         }
 
         return ResponseEntity.ok(userDTO);
     }
 
     @PostMapping
-    public ResponseEntity<Void> createProfile(
-            @RequestHeader("User-Id") UUID userId,
-            @RequestHeader("Role") String role,
-            @RequestBody CreateProfileRequest createProfileRequest
-    ) {
+    public ResponseEntity<Void> createProfile(@RequestBody CreateProfileRequest createProfileRequest) {
         userService.save(createProfileRequest);
         return ResponseEntity.ok().build();
     }
