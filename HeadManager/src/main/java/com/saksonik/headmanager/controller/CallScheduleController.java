@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @CrossOrigin
@@ -32,13 +31,7 @@ public class CallScheduleController {
     }
 
     @PostMapping
-    public ResponseEntity<ScheduledCallDTO> createCallSchedule(
-            @RequestBody ScheduledCallDTO callScheduleDTO
-//            @RequestParam String role
-    ) {
-//        if (!role.equals("ROLE_ADMIN")) {
-//            throw new NoAuthorityException("Not allowed to create call schedule");
-//        }
+    public ResponseEntity<ScheduledCallDTO> createCallSchedule(@RequestBody ScheduledCallDTO callScheduleDTO) {
 
         ScheduledCall scheduledCall = scheduledCallService.create(callScheduleDTO);
 
@@ -65,5 +58,4 @@ public class CallScheduleController {
         scheduledCallService.delete(callNumber);
         return ResponseEntity.noContent().build();
     }
-
 }

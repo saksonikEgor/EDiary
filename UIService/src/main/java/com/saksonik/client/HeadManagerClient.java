@@ -1,6 +1,7 @@
 package com.saksonik.client;
 
 import com.saksonik.dto.Classroom;
+import com.saksonik.dto.callSchedule.ScheduledCallDTO;
 import com.saksonik.dto.meetings.CreateMeetingRequest;
 import com.saksonik.dto.meetings.MeetingScheduleDTO;
 import com.saksonik.dto.meetings.UpdateMeetingRequest;
@@ -65,6 +66,13 @@ public class HeadManagerClient {
                         .build(meetingId))
                 .retrieve()
                 .bodyToMono(Void.class);
+    }
+
+    public Flux<ScheduledCallDTO> getCallSchedule() {
+        return webClient.get()
+                .uri("/call-schedule")
+                .retrieve()
+                .bodyToFlux(ScheduledCallDTO.class);
     }
 
 
