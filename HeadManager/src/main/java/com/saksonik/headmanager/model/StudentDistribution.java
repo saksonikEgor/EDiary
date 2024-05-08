@@ -21,7 +21,11 @@ public class StudentDistribution {
     @Column(name = "student_distribution_id")
     private UUID studentDistributionId;
 
-    @OneToOne(mappedBy = "studentDistribution")
+//    @OneToOne(mappedBy = "studentDistribution")
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "student_id")
+    @ToString.Exclude
     private User student;
 
     @ManyToOne

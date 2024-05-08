@@ -1,11 +1,10 @@
-package com.saksonik.headmanager.dto.marks;
+package com.saksonik.dto.marks;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 

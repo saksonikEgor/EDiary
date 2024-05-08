@@ -34,4 +34,12 @@ public interface MarkRepository extends JpaRepository<Mark, UUID> {
             @Param("classId") UUID classId,
             @Param("studyPeriod") StudyPeriod studyPeriod
     );
+
+    @Query("select m from Mark m join m.student.studentDistribution.clazz c " +
+            "where c.classId = :classId and m.studyPeriod = :studyPeriod and m.subject = :subject")
+    List<Mark> findAllByClassIdAndSubjectAndStudyPeriod(
+            @Param("classId") UUID classId,
+            @Param("subject") Subject subject,
+            @Param("studyPeriod") StudyPeriod studyPeriod
+    );
 }

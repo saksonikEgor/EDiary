@@ -44,14 +44,18 @@ public class MarkService {
         );
     }
 
-    public List<Mark> findAllForTeacherAndClass(User teacher, Class clazz, Subject subject, StudyPeriod studyPeriod) {
-        return markRepository.findAllByTeacherAndClassIdAndSubjectAndStudyPeriod(
-                teacher,
-                clazz.getClassId(),
-                subject,
-                studyPeriod
-        );
+    public List<Mark> findAllByClassIdAndSubjectAndStudyPeriod(UUID classId, Subject subject, StudyPeriod studyPeriod) {
+        return markRepository.findAllByClassIdAndSubjectAndStudyPeriod(classId, subject, studyPeriod);
     }
+
+//    public List<Mark> findAllForTeacherAndClass(User teacher, Class clazz, Subject subject, StudyPeriod studyPeriod) {
+//        return markRepository.findAllByTeacherAndClassIdAndSubjectAndStudyPeriod(
+//                teacher,
+//                clazz.getClassId(),
+//                subject,
+//                studyPeriod
+//        );
+//    }
 
     @Transactional
     public Mark createMark(CreateMarkRequest request, User student, User teacher, Subject subject, MarkType markType,
@@ -89,24 +93,20 @@ public class MarkService {
     }
 
     public Float calculateAvg(List<Mark> marks) {
-        Set<WorkType> workTypes = new HashSet<>();
-        float workTypeWeightSum = 0;
         float sum = 0;
+        float denominator = 0;
 
         for (Mark mark : marks) {
             MarkType markType = mark.getMarkType();
-            if (markType.getWeight() == null) {
+            if (markType == null) {
                 continue;
             }
 
             WorkType workType = mark.getWorkType();
-            if (workTypes.add(workType)) {
-                workTypeWeightSum += workType.getWeight();
-            }
-
-            sum += (markType.getWeight() * workType.getWeight());
+            sum += markType.getWeight() * workType.getWeight();
+            denominator += workType.getWeight();
         }
 
-        return sum / workTypeWeightSum;
+        return sum / denominator;
     }
 }

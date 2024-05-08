@@ -4,9 +4,11 @@ import com.saksonik.dto.Classroom;
 import com.saksonik.dto.callSchedule.ScheduledCallDTO;
 import com.saksonik.dto.classes.ClassDTO;
 import com.saksonik.dto.lessonTimetable.LessonTimetableDTO;
+import com.saksonik.dto.marks.MarksDTO;
 import com.saksonik.dto.meetings.CreateMeetingRequest;
 import com.saksonik.dto.meetings.MeetingScheduleDTO;
 import com.saksonik.dto.meetings.UpdateMeetingRequest;
+import com.saksonik.dto.subject.SubjectDTO;
 import com.saksonik.dto.user.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -121,6 +123,62 @@ public class HeadManagerClient {
                         .build(classId))
                 .retrieve()
                 .bodyToMono(ClassDTO.class);
+    }
+
+    public Mono<MarksDTO> getMarksForStudentAndPeriod(UUID studentId, UUID studyPeriodId) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/marks/for-student/{studentId}")
+                        .queryParam("period", studyPeriodId)
+                        .build(studentId))
+                .retrieve()
+                .bodyToMono(MarksDTO.class);
+    }
+
+    public Mono<MarksDTO> getMarksForClassAndSubjectAndStudyPeriod(UUID classId, UUID subjectId, UUID studyPeriodId) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/marks/for-class/{classId}/{subjectId}")
+                        .queryParam("period", studyPeriodId)
+                        .build(classId, subjectId))
+                .retrieve()
+                .bodyToMono(MarksDTO.class);
+    }
+
+    public Flux<SubjectDTO> findAllSubjectsByClassContains(UUID classId) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/subject/for-class/{classId}")
+                        .build(classId))
+                .retrieve()
+                .bodyToFlux(SubjectDTO.class);
+    }
+
+    public Flux<SubjectDTO> findAllSubjectsByStudentId(UUID studentId) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/subject/for-student/{studentId}")
+                        .build(studentId))
+                .retrieve()
+                .bodyToFlux(SubjectDTO.class);
+    }
+
+    public Flux<UserDTO> findAllStudentsByClass(UUID classId) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/user/students/{classId}")
+                        .build(classId))
+                .retrieve()
+                .bodyToFlux(UserDTO.class);
+    }
+
+    public Mono<SubjectDTO> findSubjectById(UUID subjectId) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/subject/{subjectId}")
+                        .build(subjectId))
+                .retrieve()
+                .bodyToMono(SubjectDTO.class);
     }
 
 

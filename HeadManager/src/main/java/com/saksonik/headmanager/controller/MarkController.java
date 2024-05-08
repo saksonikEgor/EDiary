@@ -4,16 +4,17 @@ import com.saksonik.headmanager.dto.marks.CreateMarkRequest;
 import com.saksonik.headmanager.dto.marks.MarkResponse;
 import com.saksonik.headmanager.dto.marks.MarksDTO;
 import com.saksonik.headmanager.dto.marks.UpdateMarkRequest;
-import com.saksonik.headmanager.model.*;
 import com.saksonik.headmanager.model.Class;
+import com.saksonik.headmanager.model.*;
 import com.saksonik.headmanager.service.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@Slf4j
 @RestController
 @CrossOrigin
 @RequestMapping("/marks")
@@ -27,107 +28,74 @@ public class MarkController {
     private final WorkTypeService workTypeService;
     private final MarkTypeService markTypeService;
 
-    //TODO  добавить post запрос для добавления оценок (для учителя)
-    //TODO  проверить имеет юзер права
-    //TODO  добавить обработку исключения studyPeriodNotFound
-    //TODO  добавить обработку исключения studentNotFound
-    //TODO  добавить обработку исключения classNotFound
-    @GetMapping
+    @GetMapping("/for-student/{studentId}")
     public ResponseEntity<MarksDTO> getMarksByStudent(
-            @RequestHeader("User-Id") UUID userId,
-            @RequestHeader("Role") String role,
-            @RequestParam(name = "period", required = false) String studyPeriodName
-    ) {
-//        String role = SecurityContextHolder.getContext()
-//                .getAuthentication()
-//                .getAuthorities()
-//                .stream()
-//                .findAny()
-//                .get()
-//                .getAuthority();
-
-        StudyPeriod studyPeriod = studyPeriodName == null
+            @PathVariable("studentId") UUID studentId,
+            @RequestParam(name = "period", required = false) UUID studyPeriodId) {
+        StudyPeriod studyPeriod = studyPeriodId == null
                 ? studyPeriodService.findCurrentStudyPeriod()
-                : studyPeriodService.findStudyPeriodByName(studyPeriodName);
+                : studyPeriodService.findById(studyPeriodId);
 
         MarksDTO marksDTO = new MarksDTO();
-        marksDTO.setRole(role);
-
-        User student = userService.findUserById(userId);
-        List<Mark> marks = markService.findAllByStudentAndStudyPeriod(student, studyPeriod);
-        marksDTO.setSubjects(buildSubjectDTOs(marks));
-
-        return ResponseEntity.ok(marksDTO);
-    }
-
-    @GetMapping("/for-student/{id}")
-    public ResponseEntity<MarksDTO> getMarksByStudentForParent(
-            @RequestHeader("User-Id") UUID userId,
-            @RequestHeader("Role") String role,
-            @PathVariable("id") UUID studentId,
-            @RequestParam(name = "period", required = false) String studyPeriodName
-    ) {
-//        String role = SecurityContextHolder.getContext()
-//                .getAuthentication()
-//                .getAuthorities()
-//                .stream()
-//                .findAny()
-//                .get()
-//                .getAuthority();
-
-        StudyPeriod studyPeriod = studyPeriodName == null
-                ? studyPeriodService.findCurrentStudyPeriod()
-                : studyPeriodService.findStudyPeriodByName(studyPeriodName);
-
-        MarksDTO marksDTO = new MarksDTO();
-        marksDTO.setRole(role);
 
         User student = userService.findUserById(studentId);
         List<Mark> marks = markService.findAllByStudentAndStudyPeriod(student, studyPeriod);
         marksDTO.setSubjects(buildSubjectDTOs(marks));
+        marksDTO.setStudyPeriodName(studyPeriod.getName());
+        marksDTO.setStartPeriod(studyPeriod.getStart());
+        marksDTO.setEndPeriod(studyPeriod.getEnd());
 
+        log.info("Getting marks {} for studentId {}", marks, studentId);
         return ResponseEntity.ok(marksDTO);
     }
 
-    //TODO  переместить это в getMarksByStudent и там проверять роль
-    @GetMapping("/for-class/{id}")
-    public ResponseEntity<MarksDTO> getMarksByClassForTeacher(
-            @RequestHeader("User-Id") UUID userId,
-            @RequestHeader("Role") String role,
-            @PathVariable("id") UUID classId,
-            @RequestParam(name = "period", required = false) String studyPeriodName
-    ) {
-//        String role = SecurityContextHolder.getContext()
-//                .getAuthentication()
-//                .getAuthorities()
-//                .stream()
-//                .findAny()
-//                .get()
-//                .getAuthority();
+//    @GetMapping("/for-student/{id}")
+//    public ResponseEntity<MarksDTO> getMarksByStudentForParent(
+//            @RequestHeader("User-Id") UUID userId,
+//            @RequestHeader("Role") String role,
+//            @PathVariable("id") UUID studentId,
+//            @RequestParam(name = "period", required = false) UUID studyPeriodId) {
+//        StudyPeriod studyPeriod = studyPeriodId == null
+//                ? studyPeriodService.findCurrentStudyPeriod()
+//                : studyPeriodService.findById(studyPeriodId);
+//
+//        MarksDTO marksDTO = new MarksDTO();
+//        marksDTO.setRole(role);
+//
+//        User student = userService.findUserById(studentId);
+//        List<Mark> marks = markService.findAllByStudentAndStudyPeriod(student, studyPeriod);
+//        marksDTO.setSubjects(buildSubjectDTOs(marks));
+//
+//        return ResponseEntity.ok(marksDTO);
+//    }
 
-        StudyPeriod studyPeriod = studyPeriodName == null
+    @GetMapping("/for-class/{classId}/{subjectId}")
+    public ResponseEntity<MarksDTO> getMarksForClassAndSubject(
+            @PathVariable("classId") UUID classId,
+            @PathVariable("subjectId") UUID subjectId,
+            @RequestParam(name = "period", required = false) UUID studyPeriodId) {
+        StudyPeriod studyPeriod = studyPeriodId == null
                 ? studyPeriodService.findCurrentStudyPeriod()
-                : studyPeriodService.findStudyPeriodByName(studyPeriodName);
+                : studyPeriodService.findById(studyPeriodId);
 
-        User teacher = userService.findUserById(userId);
         Class c = classService.findById(classId);
-        Subject subject = teacher.getSubjects().stream().findAny().get(); //TODO  заглушка!!!!! (продполагаем что препод ведет только 1 предмет у этого класса)
+        Subject subject = subjectService.findById(subjectId);
 
         MarksDTO marksDTO = new MarksDTO();
-        marksDTO.setRole(role);
-
-        List<Mark> marks = markService.findAllForTeacherAndClass(teacher, c, subject, studyPeriod);
+        List<Mark> marks = markService.findAllByClassIdAndSubjectAndStudyPeriod(classId, subject, studyPeriod);
         marksDTO.setSubjects(buildSubjectDTOs(marks));
+        marksDTO.setStudyPeriodName(studyPeriod.getName());
+        marksDTO.setStartPeriod(studyPeriod.getStart());
+        marksDTO.setEndPeriod(studyPeriod.getEnd());
 
+        log.info("Building marks {} for classId {} and subjectId {}", marksDTO, c, subjectId);
         return ResponseEntity.ok(marksDTO);
     }
 
 
-    //TODO  проверить роль
     @PostMapping
-    public ResponseEntity<MarkResponse> createMark(
-            @RequestHeader("User-Id") UUID userId,
-            @RequestBody CreateMarkRequest request) {
+    public ResponseEntity<MarkResponse> createMark(@RequestHeader("User-Id") UUID userId,
+                                                   @RequestBody CreateMarkRequest request) {
         User teacher = userService.findUserById(userId);
         User student = userService.findUserById(request.studentId());
         Subject subject = subjectService.findById(request.subjectId());
@@ -152,12 +120,9 @@ public class MarkController {
         ));
     }
 
-    //TODO  проверить роль и что данный учитель редактикует свою же оценку
     @PatchMapping("/{id}")
-    public ResponseEntity<MarkResponse> updateMark(
-            @RequestHeader("User-Id") UUID userId,
-            @PathVariable("id") UUID markId,
-            @RequestBody UpdateMarkRequest request) {
+    public ResponseEntity<MarkResponse> updateMark(@PathVariable("id") UUID markId,
+                                                   @RequestBody UpdateMarkRequest request) {
         WorkType workType = workTypeService.findById(request.workTypeId());
         MarkType markType = markTypeService.findById(request.markTypeId());
 
@@ -178,12 +143,8 @@ public class MarkController {
         ));
     }
 
-    //TODO  проверить роль и что данный учитель удаляет свою же оценку
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMark(
-            @RequestHeader("User-Id") UUID userId,
-            @PathVariable("id") UUID markId
-    ) {
+    public ResponseEntity<Void> deleteMark(@PathVariable("id") UUID markId) {
         markService.deleteMarkById(markId);
         return ResponseEntity.ok().build();
     }
@@ -204,13 +165,18 @@ public class MarkController {
                 .map(e -> {
                     MarksDTO.SubjectDTO subjectDTO = new MarksDTO.SubjectDTO();
 
+                    subjectDTO.setId(e.getKey().getSubjectId());
                     subjectDTO.setSubjectName(e.getKey().getName());
                     subjectDTO.setMarks(e.getValue().stream()
                             .map(mark -> new MarksDTO.SubjectDTO.MarkDTO(
+                                    mark.getMarkId(),
+                                    mark.getStudent().getUserId(),
+                                    mark.getTeacher().getUserId(),
                                     mark.getWorkType().getName(),
                                     mark.getMarkType().getType(),
                                     mark.getCreatedAt(),
                                     mark.getLastModifiedAt(),
+                                    mark.getDate(),
                                     mark.getDescription()))
                             .toList());
                     subjectDTO.setAvg(markService.calculateAvg(e.getValue()));

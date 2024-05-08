@@ -3,6 +3,8 @@ package com.saksonik.headmanager.service;
 import com.saksonik.headmanager.dto.profile.CreateProfileRequest;
 import com.saksonik.headmanager.exception.alreadyExist.UserIsAlreadyExistException;
 import com.saksonik.headmanager.exception.notExist.UserNotExistException;
+import com.saksonik.headmanager.model.Class;
+import com.saksonik.headmanager.model.StudentDistribution;
 import com.saksonik.headmanager.model.User;
 import com.saksonik.headmanager.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,13 @@ public class UserService {
 
     public List<User> findAllByIds(List<UUID> userIds) {
         return userRepository.findAllById(userIds);
+    }
+
+    public List<User> findAllStudentsByClass(Class c) {
+        return c.getStudentDistributions()
+                .stream()
+                .map(StudentDistribution::getStudent)
+                .toList();
     }
 
     @Transactional

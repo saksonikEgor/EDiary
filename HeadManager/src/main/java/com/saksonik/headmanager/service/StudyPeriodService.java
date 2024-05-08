@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +19,11 @@ public class StudyPeriodService {
 
     public List<StudyPeriod> findAll() {
         return studyPeriodRepository.findAll();
+    }
+
+    public StudyPeriod findById(UUID id) {
+        return studyPeriodRepository.findById(id)
+                .orElseThrow(() -> new StudyPeriodNotExistException("Study period not found with id: " + id));
     }
 
     public StudyPeriod findCurrentStudyPeriod() {

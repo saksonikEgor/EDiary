@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
+import static com.saksonik.util.DateUtil.buildPeriod;
+
 @Slf4j
 @Controller
 @RequestMapping("/lesson-timetable")
@@ -112,17 +114,5 @@ public class LessonTimetableController {
                             .doOnNext(teacher -> model.addAttribute("teacher", teacher))
                             .thenReturn("lessonTimetable/lesson-timetable");
                 });
-    }
-
-    private List<LocalDate> buildPeriod(LocalDate start, LocalDate end) {
-        List<LocalDate> period = new ArrayList<>();
-        LocalDate currentDate = start;
-
-        while (!currentDate.isAfter(end)) {
-            period.add(currentDate);
-            currentDate = currentDate.plusDays(1);
-        }
-
-        return period;
     }
 }

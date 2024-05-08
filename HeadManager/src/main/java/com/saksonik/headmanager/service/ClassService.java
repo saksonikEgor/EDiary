@@ -1,6 +1,7 @@
 package com.saksonik.headmanager.service;
 
 import com.saksonik.headmanager.model.Class;
+import com.saksonik.headmanager.model.User;
 import com.saksonik.headmanager.repository.ClassRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,5 +23,9 @@ public class ClassService {
     public Class findById(UUID id) {
         return classRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+    }
+
+    public Class findByStudent(User student) {
+        return student.getStudentDistribution().getClazz();
     }
 }
