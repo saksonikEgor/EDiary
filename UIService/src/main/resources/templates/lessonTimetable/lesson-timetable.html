@@ -10,10 +10,10 @@
 <section layout:fragment="content">
     <h1 th:text="'Расписание для ' + ${forTeacher ? 'учителя ' + teacher.fullName() : 'класса ' + class.name()}"></h1>
 
-    <table>
+    <table class="table table-stripped">
         <thead>
         <tr>
-            <th th:each="date : ${period}" th:text="${date}"></th>
+            <th th:each="date : ${period}" th:text="${#temporals.format(date, 'dd-MMM') + ' ' + #temporals.dayOfWeekName(date)}"></th>
         </tr>
         </thead>
         <tbody>
@@ -29,8 +29,7 @@
                     <p th:if="${!forTeacher}"
                        th:text="'Преподаватель: ' + ${lessonTimetable.get(date).get(i).teacherFullName}"></p>
                     <p th:text="'Аудитория: ' + ${lessonTimetable.get(date).get(i).classRoom}"></p>
-                    <p th:text="'Начало: ' + ${lessonTimetable.get(date).get(i).startTime}"></p>
-                    <p th:text="'Конец: ' + ${lessonTimetable.get(date).get(i).endTime}"></p>
+                    <p th:text="'Время: ' + ${lessonTimetable.get(date).get(i).startTime + '-' + lessonTimetable.get(date).get(i).endTime}"></p>
                 </div>
 
             </td>

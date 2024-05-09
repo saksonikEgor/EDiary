@@ -10,11 +10,11 @@
 <section layout:fragment="content">
     <h1 th:text="'Оценки для класса ' + ${class.name()} + ' по предмету ' + ${subject.name()}"></h1>
 
-    <table>
+    <table class="table table-stripped">
         <thead>
         <tr>
             <th>Ученик</th>
-            <th th:each="date : ${period}" th:text="${date}"></th>
+            <th th:each="date : ${period}" th:text="${#temporals.format(date, 'dd-MMM')}"></th>
         </tr>
         </thead>
         <tbody>

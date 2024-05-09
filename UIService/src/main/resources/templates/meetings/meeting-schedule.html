@@ -13,7 +13,7 @@
     <a data-th-href="@{/meeting-schedule/create/{classId}(classId=${meetingSchedule.getClassId()})}">Добавить новое
         собрание</a>
 
-    <table>
+    <table class="table table-stripped">
         <thead>
         <tr>
             <th>Дата</th>
@@ -25,7 +25,7 @@
         </thead>
         <tbody>
         <tr th:each="meeting : ${meetingSchedule.meetings}">
-            <td th:text="${meeting.date}"></td>
+            <td th:text="${#temporals.format(meeting.date, 'dd-MMM-yyyy HH:mm') + ', ' + #temporals.dayOfWeekName(meeting.date)}"></td>
             <td th:text="${meeting.getClassroom}"></td>
             <td th:text="${meeting.description}"></td>
             <td>
