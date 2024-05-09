@@ -13,18 +13,11 @@
 
     <h1>Изменение родительского собрания</h1>
 
-    <div data-th-if="${errors}">
-        <h2>Допущены ошибки</h2>
-        <ul>
-            <li data-th-each="error: ${errors}" data-th-text="${error}"></li>
-        </ul>
-    </div>
-
     <form method="post"
           th:action="@{/meeting-schedule/update/{classId}/{id}(classId=${classId},id=${meeting.getMeetingId()})}"
           th:object="${payload}">
         <div class="form-group">
-            <label for="inputDate">Дата:</label>
+            <label for="inputDate">Дата</label>
             <input id="inputDate" type="datetime-local" class="form-control" name="dateTime"
                    th:value="${#temporals.format(payload.dateTime, 'yyyy-MM-dd HH:mm')}">
         </div>
@@ -45,6 +38,12 @@
             <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"
                       name="description"
                       data-th-text="${payload != null ? payload.description : meeting.description}"></textarea>
+        </div>
+
+        <div data-th-if="${errors}">
+            <ul>
+                <li class="error" data-th-each="error: ${errors}" data-th-text="${error}"></li>
+            </ul>
         </div>
 
         <button type="submit" class="btn btn-outline-primary">Обновить</button>

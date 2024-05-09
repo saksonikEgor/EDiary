@@ -14,17 +14,10 @@
 
     <h1>Новое родительское собрание</h1>
 
-    <div data-th-if="${errors}">
-        <h2>Допущены ошибки</h2>
-        <ul>
-            <li data-th-each="error: ${errors}" data-th-text="${error}"></li>
-        </ul>
-    </div>
-
-    <form method="post" th:action="@{/meeting-schedule/create/{classId}(classId=${meeting.getClassId()})}"
+    <form class="needs-validation" method="post" th:action="@{/meeting-schedule/create/{classId}(classId=${meeting.getClassId()})}"
           th:object="${meeting}">
         <div class="form-group">
-            <label for="inputDate">Дата:</label>
+            <label for="inputDate">Дата</label>
             <input id="inputDate" type="datetime-local" class="form-control" name="dateTime"
                    th:value="${#temporals.format(meeting.dateTime, 'yyyy-MM-dd HH:mm')}">
         </div>
@@ -45,6 +38,12 @@
             <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"
                       name="description"
                       data-th-text="${meeting?.description}"></textarea>
+        </div>
+
+        <div data-th-if="${errors}">
+            <ul>
+                <li class="error" data-th-each="error: ${errors}" data-th-text="${error}"></li>
+            </ul>
         </div>
 
         <button type="submit" class="btn btn-outline-primary">Создать</button>
