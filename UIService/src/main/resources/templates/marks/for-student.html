@@ -1,48 +1,39 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/fragments/layuots/base-layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>Расписание уроков</title>
-    <style>
-        ul.hr {
-            margin: 0; /* Обнуляем значение отступов */
-            padding: 4px; /* Значение полей */
-        }
-        ul.hr li {
-            display: inline; /* Отображать как строчный элемент */
-            margin-right: 5px; /* Отступ слева */
-            border: 1px solid #000; /* Рамка вокруг текста */
-            padding: 3px; /* Поля вокруг текста */
-        }
-    </style>
+    <title>Оценки ученика</title>
 </head>
 <body>
-<h1 th:text="'Оценки ученика ' + ${student.fullName()}"></h1>
+<section layout:fragment="content">
+    <h1 th:text="'Оценки ученика ' + ${student.fullName()}"></h1>
 
+    <table>
+        <thead>
+        <tr>
+            <th>Предмет</th>
+            <th>Оценки</th>
+            <th>Средний балл</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="subject : ${subjects}">
+            <td th:text="${subject.name()}"></td>
 
-<table>
-    <thead>
-    <tr>
-        <th>Предмет</th>
-        <th>Оценки</th>
-        <th>Средний балл</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="subject : ${subjects}">
-        <td th:text="${subject.name()}"></td>
+            <td th:if="${subjectIdToMarks.get(subject.id()) == null}">Нет выставленных оценок</td>
+            <td th:unless="${subjectIdToMarks.get(subject.id()) == null}">
+                <ul class="hr">
+                    <li th:each="mark : ${subjectIdToMarks.get(subject.id()).getMarks()}"
+                        th:text="${mark.markType}"></li>
+                </ul>
+            </td>
 
-        <td th:if="${subjectIdToMarks.get(subject.id()) == null}">Нет выставленных оценок</td>
-        <td th:unless="${subjectIdToMarks.get(subject.id()) == null}">
-            <ul class="hr">
-                <li th:each="mark : ${subjectIdToMarks.get(subject.id()).getMarks()}" th:text="${mark.markType}"></li>
-            </ul>
-        </td>
-
-        <td th:text="${subjectIdToMarks.get(subject.id()) == null ? '-' : subjectIdToMarks.get(subject.id()).getAvg()}"></td>
-    </tr>
-    </tbody>
-</table>
-
+            <td th:text="${subjectIdToMarks.get(subject.id()) == null ? '-' : subjectIdToMarks.get(subject.id()).getAvg()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</section>
 </body>
 </html>

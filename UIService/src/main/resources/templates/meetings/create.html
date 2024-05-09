@@ -1,48 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/fragments/layuots/base-layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>Форма добавления нового родительского собрания</title>
+    <title>Создание родительского собрания</title>
 </head>
 <body>
+<section layout:fragment="content">
+    <a data-th-href="@{/meeting-schedule/list/{classId}(classId=${meeting.getClassId()})}">&larr; К расписанию
+        родительских
+        собраний</a>
 
-<a data-th-href="@{/meeting-schedule/list/{classId}(classId=${meeting.getClassId()})}">&larr; К расписанию родительских
-    собраний</a>
+    <h1>Новое родительское собрание</h1>
 
-<h1>Новое родительское собрание</h1>
+    <div data-th-if="${errors}">
+        <h2>Допущены ошибки</h2>
+        <ul>
+            <li data-th-each="error: ${errors}" data-th-text="${error}"></li>
+        </ul>
+    </div>
 
-<div data-th-if="${errors}">
-    <h2>Допущены ошибки</h2>
-    <ul>
-        <li data-th-each="error: ${errors}" data-th-text="${error}"></li>
-    </ul>
-</div>
+    <form method="post" th:action="@{/meeting-schedule/create/{classId}(classId=${meeting.getClassId()})}"
+          th:object="${meeting}">
 
-<form method="post" th:action="@{/meeting-schedule/create/{classId}(classId=${meeting.getClassId()})}"
-      th:object="${meeting}">
+        <label>
+            Дата:<br>
+            <input type="datetime-local" name="dateTime"
+                   th:value="${#dates.format(meeting.dateTime, 'yyyy-MM-dd HH:mm')}">
+        </label><br>
 
-    <label>
-        Дата:<br>
-        <input type="datetime-local" name="dateTime" th:value="${#dates.format(meeting.dateTime, 'yyyy-MM-dd HH:mm')}">
-    </label><br>
+        <label>
+            Аудитория:<br>
+            <select name="classroomId" data-th-value="${meeting?.classroomId}">
+                <option th:each="classroom : ${classrooms}"
+                        th:value="${classroom.id()}"
+                        th:text="${classroom.name()}">
+                </option>
+            </select>
+        </label><br>
 
-    <label>
-        Аудитория:<br>
-        <select name="classroomId" data-th-value="${meeting?.classroomId}">
-            <option th:each="classroom : ${classrooms}"
-                    th:value="${classroom.id()}"
-                    th:text="${classroom.name()}">
-            </option>
-        </select>
-    </label><br>
+        <label>
+            Описание:<br>
+            <input type="text" name="description" data-th-value="${meeting?.description}">
+        </label><br>
 
-    <label>
-        Описание:<br>
-        <input type="text" name="description" data-th-value="${meeting?.description}">
-    </label><br>
-
-    <button type="submit">Создать</button>
-</form>
-
+        <button type="submit">Создать</button>
+    </form>
+</section>
 </body>
 </html>

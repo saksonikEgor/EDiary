@@ -1,29 +1,32 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/fragments/layuots/base-layout}">
 <head>
-    <meta charset="UTF-8">
     <title>Расписание родительских собраний</title>
 </head>
 <body>
-<h1>Расписание звонков</h1>
 
+<section layout:fragment="content">
+    <h1>Расписание звонков</h1>
 
-<table>
-    <thead>
-    <tr>
-        <th>Номер урока</th>
-        <th>Начало</th>
-        <th>Конец</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="i : ${#numbers.sequence(1, 8, 1)}">
-        <td th:text="${i}"></td>
-        <td th:text="${callSchedule.get(i) == null ? '-' : callSchedule.get(i).start()}"></td>
-        <td th:text="${callSchedule.get(i) == null ? '-' : callSchedule.get(i).end()}"></td>
-    </tr>
-    </tbody>
-</table>
-
+    <table>
+        <thead>
+        <tr>
+            <th>Номер урока</th>
+            <th>Начало</th>
+            <th>Конец</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="i : ${#numbers.sequence(1, 8, 1)}">
+            <td th:text="${i}"></td>
+            <td th:text="${callSchedule.get(i) == null ? '-' : callSchedule.get(i).start()}"></td>
+            <td th:text="${callSchedule.get(i) == null ? '-' : callSchedule.get(i).end()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</section>
 </body>
 </html>

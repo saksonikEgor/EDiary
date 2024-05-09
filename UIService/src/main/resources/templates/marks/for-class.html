@@ -1,51 +1,39 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/fragments/layuots/base-layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>Расписание уроков</title>
-    <style>
-        ul.hr {
-            margin: 0; /* Обнуляем значение отступов */
-            padding: 4px; /* Значение полей */
-        }
-
-        ul.hr li {
-            display: inline; /* Отображать как строчный элемент */
-            margin-right: 5px; /* Отступ слева */
-            border: 1px solid #000; /* Рамка вокруг текста */
-            padding: 3px; /* Поля вокруг текста */
-        }
-    </style>
+    <title>Оценки класса</title>
 </head>
 <body>
-<h1 th:text="'Оценки для класса ' + ${class.name()} + ' по предмету ' + ${subject.name()}"></h1>
+<section layout:fragment="content">
+    <h1 th:text="'Оценки для класса ' + ${class.name()} + ' по предмету ' + ${subject.name()}"></h1>
 
-<table>
-    <thead>
-    <tr>
-        <th>Ученик</th>
-        <th th:each="date : ${period}" th:text="${date}"></th>
-    </tr>
-    </thead>
-    <tbody>
+    <table>
+        <thead>
+        <tr>
+            <th>Ученик</th>
+            <th th:each="date : ${period}" th:text="${date}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="student : ${students}">
+            <td th:text="${student.fullName()}"></td>
 
-    <tr th:each="student : ${students}">
-        <td th:text="${student.fullName()}"></td>
-
-        <td th:each="date : ${period}">
-            <ul class="hr" th:if="${studentIdToDateToMarks.get(student.id()) != null
+            <td th:each="date : ${period}">
+                <ul class="hr" th:if="${studentIdToDateToMarks.get(student.id()) != null
                 && studentIdToDateToMarks.get(student.id()).get(date) != null}">
-                <li th:each="mark : ${studentIdToDateToMarks.get(student.id()).get(date)}"
-                    th:text="${mark.markType}"></li>
-            </ul>
+                    <li th:each="mark : ${studentIdToDateToMarks.get(student.id()).get(date)}"
+                        th:text="${mark.markType}"></li>
+                </ul>
 
-            <div th:unless="${studentIdToDateToMarks.get(student.id()) != null
+                <div th:unless="${studentIdToDateToMarks.get(student.id()) != null
                 && studentIdToDateToMarks.get(student.id()).get(date) != null}" th:text="'-'"></div>
-        </td>
-    </tr>
-
-    </tbody>
-</table>
-
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
 </body>
 </html>

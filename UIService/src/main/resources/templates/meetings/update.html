@@ -1,47 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/fragments/layuots/base-layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>Форма изменения родительского собрания</title>
+    <title>Изменение родительских собраний</title>
 </head>
 <body>
+<section layout:fragment="content">
+    <a data-th-href="@{/meeting-schedule/list/{classId}(classId=${classId})}">&larr; К расписанию родительских
+        собраний</a>
 
-<a data-th-href="@{/meeting-schedule/list/{classId}(classId=${classId})}">&larr; К расписанию родительских
-    собраний</a>
+    <h1>Изменение родительского собрания</h1>
 
-<h1>Изменение родительского собрания</h1>
+    <div data-th-if="${errors}">
+        <h2>Допущены ошибки</h2>
+        <ul>
+            <li data-th-each="error: ${errors}" data-th-text="${error}"></li>
+        </ul>
+    </div>
 
-<div data-th-if="${errors}">
-    <h2>Допущены ошибки</h2>
-    <ul>
-        <li data-th-each="error: ${errors}" data-th-text="${error}"></li>
-    </ul>
-</div>
+    <form method="post"
+          th:action="@{/meeting-schedule/update/{classId}/{id}(classId=${classId},id=${meeting.getMeetingId()})}"
+          th:object="${payload}">
+        <label>
+            Дата:<br>
+            <input type="datetime-local" name="dateTime"
+                   th:value="${#dates.format(payload.dateTime, 'yyyy-MM-dd HH:mm')}">
+        </label><br>
+        <label>
+            Аудитория:<br>
+            <select name="classroomId" data-th-value="${payload != null ? payload.classroomId : meeting.classroomId}">
+                <option th:each="classroom : ${classrooms}"
+                        th:value="${classroom.id()}"
+                        th:text="${classroom.name()}">
+                </option>
+            </select>
+        </label><br>
+        <label>
+            Описание:<br>
+            <textarea name="description"
+                      data-th-text="${payload != null ? payload.description : meeting.description}"></textarea>
+        </label><br>
 
-<form method="post"
-      th:action="@{/meeting-schedule/update/{classId}/{id}(classId=${classId},id=${meeting.getMeetingId()})}"
-      th:object="${payload}">
-    <label>
-        Дата:<br>
-        <input type="datetime-local" name="dateTime" th:value="${#dates.format(payload.dateTime, 'yyyy-MM-dd HH:mm')}">
-    </label><br>
-    <label>
-        Аудитория:<br>
-        <select name="classroomId" data-th-value="${payload != null ? payload.classroomId : meeting.classroomId}">
-            <option th:each="classroom : ${classrooms}"
-                    th:value="${classroom.id()}"
-                    th:text="${classroom.name()}">
-            </option>
-        </select>
-    </label><br>
-    <label>
-        Описание:<br>
-        <textarea name="description"
-                  data-th-text="${payload != null ? payload.description : meeting.description}"></textarea>
-    </label><br>
-
-    <button type="submit">Обновить</button>
-</form>
-
+        <button type="submit">Обновить</button>
+    </form>
+</section>
 </body>
 </html>
