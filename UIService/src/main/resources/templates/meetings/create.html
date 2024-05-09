@@ -23,29 +23,31 @@
 
     <form method="post" th:action="@{/meeting-schedule/create/{classId}(classId=${meeting.getClassId()})}"
           th:object="${meeting}">
+        <div class="form-group">
+            <label for="inputDate">Дата:</label>
+            <input id="inputDate" type="datetime-local" class="form-control" name="dateTime"
+                   th:value="${#temporals.format(meeting.dateTime, 'yyyy-MM-dd HH:mm')}">
+        </div>
 
-        <label>
-            Дата:<br>
-            <input type="datetime-local" name="dateTime"
-                   th:value="${#dates.format(meeting.dateTime, 'yyyy-MM-dd HH:mm')}">
-        </label><br>
-
-        <label>
-            Аудитория:<br>
-            <select name="classroomId" data-th-value="${meeting?.classroomId}">
+        <div class="form-group">
+            <label for="exampleFormControlSelect1">Аудитория</label>
+            <select class="form-control" id="exampleFormControlSelect1"
+                    name="classroomId" data-th-value="${meeting?.classroomId}">
                 <option th:each="classroom : ${classrooms}"
                         th:value="${classroom.id()}"
                         th:text="${classroom.name()}">
                 </option>
             </select>
-        </label><br>
+        </div>
 
-        <label>
-            Описание:<br>
-            <input type="text" name="description" data-th-value="${meeting?.description}">
-        </label><br>
+        <div class="form-group">
+            <label for="exampleFormControlTextarea1">Описание</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"
+                      name="description"
+                      data-th-text="${meeting?.description}"></textarea>
+        </div>
 
-        <button type="submit">Создать</button>
+        <button type="submit" class="btn btn-outline-primary">Создать</button>
     </form>
 </section>
 </body>

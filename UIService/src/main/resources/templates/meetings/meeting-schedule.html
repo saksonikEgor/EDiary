@@ -10,8 +10,9 @@
 <section layout:fragment="content">
     <h1 th:text="'Расписание родительских собраний для ' + ${meetingSchedule.getClassName()}"></h1>
 
-    <a data-th-href="@{/meeting-schedule/create/{classId}(classId=${meetingSchedule.getClassId()})}">Добавить новое
-        собрание</a>
+    <form method="get" data-th-action="@{/meeting-schedule/create/{classId}(classId=${meetingSchedule.getClassId()})}">
+        <button type="submit" class="btn btn-outline-success">Добавить новое собрание</button>
+    </form>
 
     <table class="table table-stripped">
         <thead>
@@ -29,13 +30,15 @@
             <td th:text="${meeting.getClassroom}"></td>
             <td th:text="${meeting.description}"></td>
             <td>
-                <a data-th-href="@{/meeting-schedule/update/{classId}/{id}
-            (classId=${meetingSchedule.getClassId()},id=${meeting.getMeetingId()})}">Обновить</a>
+                <form method="get" data-th-action="@{/meeting-schedule/update/{classId}/{id}
+            (classId=${meetingSchedule.getClassId()},id=${meeting.getMeetingId()})}">
+                    <button type="submit" class="btn btn-outline-primary">Обновить</button>
+                </form>
             </td>
             <td>
                 <form method="post" data-th-action="@{/meeting-schedule/delete/{classId}/{id}
             (classId=${meetingSchedule.getClassId()},id=${meeting.getMeetingId()})}">
-                    <button type="submit">Удалить</button>
+                    <button type="submit" class="btn btn-outline-danger">Удалить</button>
                 </form>
             </td>
         </tr>
