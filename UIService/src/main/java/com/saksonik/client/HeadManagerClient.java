@@ -10,7 +10,10 @@ import com.saksonik.dto.meetings.MeetingScheduleDTO;
 import com.saksonik.dto.meetings.UpdateMeetingRequest;
 import com.saksonik.dto.subject.SubjectDTO;
 import com.saksonik.dto.user.UserDTO;
+import com.saksonik.exception.HeadManagerAPIException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
@@ -18,10 +21,19 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 public class HeadManagerClient {
     private final WebClient webClient;
+    private final Function<ClientResponse, Mono<? extends Throwable>> exceptionFunction = response ->
+            Mono.error(new HeadManagerAPIException(switch (response.statusCode().value()) {
+                case 400 -> "Некорректные параметры запроса";
+                case 401, 403 -> "Недостаточно прав";
+                case 404 -> "Страница не найдена";
+                case 500 -> "Ошибка на стороне сервера";
+                default -> "Неизвестная ошибка";
+            }, response.statusCode().value()));
 
     public Mono<MeetingScheduleDTO> getMeetingSchedule(UUID classId) {
         return webClient.get()
@@ -29,14 +41,15 @@ public class HeadManagerClient {
                         .path("/meeting-schedule/list/{id}")
                         .build(classId))
                 .retrieve()
-                .bodyToMono(MeetingScheduleDTO.class)
-                .onErrorComplete(WebClientResponseException.NotFound.class);
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToMono(MeetingScheduleDTO.class);
     }
 
     public Flux<Classroom> getAllClassrooms() {
         return webClient.get()
                 .uri("/classroom")
                 .retrieve()
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
                 .bodyToFlux(Classroom.class);
     }
 
@@ -45,9 +58,8 @@ public class HeadManagerClient {
                 .uri("/meeting-schedule")
                 .bodyValue(request)
                 .retrieve()
-                .bodyToMono(Void.class)
-                .onErrorComplete(WebClientResponseException.BadRequest.class)
-                .onErrorComplete(WebClientResponseException.NotFound.class);
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToMono(Void.class);
     }
 
     public Mono<MeetingScheduleDTO.MeetingDTO> getMeetingById(UUID meetingId) {
@@ -56,8 +68,8 @@ public class HeadManagerClient {
                         .path("/meeting-schedule/{id}")
                         .build(meetingId))
                 .retrieve()
-                .bodyToMono(MeetingScheduleDTO.MeetingDTO.class)
-                .onErrorComplete(WebClientResponseException.NotFound.class);
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToMono(MeetingScheduleDTO.MeetingDTO.class);
     }
 
     public Mono<Void> updateMeeting(UUID meetingId, UpdateMeetingRequest request) {
@@ -67,9 +79,8 @@ public class HeadManagerClient {
                         .build(meetingId))
                 .bodyValue(request)
                 .retrieve()
-                .bodyToMono(Void.class)
-                .onErrorComplete(WebClientResponseException.BadRequest.class)
-                .onErrorComplete(WebClientResponseException.NotFound.class);
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToMono(Void.class);
     }
 
     public Mono<Void> deleteMeeting(UUID meetingId) {
@@ -78,14 +89,15 @@ public class HeadManagerClient {
                         .path("/meeting-schedule/{id}")
                         .build(meetingId))
                 .retrieve()
-                .bodyToMono(Void.class)
-                .onErrorComplete(WebClientResponseException.NotFound.class);
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToMono(Void.class);
     }
 
     public Flux<ScheduledCallDTO> getCallSchedule() {
         return webClient.get()
                 .uri("/call-schedule")
                 .retrieve()
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
                 .bodyToFlux(ScheduledCallDTO.class);
     }
 
@@ -99,9 +111,8 @@ public class HeadManagerClient {
                         .queryParam("end", lastDayOfWeek)
                         .build(classId))
                 .retrieve()
-                .bodyToFlux(LessonTimetableDTO.class)
-                .onErrorComplete(WebClientResponseException.BadRequest.class)
-                .onErrorComplete(WebClientResponseException.NotFound.class);
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToFlux(LessonTimetableDTO.class);
     }
 
     public Flux<LessonTimetableDTO> getLessonTimetableForTeacher(UUID teacherId,
@@ -114,9 +125,8 @@ public class HeadManagerClient {
                         .queryParam("end", lastDayOfWeek)
                         .build(teacherId))
                 .retrieve()
-                .bodyToFlux(LessonTimetableDTO.class)
-                .onErrorComplete(WebClientResponseException.BadRequest.class)
-                .onErrorComplete(WebClientResponseException.NotFound.class);
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToFlux(LessonTimetableDTO.class);
     }
 
     public Mono<UserDTO> getUserById(UUID userId) {
@@ -125,8 +135,8 @@ public class HeadManagerClient {
                         .path("/user/{userId}")
                         .build(userId))
                 .retrieve()
-                .bodyToMono(UserDTO.class)
-                .onErrorComplete(WebClientResponseException.NotFound.class);
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToMono(UserDTO.class);
     }
 
     public Mono<ClassDTO> getClassById(UUID classId) {
@@ -135,8 +145,8 @@ public class HeadManagerClient {
                         .path("/class/{classId}")
                         .build(classId))
                 .retrieve()
-                .bodyToMono(ClassDTO.class)
-                .onErrorComplete(WebClientResponseException.NotFound.class);
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToMono(ClassDTO.class);
     }
 
     public Mono<MarksDTO> getMarksForStudentAndPeriod(UUID studentId, UUID studyPeriodId) {
@@ -146,8 +156,8 @@ public class HeadManagerClient {
                         .queryParam("period", studyPeriodId)
                         .build(studentId))
                 .retrieve()
-                .bodyToMono(MarksDTO.class)
-                .onErrorComplete(WebClientResponseException.NotFound.class);
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToMono(MarksDTO.class);
     }
 
     public Mono<MarksDTO> getMarksForClassAndSubjectAndStudyPeriod(UUID classId, UUID subjectId, UUID studyPeriodId) {
@@ -157,8 +167,8 @@ public class HeadManagerClient {
                         .queryParam("period", studyPeriodId)
                         .build(classId, subjectId))
                 .retrieve()
-                .bodyToMono(MarksDTO.class)
-                .onErrorComplete(WebClientResponseException.NotFound.class);
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToMono(MarksDTO.class);
     }
 
     public Flux<SubjectDTO> findAllSubjectsByStudentId(UUID studentId) {
@@ -167,8 +177,8 @@ public class HeadManagerClient {
                         .path("/subject/for-student/{studentId}")
                         .build(studentId))
                 .retrieve()
-                .bodyToFlux(SubjectDTO.class)
-                .onErrorComplete(WebClientResponseException.NotFound.class);
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToFlux(SubjectDTO.class);
     }
 
     public Flux<UserDTO> findAllStudentsByClass(UUID classId) {
@@ -177,8 +187,8 @@ public class HeadManagerClient {
                         .path("/user/students/{classId}")
                         .build(classId))
                 .retrieve()
-                .bodyToFlux(UserDTO.class)
-                .onErrorComplete(WebClientResponseException.NotFound.class);
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToFlux(UserDTO.class);
     }
 
     public Mono<SubjectDTO> findSubjectById(UUID subjectId) {
@@ -187,8 +197,8 @@ public class HeadManagerClient {
                         .path("/subject/{subjectId}")
                         .build(subjectId))
                 .retrieve()
-                .bodyToMono(SubjectDTO.class)
-                .onErrorComplete(WebClientResponseException.NotFound.class);
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToMono(SubjectDTO.class);
     }
 
 

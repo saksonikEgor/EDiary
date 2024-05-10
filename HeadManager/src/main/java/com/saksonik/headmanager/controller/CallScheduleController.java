@@ -4,12 +4,15 @@ import com.saksonik.headmanager.dto.callSchedule.ScheduledCallDTO;
 import com.saksonik.headmanager.model.ScheduledCall;
 import com.saksonik.headmanager.service.ScheduledCallService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Comparator;
 import java.util.List;
 
+@Slf4j
 @RestController
 @CrossOrigin
 @RequestMapping("/call-schedule")
@@ -18,7 +21,9 @@ public class CallScheduleController {
     private final ScheduledCallService scheduledCallService;
 
     @GetMapping
-    public ResponseEntity<List<ScheduledCallDTO>> getCallSchedule() {
+    public ResponseEntity<List<ScheduledCallDTO>> getCallSchedule(Principal principal) {
+        log.info("Principal {}", principal);
+
         List<ScheduledCall> calls = scheduledCallService.findAll();
 
         return ResponseEntity.ok(calls.stream()

@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.UUID;
 
 @Slf4j
@@ -33,7 +34,9 @@ public class MeetingScheduleController {
     //TODO  добавить post запрос на добавления новых собраний
     //TODO  подумать мб разрешить этот метод только для админа
     @GetMapping("/list/{id}")
-    public ResponseEntity<MeetingScheduleDTO> getMeetingsScheduleByClass(@PathVariable("id") UUID classId) {
+    public ResponseEntity<MeetingScheduleDTO> getMeetingsScheduleByClass(@PathVariable("id") UUID classId, Principal principal) {
+        log.info("principal = {}", principal);
+
         MeetingScheduleDTO meetingScheduleDTO = new MeetingScheduleDTO();
 
         Class c = classService.findById(classId);

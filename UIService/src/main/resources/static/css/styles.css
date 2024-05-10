@@ -31,6 +31,6 @@ ul.hr li {
     padding: 3px; /* Поля вокруг текста */
 }
 
-.error {
+.form-error {
     color: #e14141;
 }

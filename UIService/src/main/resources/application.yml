@@ -13,6 +13,7 @@ spring:
             authorization-grant-type: authorization_code
             scope:
               - openid
+              - microprofile-jwt
 
 server:
   port: 8081
