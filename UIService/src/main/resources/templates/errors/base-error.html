@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/fragments/layuots/base-layout}">
+<head>
+    <title>Ошибка</title>
+</head>
+<body>
+
+<section layout:fragment="content">
+    <h1 th:text="${message}"></h1>
+</section>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package com.saksonik.headmanager.service;
 
+import com.saksonik.headmanager.exception.notExist.ClassNotExistException;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.User;
 import com.saksonik.headmanager.repository.ClassRepository;
@@ -22,7 +23,7 @@ public class ClassService {
 
     public Class findById(UUID id) {
         return classRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Class not found"));
+                .orElseThrow(() -> new ClassNotExistException("Class not found"));
     }
 
     public Class findByStudent(User student) {

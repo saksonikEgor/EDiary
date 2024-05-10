@@ -1,4 +1,4 @@
-package com.saksonik.dto.lessonTimetable;
+package com.saksonik.dto.error.lessonTimetable;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

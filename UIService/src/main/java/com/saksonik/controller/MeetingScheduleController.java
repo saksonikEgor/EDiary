@@ -3,6 +3,7 @@ package com.saksonik.controller;
 import com.saksonik.client.HeadManagerClient;
 import com.saksonik.dto.meetings.CreateMeetingRequest;
 import com.saksonik.dto.meetings.UpdateMeetingRequest;
+import com.saksonik.exception.WrongRequestException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Slf4j
@@ -25,6 +27,7 @@ public class MeetingScheduleController {
     @GetMapping("/list/{classId}")
     public Mono<String> getMeetingScheduleForClass(Model model, @PathVariable("classId") UUID classId) {
         return headManagerClient.getMeetingSchedule(classId)
+                .switchIfEmpty(Mono.error(new NoSuchElementException("Класс не найден")))
                 .doOnNext(meetingSchedule -> model.addAttribute("meetingSchedule", meetingSchedule))
                 .thenReturn("meetings/meeting-schedule");
     }
@@ -50,6 +53,7 @@ public class MeetingScheduleController {
         model.addAttribute("classId", classId);
 
         return headManagerClient.getMeetingById(meetingId)
+                .switchIfEmpty(Mono.error(new NoSuchElementException("Собрание не найдено")))
                 .flatMap(meeting -> {
                     model.addAttribute("meeting", meeting);
                     return headManagerClient.getAllClassrooms()
@@ -79,6 +83,8 @@ public class MeetingScheduleController {
                     .thenReturn("meetings/create");
         } else {
             return headManagerClient.createMeeting(meeting)
+                    .switchIfEmpty(Mono.error(new NoSuchElementException("Класс или аудиторя не найдены")))
+                    .switchIfEmpty(Mono.error(new WrongRequestException("Некорректные параметры запроса")))
                     .thenReturn("redirect:/meeting-schedule/list/%s".formatted(classId));
         }
     }
@@ -101,6 +107,7 @@ public class MeetingScheduleController {
             model.addAttribute("payload", payload);
 
             return headManagerClient.getMeetingById(meetingId)
+                    .switchIfEmpty(Mono.error(new NoSuchElementException("Собрание не найдено")))
                     .flatMap(meeting -> {
                         model.addAttribute("meeting", meeting);
                         return headManagerClient.getAllClassrooms()
@@ -110,6 +117,8 @@ public class MeetingScheduleController {
                     });
         } else {
             return headManagerClient.updateMeeting(meetingId, payload)
+                    .switchIfEmpty(Mono.error(new NoSuchElementException("Собрание не найдено")))
+                    .switchIfEmpty(Mono.error(new WrongRequestException("Некорректные параметры запроса")))
                     .thenReturn("redirect:/meeting-schedule/list/%s".formatted(classId));
         }
     }
@@ -118,6 +127,7 @@ public class MeetingScheduleController {
     public Mono<String> deleteMeeting(@PathVariable("classId") UUID classId,
                                       @PathVariable("id") UUID meetingId) {
         return headManagerClient.deleteMeeting(meetingId)
+                .switchIfEmpty(Mono.error(new NoSuchElementException("Собрание не найдено")))
                 .thenReturn("redirect:/meeting-schedule/list/%s".formatted(classId));
     }
 }

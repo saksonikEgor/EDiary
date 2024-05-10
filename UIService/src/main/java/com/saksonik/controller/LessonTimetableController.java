@@ -1,7 +1,8 @@
 package com.saksonik.controller;
 
 import com.saksonik.client.HeadManagerClient;
-import com.saksonik.dto.lessonTimetable.LessonTimetableDTO;
+import com.saksonik.dto.error.lessonTimetable.LessonTimetableDTO;
+import com.saksonik.exception.WrongRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -58,6 +59,8 @@ public class LessonTimetableController {
         model.addAttribute("forTeacher", false);
 
         return headManagerClient.getLessonTimetableForClass(classId, firstDayOfWeek, lastDayOfWeek)
+                .switchIfEmpty(Mono.error(new NoSuchElementException("Класс не найден")))
+                .switchIfEmpty(Mono.error(new WrongRequestException("Некорректные параметры запроса")))
                 .collectMap(LessonTimetableDTO::getDate, lessonTimetable -> {
                     Map<Integer, LessonTimetableDTO.LessonDTO> numberToLesson = new HashMap<>();
                     lessonTimetable.getLessons().forEach(l -> numberToLesson.put(l.getLessonNumber(), l));
@@ -67,6 +70,7 @@ public class LessonTimetableController {
                 .flatMap(lessonTimetable -> {
                     model.addAttribute("lessonTimetable", lessonTimetable);
                     return headManagerClient.getClassById(classId)
+                            .switchIfEmpty(Mono.error(new NoSuchElementException("Класс не найден")))
                             .doOnNext(c -> model.addAttribute("class", c))
                             .thenReturn("lessonTimetable/lesson-timetable");
                 });
@@ -102,6 +106,8 @@ public class LessonTimetableController {
         model.addAttribute("forTeacher", true);
 
         return headManagerClient.getLessonTimetableForTeacher(teacherId, firstDayOfWeek, lastDayOfWeek)
+                .switchIfEmpty(Mono.error(new NoSuchElementException("Учитель не найден")))
+                .switchIfEmpty(Mono.error(new WrongRequestException("Некорректные параметры запроса")))
                 .collectMap(LessonTimetableDTO::getDate, lessonTimetable -> {
                     Map<Integer, LessonTimetableDTO.LessonDTO> numberToLesson = new HashMap<>();
                     lessonTimetable.getLessons().forEach(l -> numberToLesson.put(l.getLessonNumber(), l));
@@ -111,6 +117,7 @@ public class LessonTimetableController {
                 .flatMap(lessonTimetable -> {
                     model.addAttribute("lessonTimetable", lessonTimetable);
                     return headManagerClient.getUserById(teacherId)
+                            .switchIfEmpty(Mono.error(new NoSuchElementException("Учитель не найден")))
                             .doOnNext(teacher -> model.addAttribute("teacher", teacher))
                             .thenReturn("lessonTimetable/lesson-timetable");
                 });

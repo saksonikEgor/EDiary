@@ -29,17 +29,20 @@ public class MarkController {
                                          Model model) {
 
         return headManagerClient.findAllSubjectsByStudentId(studentId)
+                .switchIfEmpty(Mono.error(new NoSuchElementException("Предмет не найден")))
                 .collectList()
                 .flatMap(subjects -> {
                     model.addAttribute("subjects", subjects);
 
                     return headManagerClient.getMarksForStudentAndPeriod(studentId, studyPeriodId)
+                            .switchIfEmpty(Mono.error(new NoSuchElementException("Учебный период или ученик не найдены")))
                             .flatMap(marks -> {
                                 Map<UUID, MarksDTO.SubjectDTO> subjectIdToMarks = new HashMap<>();
                                 marks.getSubjects().forEach(s -> subjectIdToMarks.put(s.getId(), s));
                                 model.addAttribute("subjectIdToMarks", subjectIdToMarks);
 
                                 return headManagerClient.getUserById(studentId)
+                                        .switchIfEmpty(Mono.error(new NoSuchElementException("Ученик не найден")))
                                         .doOnNext(student -> model.addAttribute("student", student))
                                         .thenReturn("marks/for-student");
                             });
@@ -53,11 +56,13 @@ public class MarkController {
             @RequestParam(name = "period", required = false) UUID studyPeriodId,
             Model model) {
         return headManagerClient.findAllStudentsByClass(classId)
+                .switchIfEmpty(Mono.error(new NoSuchElementException("Класс не найден")))
                 .collectList()
                 .flatMap(students -> {
                     model.addAttribute("students", students);
 
                     return headManagerClient.getMarksForClassAndSubjectAndStudyPeriod(classId, subjectId, studyPeriodId)
+                            .switchIfEmpty(Mono.error(new NoSuchElementException("Класс или предмет или учебный период не найдены")))
                             .flatMap(marks -> {
                                 Map<UUID, Map<LocalDate, List<MarksDTO.SubjectDTO.MarkDTO>>> studentIdToDateToMarks
                                         = new HashMap<>();
@@ -75,10 +80,12 @@ public class MarkController {
 
                                 model.addAttribute("studentIdToDateToMarks", studentIdToDateToMarks);
                                 return headManagerClient.getClassById(classId)
+                                        .switchIfEmpty(Mono.error(new NoSuchElementException("Класс не найден")))
                                         .flatMap(c -> {
                                             model.addAttribute("class", c);
 
                                             return headManagerClient.findSubjectById(subjectId)
+                                                    .switchIfEmpty(Mono.error(new NoSuchElementException("Предмет не найден")))
                                                     .doOnNext(s -> {
                                                                 model.addAttribute("subject", s);
                                                                 model.addAttribute(

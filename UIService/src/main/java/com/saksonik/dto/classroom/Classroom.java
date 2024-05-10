@@ -1,4 +1,4 @@
-package com.saksonik.dto;
+package com.saksonik.dto.classroom;
 
 import java.util.UUID;
 
