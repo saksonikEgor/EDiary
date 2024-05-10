@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.Comparator;
 import java.util.List;
 
@@ -21,9 +20,7 @@ public class CallScheduleController {
     private final ScheduledCallService scheduledCallService;
 
     @GetMapping
-    public ResponseEntity<List<ScheduledCallDTO>> getCallSchedule(Principal principal) {
-        log.info("Principal {}", principal);
-
+    public ResponseEntity<List<ScheduledCallDTO>> getCallSchedule() {
         List<ScheduledCall> calls = scheduledCallService.findAll();
 
         return ResponseEntity.ok(calls.stream()
