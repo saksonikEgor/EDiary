@@ -42,7 +42,7 @@ public class CallScheduleController {
                         scheduledCall.getEnd()));
     }
 
-    @PatchMapping()
+    @PatchMapping
     public ResponseEntity<ScheduledCallDTO> update(@RequestBody ScheduledCallDTO callScheduleDTO) {
         ScheduledCall scheduledCall = scheduledCallService.update(callScheduleDTO);
 

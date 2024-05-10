@@ -1,5 +1,21 @@
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8180/realms/ediary
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            client-id: ui-client
+            client-secret: NCFAsIyNDM2MxTS8IMDE7WGQ6wt2pXlV
+            authorization-grant-type: authorization_code
+            scope:
+              - openid
+
 server:
-  port: 8080
+  port: 8081
 
 app:
   base-url:
