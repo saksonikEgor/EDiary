@@ -31,15 +31,14 @@
                 <li class="nav-item active" sec:authorize="isAuthenticated()">
                     <a class="nav-link" href="/call-schedule">Расписание звонков</a>
                 </li>
-                <li class="nav-item active" th:if="${#authentication == null}">
-                    <a class="nav-link" href="/login">Войти</a>
-                </li>
-                <li class="nav-item active" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/logout">Выйти</a>
-                </li>
-
             </ul>
             <span class="navbar-text" sec:authorize="isAuthenticated()" th:text="${#authentication.getName()}"></span>
+            <span class="navbar-text" th:if="${#authentication == null}">
+                <a class="nav-link" href="/login">Войти</a>
+            </span>
+            <span class="navbar-text" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/logout">Выйти</a>
+            </span>
         </div>
     </nav>
 
