@@ -2,14 +2,12 @@ package com.saksonik.controller;
 
 import com.saksonik.client.HeadManagerClient;
 import com.saksonik.dto.lessonTimetable.LessonTimetableDTO;
+import com.saksonik.dto.userfeed.UserfeedDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.time.DayOfWeek;
@@ -29,7 +27,8 @@ public class LessonTimetableController {
     private final HeadManagerClient headManagerClient;
 
     @GetMapping("/for-class/{classId}")
-    public Mono<String> getTimetableByClassForWeek(@PathVariable("classId") UUID classId,
+    public Mono<String> getTimetableByClassForWeek(@ModelAttribute("userfeed") Mono<UserfeedDTO> userfeed,
+                                                   @PathVariable("classId") UUID classId,
                                                    @RequestParam(value = "year", required = false) Integer year,
                                                    @RequestParam(value = "monty", required = false) Integer month,
                                                    @RequestParam(value = "day", required = false) Integer day,
@@ -64,16 +63,16 @@ public class LessonTimetableController {
 
                     return numberToLesson;
                 })
-                .flatMap(lessonTimetable -> {
-                    model.addAttribute("lessonTimetable", lessonTimetable);
-                    return headManagerClient.getClassById(classId)
-                            .doOnNext(c -> model.addAttribute("class", c))
-                            .thenReturn("lessonTimetable/lesson-timetable");
-                });
+                .doOnNext(lessonTimetable -> model.addAttribute("lessonTimetable", lessonTimetable))
+                .then(headManagerClient.getClassById(classId)
+                        .doOnNext(c -> model.addAttribute("class", c)))
+                .then(userfeed.doOnNext(uf -> model.addAttribute("userfeed", uf)))
+                .thenReturn("lessonTimetable/lesson-timetable");
     }
 
     @GetMapping("/for-teacher/{teacherId}")
-    public Mono<String> getTimetableByTeacherForWeek(@PathVariable("teacherId") UUID teacherId,
+    public Mono<String> getTimetableByTeacherForWeek(@ModelAttribute("userfeed") Mono<UserfeedDTO> userfeed,
+                                                     @PathVariable("teacherId") UUID teacherId,
                                                      @RequestParam(value = "year", required = false) Integer year,
                                                      @RequestParam(value = "monty", required = false) Integer month,
                                                      @RequestParam(value = "day", required = false) Integer day,
@@ -108,11 +107,15 @@ public class LessonTimetableController {
 
                     return numberToLesson;
                 })
-                .flatMap(lessonTimetable -> {
-                    model.addAttribute("lessonTimetable", lessonTimetable);
-                    return headManagerClient.getUserById(teacherId)
-                            .doOnNext(teacher -> model.addAttribute("teacher", teacher))
-                            .thenReturn("lessonTimetable/lesson-timetable");
-                });
+                .doOnNext(lessonTimetable -> model.addAttribute("lessonTimetable", lessonTimetable))
+                .then(headManagerClient.getUserById(teacherId)
+                        .doOnNext(teacher -> model.addAttribute("teacher", teacher)))
+                .then(userfeed.doOnNext(uf -> model.addAttribute("userfeed", uf)))
+                .thenReturn("lessonTimetable/lesson-timetable");
+    }
+
+    @ModelAttribute(name = "userfeed", binding = false)
+    public Mono<UserfeedDTO> loadUserfeed() {
+        return headManagerClient.getUserfeed();
     }
 }

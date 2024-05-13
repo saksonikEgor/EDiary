@@ -3,6 +3,7 @@ package com.saksonik.controller;
 import com.saksonik.client.HeadManagerClient;
 import com.saksonik.dto.meetings.CreateMeetingRequest;
 import com.saksonik.dto.meetings.UpdateMeetingRequest;
+import com.saksonik.dto.userfeed.UserfeedDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,14 +28,18 @@ public class MeetingScheduleController {
     private final HeadManagerClient headManagerClient;
 
     @GetMapping("/list/{classId}")
-    public Mono<String> getMeetingScheduleForClass(Model model, @PathVariable("classId") UUID classId) {
+    public Mono<String> getMeetingScheduleForClass(@ModelAttribute("userfeed") Mono<UserfeedDTO> userfeed,
+                                                   Model model,
+                                                   @PathVariable("classId") UUID classId) {
         return headManagerClient.getMeetingSchedule(classId)
                 .doOnNext(meetingSchedule -> model.addAttribute("meetingSchedule", meetingSchedule))
+                .then(userfeed.doOnNext(uf -> model.addAttribute("userfeed", uf)))
                 .thenReturn("meetings/meeting-schedule");
     }
 
     @GetMapping("/create/{classId}")
-    public Mono<String> getCreateMeetingPage(@ModelAttribute("meeting") CreateMeetingRequest meeting,
+    public Mono<String> getCreateMeetingPage(@ModelAttribute("userfeed") Mono<UserfeedDTO> userfeed,
+                                             @ModelAttribute("meeting") CreateMeetingRequest meeting,
                                              @PathVariable("classId") UUID classId,
                                              Model model) {
         model.addAttribute("classId", classId);
@@ -43,24 +48,25 @@ public class MeetingScheduleController {
         return headManagerClient.getAllClassrooms()
                 .collectList()
                 .doOnNext(classrooms -> model.addAttribute("classrooms", classrooms))
+                .then(userfeed.doOnNext(uf -> model.addAttribute("userfeed", uf)))
                 .thenReturn("meetings/create");
     }
 
     @GetMapping("/update/{classId}/{id}")
-    public Mono<String> getUpdateMeetingPage(@ModelAttribute("payload") UpdateMeetingRequest payload,
+    public Mono<String> getUpdateMeetingPage(@ModelAttribute("userfeed") Mono<UserfeedDTO> userfeed,
+                                             @ModelAttribute("payload") UpdateMeetingRequest payload,
                                              @PathVariable("classId") UUID classId,
                                              @PathVariable("id") UUID meetingId,
                                              Model model) {
         model.addAttribute("classId", classId);
 
         return headManagerClient.getMeetingById(meetingId)
-                .flatMap(meeting -> {
-                    model.addAttribute("meeting", meeting);
-                    return headManagerClient.getAllClassrooms()
-                            .collectList()
-                            .doOnNext(classrooms -> model.addAttribute("classrooms", classrooms))
-                            .thenReturn("meetings/update");
-                });
+                .doOnNext(meeting -> model.addAttribute("meeting", meeting))
+                .then(headManagerClient.getAllClassrooms()
+                        .collectList()
+                        .doOnNext(classrooms -> model.addAttribute("classrooms", classrooms)))
+                .then(userfeed.doOnNext(uf -> model.addAttribute("userfeed", uf)))
+                .thenReturn("meetings/update");
     }
 
     @PostMapping("/create/{classId}")
@@ -105,13 +111,12 @@ public class MeetingScheduleController {
             model.addAttribute("payload", payload);
 
             return headManagerClient.getMeetingById(meetingId)
-                    .flatMap(meeting -> {
-                        model.addAttribute("meeting", meeting);
-                        return headManagerClient.getAllClassrooms()
-                                .collectList()
-                                .doOnNext(classrooms -> model.addAttribute("classrooms", classrooms))
-                                .thenReturn("meetings/update");
-                    });
+                    .doOnNext(meeting -> model.addAttribute("meeting", meeting))
+                    .then(headManagerClient.getAllClassrooms()
+                            .collectList()
+                            .doOnNext(classrooms -> model.addAttribute("classrooms", classrooms)))
+                    .thenReturn("meetings/update");
+
         } else {
             return headManagerClient.updateMeeting(meetingId, payload)
                     .thenReturn("redirect:/meeting-schedule/list/%s".formatted(classId));
@@ -130,5 +135,10 @@ public class MeetingScheduleController {
         return Objects.requireNonNull(exchange.<Mono<CsrfToken>>getAttribute(CsrfToken.class.getName()))
                 .doOnSuccess(token ->
                         exchange.getAttributes().put(CsrfRequestDataValueProcessor.DEFAULT_CSRF_ATTR_NAME, token));
+    }
+
+    @ModelAttribute(name = "userfeed", binding = false)
+    public Mono<UserfeedDTO> loadUserfeed() {
+        return headManagerClient.getUserfeed();
     }
 }
