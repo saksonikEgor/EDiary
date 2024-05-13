@@ -23,6 +23,7 @@ public class UserfeedDTO {
 
     @NoArgsConstructor
     @Setter
+    @Getter
     @ToString
     public static class ClassToSubjectsDTO {
         private ClassDTO classDTO;

@@ -27,11 +27,126 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active" sec:authorize="isAuthenticated()">
+            <ul class="navbar-nav mr-auto" sec:authorize="isAuthenticated()">
+                <li class="nav-item active">
                     <a class="nav-link" href="/call-schedule">Расписание звонков</a>
                 </li>
             </ul>
+            <!--        Расписание занятий для учителя-->
+            <ul class="navbar-nav mr-auto" th:if="${userfeed != null && userfeed.roles.contains('ROLE_TEACHER')}">
+                <li class="nav-item active">
+                    <a class="nav-link"
+                       th:href="@{/lesson-timetable/for-teacher/{teacherId}(teacherId=${userfeed.userId})}">
+                        Расписание занятий
+                    </a>
+                </li>
+            </ul>
+            <!--        Расписание занятий для ученика-->
+            <ul class="navbar-nav mr-auto" th:if="${userfeed != null && userfeed.roles.contains('ROLE_STUDENT')}">
+                <li class="nav-item active">
+                    <a class="nav-link"
+                       th:href="@{/lesson-timetable/for-class/{classId}(classId=${userfeed.studyingClass.classId()})}">
+                        Расписание занятий
+                    </a>
+                </li>
+            </ul>
+            <!--        Расписание занятий для родителя-->
+            <ul class="navbar-nav mr-auto" th:if="${userfeed != null && userfeed.roles.contains('ROLE_PARENT')}">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Расписание занятий детей
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" th:each="child : ${userfeed.children}" th:text="${child.fullName()}"
+                           th:href="@{/lesson-timetable/for-class/{classId}(classId=${child.learningClass().classId()})}"></a>
+                    </div>
+                </li>
+            </ul>
+
+            <!--        Успеваемость для ученика-->
+            <ul class="navbar-nav mr-auto" th:if="${userfeed != null && userfeed.roles.contains('ROLE_STUDENT')}">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/marks/for-student/{studentId}(studentId=${userfeed.userId})}">
+                        Моя успеваемость
+                    </a>
+                </li>
+            </ul>
+            <!--        Успеваемость для родителя-->
+            <ul class="navbar-nav mr-auto" th:if="${userfeed != null && userfeed.roles.contains('ROLE_PARENT')}">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Успеваемость детей
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" th:each="child : ${userfeed.children}" th:text="${child.fullName()}"
+                           th:href="@{/marks/for-student/{studentId}(studentId=${child.childId()})}"></a>
+                    </div>
+                </li>
+            </ul>
+            <!--        Журнал для учителя-->
+            <ul class="navbar-nav mr-auto" th:if="${userfeed != null && userfeed.roles.contains('ROLE_TEACHER')}">
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Журнал
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <th:block th:each="teachingClass : ${userfeed.teachingClasses}">
+                            <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false"
+                               th:text="${teachingClass.getClassDTO().name()}"></a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" th:each="subjet : ${teachingClass.subjects}"
+                                   th:text="${subjet.name()}"
+                                   th:href="@{/marks/for-class/{classId}/{subjectId}
+                           (classId=${teachingClass.getClassDTO().classId()},subjectId=${subjet.subjectId()})}"></a>
+                            </div>
+                        </th:block>
+                    </div>
+                </li>
+            </ul>
+
+            <!--        Расписание собраний для ученика-->
+            <ul class="navbar-nav mr-auto" th:if="${userfeed != null && userfeed.roles.contains('ROLE_STUDENT')}">
+                <li class="nav-item active">
+                    <a class="nav-link"
+                       th:href="@{/meeting-schedule/list/{classId}(classId=${userfeed.studyingClass.classId()})}">
+                        Расписание родительских собраний
+                    </a>
+                </li>
+            </ul>
+            <!--        Расписание собраний для родителя-->
+            <ul class="navbar-nav mr-auto" th:if="${userfeed != null && userfeed.roles.contains('ROLE_PARENT')}">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Расписание родительских собраний
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" th:each="child : ${userfeed.children}"
+                           th:text="${child.fullName() + ' - ' + child.learningClass().name()}"
+                           th:href="@{/meeting-schedule/list/{classId}(classId=${child.learningClass().classId()})}"></a>
+                    </div>
+                </li>
+            </ul>
+            <!--        Расписание собраний для классного руководителя-->
+            <ul class="navbar-nav mr-auto" th:if="${userfeed != null && userfeed.roles.contains('ROLE_CLASSROOM_TEACHER')}">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Расписание родительских собраний
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" th:each="class : ${userfeed.managedClasses}"
+                           th:text="${class.name()}"
+                           th:href="@{/meeting-schedule/list/{classId}(classId=${class.classId()})}"></a>
+                    </div>
+                </li>
+            </ul>
+
+
             <span class="navbar-text" sec:authorize="isAuthenticated()" th:text="${#authentication.getName()}"></span>
             <span class="navbar-text" th:if="${#authentication == null}">
                 <a class="nav-link" href="/login">Войти</a>
