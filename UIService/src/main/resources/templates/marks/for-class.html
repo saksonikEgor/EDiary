@@ -10,30 +10,35 @@
 <section layout:fragment="content">
     <h1 th:text="'Оценки для класса ' + ${class.name()} + ' по предмету ' + ${subject.name()}"></h1>
 
-    <table class="table table-stripped">
-        <thead>
-        <tr>
-            <th>Ученик</th>
-            <th th:each="date : ${period}" th:text="${#temporals.format(date, 'dd-MMM')}"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="student : ${students}">
-            <td th:text="${student.fullName()}"></td>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr class="table-info">
+                <th>Ученик</th>
+                <th th:each="date : ${period}" th:text="${#temporals.format(date, 'dd-MMM')}"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="student : ${students}">
+                <td class="table-success" th:text="${student.fullName()}"></td>
 
-            <td th:each="date : ${period}">
-                <ul class="hr" th:if="${studentIdToDateToMarks.get(student.id()) != null
+                <td th:each="date : ${period}">
+                    <th:block th:if="${studentIdToDateToMarks.get(student.id()) != null
                 && studentIdToDateToMarks.get(student.id()).get(date) != null}">
-                    <li th:each="mark : ${studentIdToDateToMarks.get(student.id()).get(date)}"
-                        th:text="${mark.markType}"></li>
-                </ul>
+                        <p th:each="mark : ${studentIdToDateToMarks.get(student.id()).get(date)}"
+                            class="grade"
+                            th:classappend="${mark.markType == '5' ? 'grade-excellent' : (mark.markType == '4' ? 'grade-excellent'
+                            : (mark.markType == '3' ? 'grade-good' : 'grade-bad'))}"
+                            th:text="${mark.markType}"></p>
+                    </th:block>
 
-                <div th:unless="${studentIdToDateToMarks.get(student.id()) != null
+                    <div th:unless="${studentIdToDateToMarks.get(student.id()) != null
                 && studentIdToDateToMarks.get(student.id()).get(date) != null}" th:text="'-'"></div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </section>
 </body>
 </html>

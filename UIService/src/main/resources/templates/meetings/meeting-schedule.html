@@ -10,40 +10,45 @@
 <section layout:fragment="content">
     <h1 th:text="'Расписание родительских собраний для ' + ${meetingSchedule.getClassName()}"></h1>
 
-    <form method="get" data-th-action="@{/meeting-schedule/create/{classId}(classId=${meetingSchedule.getClassId()})}">
+    <form th:if="${userfeed.roles.contains('ROLE_CLASSROOM_TEACHER')}" method="get"
+          data-th-action="@{/meeting-schedule/create/{classId}(classId=${meetingSchedule.getClassId()})}">
         <button type="submit" class="btn btn-outline-success">Добавить новое собрание</button>
     </form>
 
-    <table class="table table-stripped">
-        <thead>
-        <tr>
-            <th>Дата</th>
-            <th>Аудитория</th>
-            <th>Описание</th>
-            <th></th>
-            <th></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="meeting : ${meetingSchedule.meetings}">
-            <td th:text="${#temporals.format(meeting.date, 'dd-MMM-yyyy HH:mm') + ', ' + #temporals.dayOfWeekName(meeting.date)}"></td>
-            <td th:text="${meeting.getClassroom}"></td>
-            <td th:text="${meeting.description}"></td>
-            <td>
-                <form method="get" data-th-action="@{/meeting-schedule/update/{classId}/{id}
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr class="table-info">
+                <th>Дата</th>
+                <th>Аудитория</th>
+                <th>Описание</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="meeting : ${meetingSchedule.meetings}">
+                <td th:text="${#temporals.format(meeting.date, 'dd-MMM-yyyy HH:mm') + ', ' + #temporals.dayOfWeekName(meeting.date)}"></td>
+                <td th:text="${meeting.getClassroom}"></td>
+                <td th:text="${meeting.description}"></td>
+                <td>
+                    <form th:if="${userfeed.roles.contains('ROLE_CLASSROOM_TEACHER')}"
+                          method="get" data-th-action="@{/meeting-schedule/update/{classId}/{id}
             (classId=${meetingSchedule.getClassId()},id=${meeting.getMeetingId()})}">
-                    <button type="submit" class="btn btn-outline-primary">Обновить</button>
-                </form>
-            </td>
-            <td>
-                <form method="post" data-th-action="@{/meeting-schedule/delete/{classId}/{id}
+                        <button type="submit" class="btn btn-outline-primary">Обновить</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:if="${userfeed.roles.contains('ROLE_CLASSROOM_TEACHER')}"
+                          method="post" data-th-action="@{/meeting-schedule/delete/{classId}/{id}
             (classId=${meetingSchedule.getClassId()},id=${meeting.getMeetingId()})}">
-                    <button type="submit" class="btn btn-outline-danger">Удалить</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+                        <button type="submit" class="btn btn-outline-danger">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </section>
 </body>
 </html>

@@ -10,33 +10,37 @@
 <section layout:fragment="content">
     <h1 th:text="'Расписание для ' + ${forTeacher ? 'учителя ' + teacher.fullName() : 'класса ' + class.name()}"></h1>
 
-    <table class="table table-stripped">
-        <thead>
-        <tr>
-            <th th:each="date : ${period}" th:text="${#temporals.format(date, 'dd-MMM') + ' ' + #temporals.dayOfWeekName(date)}"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="i : ${#numbers.sequence(1, 8, 1)}">
-            <td th:each="date : ${period}">
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr class="table-info">
+                <th th:each="date : ${period}"
+                    th:text="${#temporals.format(date, 'dd-MMM') + ' ' + #temporals.dayOfWeekName(date)}"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="i : ${#numbers.sequence(1, 8, 1)}">
+                <td th:each="date : ${period}">
 
-                <div th:if="${lessonTimetable.get(date) == null || lessonTimetable.get(date).get(i) == null}"
-                     th:text="'-'"></div>
-                <div th:if="${lessonTimetable.get(date) != null && lessonTimetable.get(date).get(i) != null}">
-                    <p th:text="'Номер урока: ' + ${lessonTimetable.get(date).get(i).lessonNumber}"></p>
-                    <p th:text="'Предмет: ' + ${lessonTimetable.get(date).get(i).subject}"></p>
-                    <p th:if="${forTeacher}" th:text="'Класс: ' + ${lessonTimetable.get(date).get(i).className}"></p>
-                    <p th:if="${!forTeacher}"
-                       th:text="'Преподаватель: ' + ${lessonTimetable.get(date).get(i).teacherFullName}"></p>
-                    <p th:text="'Аудитория: ' + ${lessonTimetable.get(date).get(i).classRoom}"></p>
-                    <p th:text="'Время: ' + ${lessonTimetable.get(date).get(i).startTime + '-' + lessonTimetable.get(date).get(i).endTime}"></p>
-                </div>
+                    <div th:if="${lessonTimetable.get(date) == null || lessonTimetable.get(date).get(i) == null}"
+                         th:text="'-'"></div>
+                    <div th:if="${lessonTimetable.get(date) != null && lessonTimetable.get(date).get(i) != null}">
+                        <p th:text="'Номер урока: ' + ${lessonTimetable.get(date).get(i).lessonNumber}"></p>
+                        <p th:text="'Предмет: ' + ${lessonTimetable.get(date).get(i).subject}"></p>
+                        <p th:if="${forTeacher}"
+                           th:text="'Класс: ' + ${lessonTimetable.get(date).get(i).className}"></p>
+                        <p th:if="${!forTeacher}"
+                           th:text="'Преподаватель: ' + ${lessonTimetable.get(date).get(i).teacherFullName}"></p>
+                        <p th:text="'Аудитория: ' + ${lessonTimetable.get(date).get(i).classRoom}"></p>
+                        <p th:text="'Время: ' + ${lessonTimetable.get(date).get(i).startTime + '-' + lessonTimetable.get(date).get(i).endTime}"></p>
+                    </div>
 
-            </td>
+                </td>
 
-        </tr>
-        </tbody>
-    </table>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </section>
 </body>
 </html>

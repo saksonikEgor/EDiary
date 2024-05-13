@@ -19,17 +19,79 @@ footer {
     padding: 20px; /* Отступы внутри footer */
 }
 
-ul.hr {
-    margin: 0; /* Обнуляем значение отступов */
-    padding: 4px; /* Значение полей */
+
+
+.grade {
+    width: 25px; /* Ширина квадрата */
+    height: 25px; /* Высота квадрата */
+    text-align: center; /* Выравнивание текста по центру */
+    line-height: 25px; /* Высота квадрата, чтобы текст был по центру */
+    font-size: 20px; /* Размер шрифта */
+    color: white; /* Цвет текста */
+    border-radius: 8px; /* Загругленные края */
 }
 
-ul.hr li {
-    display: inline; /* Отображать как строчный элемент */
-    margin-right: 5px; /* Отступ слева */
-    border: 1px solid #000; /* Рамка вокруг текста */
-    padding: 3px; /* Поля вокруг текста */
+.grade-excellent {
+    background-color: green; /* Зеленый цвет для отличной оценки */
 }
+
+.grade-good {
+    background-color: orange; /* Оранжевый цвет для хорошей оценки */
+}
+
+.grade-bad {
+    background-color: red; /* Красный цвет для плохой оценки */
+}
+
+
+
+
+/*!*2*!*/
+/*.pcufu {*/
+/*    background-color: #cf3838;*/
+/*    color: #fff;*/
+/*}*/
+/*!*3*!*/
+/*.YiVWk {*/
+/*    background-color: #ff8f00;*/
+/*    color: #fff;*/
+/*}*/
+/*!*4 и 5*!*/
+/*.L4zz0 {*/
+/*    background-color: #4b9a25;*/
+/*    color: #fff;*/
+/*}*/
+/*.QoB5a {*/
+/*    height: 17px;*/
+/*    -webkit-box-sizing: border-box;*/
+/*    box-sizing: border-box;*/
+/*    color: #fff;*/
+/*    display: inline-block;*/
+/*    padding: 4px;*/
+/*    font-weight: 400;*/
+/*    font-size: 14px;*/
+/*    line-height: 9px;*/
+/*    border-radius: 2px;*/
+/*    cursor: default;*/
+/*}*/
+/*.RLesi {*/
+/*    width: 15px;*/
+/*    margin: auto;*/
+/*    -webkit-box-align: center;*/
+/*    -ms-flex-align: center;*/
+/*    align-items: center;*/
+/*    display: -webkit-box;*/
+/*    display: -ms-flexbox;*/
+/*    display: flex;*/
+/*    -webkit-box-pack: center;*/
+/*    -ms-flex-pack: center;*/
+/*    justify-content: center;*/
+/*    padding: 0;*/
+/*}*/
+/*.cgbDV {*/
+/*    cursor: pointer;*/
+/*}*/
+
 
 .form-error {
     color: #e14141;

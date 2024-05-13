@@ -11,22 +11,24 @@
 <section layout:fragment="content">
     <h1>Расписание звонков</h1>
 
-    <table class="table table-stripped">
-        <thead>
-        <tr>
-            <th>Номер урока</th>
-            <th>Начало</th>
-            <th>Конец</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="i : ${#numbers.sequence(1, 8, 1)}">
-            <td th:text="${i}"></td>
-            <td th:text="${callSchedule.get(i) == null ? '-' : callSchedule.get(i).start()}"></td>
-            <td th:text="${callSchedule.get(i) == null ? '-' : callSchedule.get(i).end()}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr class="table-info">
+                <th>Номер урока</th>
+                <th>Начало</th>
+                <th>Конец</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="i : ${#numbers.sequence(1, 8, 1)}">
+                <td th:text="${i}"></td>
+                <td th:text="${callSchedule.get(i) == null ? '-' : callSchedule.get(i).start()}"></td>
+                <td th:text="${callSchedule.get(i) == null ? '-' : callSchedule.get(i).end()}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </section>
 </body>
 </html>
