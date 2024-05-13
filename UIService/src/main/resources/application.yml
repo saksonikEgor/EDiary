@@ -1,4 +1,7 @@
 spring:
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
   security:
     oauth2:
       client:
@@ -14,6 +17,7 @@ spring:
             scope:
               - openid
               - microprofile-jwt
+
 
 server:
   port: 8081

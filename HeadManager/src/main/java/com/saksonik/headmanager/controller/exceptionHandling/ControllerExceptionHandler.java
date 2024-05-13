@@ -1,6 +1,6 @@
 package com.saksonik.headmanager.controller.exceptionHandling;
 
-import com.saksonik.headmanager.dto.APIErrorResponse;
+import com.saksonik.headmanager.dto.error.APIErrorResponse;
 import com.saksonik.headmanager.exception.NoAuthorityException;
 import com.saksonik.headmanager.exception.WrongLessonTimetableCredentialsException;
 import com.saksonik.headmanager.exception.alreadyExist.LessonScheduleIsAlreadyExistException;

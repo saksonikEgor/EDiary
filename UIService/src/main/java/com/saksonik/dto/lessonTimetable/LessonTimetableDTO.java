@@ -1,4 +1,4 @@
-package com.saksonik.dto.error.lessonTimetable;
+package com.saksonik.dto.lessonTimetable;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,7 +6,6 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data

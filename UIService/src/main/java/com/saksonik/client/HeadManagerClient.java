@@ -3,19 +3,19 @@ package com.saksonik.client;
 import com.saksonik.dto.callSchedule.ScheduledCallDTO;
 import com.saksonik.dto.classes.ClassDTO;
 import com.saksonik.dto.classroom.Classroom;
-import com.saksonik.dto.error.lessonTimetable.LessonTimetableDTO;
+import com.saksonik.dto.lessonTimetable.LessonTimetableDTO;
 import com.saksonik.dto.marks.MarksDTO;
 import com.saksonik.dto.meetings.CreateMeetingRequest;
 import com.saksonik.dto.meetings.MeetingScheduleDTO;
 import com.saksonik.dto.meetings.UpdateMeetingRequest;
 import com.saksonik.dto.subject.SubjectDTO;
 import com.saksonik.dto.user.UserDTO;
+import com.saksonik.dto.userfeed.UserfeedDTO;
 import com.saksonik.exception.HeadManagerAPIException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -199,6 +199,14 @@ public class HeadManagerClient {
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, exceptionFunction)
                 .bodyToMono(SubjectDTO.class);
+    }
+
+    public Mono<UserfeedDTO> getUserfeed() {
+        return webClient.get()
+                .uri("/userfeed")
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToMono(UserfeedDTO.class);
     }
 
 

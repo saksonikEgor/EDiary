@@ -1,4 +1,4 @@
-package com.saksonik.headmanager.dto;
+package com.saksonik.dto.error;
 
 public record APIErrorResponse(
         String description,

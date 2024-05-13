@@ -71,8 +71,6 @@ public class User {
     @ToString.Exclude
     private List<Class> classesForClassroomTeacher;
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "user_id", referencedColumnName = "student_id")
     @OneToOne(mappedBy = "student")
     @PrimaryKeyJoinColumn
     private StudentDistribution studentDistribution;

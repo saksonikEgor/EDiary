@@ -1,6 +1,6 @@
 package com.saksonik.headmanager.controller;
 
-import com.saksonik.headmanager.dto.MeetingScheduleDTO;
+import com.saksonik.headmanager.dto.meetings.MeetingScheduleDTO;
 import com.saksonik.headmanager.dto.meetings.CreateMeetingRequest;
 import com.saksonik.headmanager.dto.meetings.MeetingResponse;
 import com.saksonik.headmanager.dto.meetings.UpdateMeetingRequest;

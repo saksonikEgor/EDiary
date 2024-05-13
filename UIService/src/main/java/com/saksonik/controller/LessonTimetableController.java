@@ -1,7 +1,7 @@
 package com.saksonik.controller;
 
 import com.saksonik.client.HeadManagerClient;
-import com.saksonik.dto.error.lessonTimetable.LessonTimetableDTO;
+import com.saksonik.dto.lessonTimetable.LessonTimetableDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

@@ -1,16 +1,24 @@
 package com.saksonik.headmanager.controller;
 
-import com.saksonik.headmanager.dto.UserfeedDTO;
-import com.saksonik.headmanager.exception.NoAuthorityException;
+import com.saksonik.headmanager.dto.userfeed.UserfeedDTO;
+import com.saksonik.headmanager.model.Class;
+import com.saksonik.headmanager.model.Subject;
+import com.saksonik.headmanager.model.User;
 import com.saksonik.headmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
+import java.util.*;
 
 
+@Slf4j
 @RestController
 @CrossOrigin
 @RequestMapping("/userfeed")
@@ -18,99 +26,63 @@ import java.util.UUID;
 public class UserFeedController {
     private final UserService userService;
 
-    //TODO  передавать в хедере токен
-    //TODO  обработать исключение userIsNotFound
-    //TODO  добавить логику для админа
-    @GetMapping
-    public ResponseEntity<UserfeedDTO> getUserFeed(
-            @RequestHeader("User-Id") UUID userId,
-            @RequestHeader("Role") String role
-    ) {
-//        String role = SecurityContextHolder.getContext()
-//                .getAuthentication()
-//                .getAuthorities()
-//                .stream()
-//                .findAny()
-//                .get()
-//                .getAuthority();
+    @GetMapping()
+    public ResponseEntity<UserfeedDTO> getUserFeed(JwtAuthenticationToken authenticationToken) {
+        UUID userId = UUID.fromString(authenticationToken.getToken().getSubject());
 
+        User user = userService.findUserById(userId);
         UserfeedDTO userfeedDTO = new UserfeedDTO();
-        userfeedDTO.setId(userId);
-        userfeedDTO.setRole(role);
 
-        switch (role) {
-            case "ROLE_STUDENT", "ROLE_CLASSROOM-TEACHER" -> {
+        userfeedDTO.setUserId(userId);
+        List<String> roles = authenticationToken
+                .getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority).toList();
+        userfeedDTO.setRoles(roles);
+
+        if (roles.contains("ROLE_STUDENT")) {
+            Class c = user.getStudentDistribution().getClazz();
+            userfeedDTO.setStudyingClass(new UserfeedDTO.ClassDTO(c.getClassId(), c.getName()));
+        }
+        if (roles.contains("ROLE_PARENT")) {
+            List<User> children = user.getChildren();
+            userfeedDTO.setChildren(children.stream()
+                    .peek(User::buildFullName)
+                    .map(c -> new UserfeedDTO.ChildDTO(
+                            c.getUserId(),
+                            c.getFullName(),
+                            new UserfeedDTO.ClassDTO(
+                                    c.getStudentDistribution().getClazz().getClassId(),
+                                    c.getStudentDistribution().getClazz().getName()
+                            )))
+                    .toList());
+        }
+        if (roles.contains("ROLE_TEACHER")) {
+            List<UserfeedDTO.ClassToSubjectsDTO> classesToSubjects = new ArrayList<>();
+            List<Class> classes = user.getClassesForTeacher();
+            Set<Subject> subjects = new HashSet<>(user.getSubjects());
+
+            for (Class c : classes) {
+                Set<Subject> subjectsForClass = new HashSet<>(c.getSubjects());
+                subjectsForClass.retainAll(subjects);
+
+                classesToSubjects.add(new UserfeedDTO.ClassToSubjectsDTO(
+                        new UserfeedDTO.ClassDTO(c.getClassId(), c.getName()),
+                        subjectsForClass.stream()
+                                .map(s -> new UserfeedDTO.SubjectDTO(s.getSubjectId(), s.getName()))
+                                .toList()));
             }
-            case "ROLE_PARENT" -> userfeedDTO.setChildren(userService.findUserById(userId)
-                    .getChildren()
-                    .stream()
-                    .map(user -> new UserfeedDTO.ChildDTO(
-                            user.getUserId(),
-                            user.getFullName(),
-                            user.getStudentDistribution().getClazz().getName()))
-                    .toList()
-            );
-            case "ROLE_TEACHER" -> userfeedDTO.setClasses(userService.findUserById(userId)
-                    .getClassesForTeacher()
+            userfeedDTO.setTeachingClasses(classesToSubjects);
+        }
+        if (roles.contains("ROLE_CLASSROOM_TEACHER")) {
+            userfeedDTO.setManagedClasses(user.getClassesForClassroomTeacher()
                     .stream()
                     .map(c -> new UserfeedDTO.ClassDTO(c.getClassId(), c.getName()))
-                    .toList()
-            );
-            case null, default -> throw new NoAuthorityException("Not allowed to access this meeting");
-//            case "ROLE_ADMIN" -> {
-//            }
+                    .toList());
         }
 
+        log.info("Building user feed {}", userfeedDTO);
         return ResponseEntity.ok(userfeedDTO);
     }
-
-
-//    @GetMapping("/student")
-//    public ResponseEntity<UserDTO> getStudentUserFeed() {
-//        var user = new UserDTO("Student ivan", "ivan@mail.ru");
-//
-//        System.out.println("/student");
-//        return ResponseEntity.ok(user);
-//    }
-//
-//    @GetMapping("/parent")
-//    public ResponseEntity<UserDTO> getParentUserFeed() {
-//        var user = new UserDTO("Teacher maria", "maria@mail.ru");
-//
-//        return ResponseEntity.ok(user);
-//    }
-//
-//
-//    @GetMapping("/teacher")
-//    public String getTeacherUserFeed() {
-//        System.out.println("teacher/");
-//        return "hm";
-//    }
-//
-//    @GetMapping("/classroom-teacher")
-//    public String getClassroomTeacherUserFeed() {
-//        return "hm";
-//    }
-//
-//    @Data
-//    @AllArgsConstructor
-//    public class UserDTO {
-//        String login;
-//        String email;
-//    }
-
-    //TODO
-    private String getUserIdFromToken() {
-        return "yft324s234y11s3";
-//        Authentication authenticationToken = SecurityContextHolder.getContext().getAuthentication();
-//         (User)authenticationToken.getPrincipal();
-//
-//        JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-//        JWTAssertionDetails.
-//        OAuth2ResourceServerProperties.Jwt jwt = (OAuth2ResourceServerProperties.Jwt) authenticationToken.getCredentials();
-//        String email = (String) jwt.getClaims().get("email");
-//        return email;
-    }
-
 
 }
