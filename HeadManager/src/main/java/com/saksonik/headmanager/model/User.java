@@ -88,7 +88,7 @@ public class User {
     private List<Mark> marksOfTeacher;
 
     public void buildFullName() {
-        fullName = name + " " + surname + " " + patronymic;
+        fullName = surname + " " + name + " " + patronymic;
     }
 
     @Override
