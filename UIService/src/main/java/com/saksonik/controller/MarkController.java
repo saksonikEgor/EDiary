@@ -1,13 +1,18 @@
 package com.saksonik.controller;
 
 import com.saksonik.client.HeadManagerClient;
+import com.saksonik.dto.classes.ClassDTO;
+import com.saksonik.dto.marks.CreateMarkRequest;
 import com.saksonik.dto.marks.MarksDTO;
 import com.saksonik.dto.userfeed.UserfeedDTO;
 import com.saksonik.util.DateUtil;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -50,15 +55,25 @@ public class MarkController {
     @GetMapping("/for-class/{classId}/{subjectId}")
     public Mono<String> getMarksForClassAndSubject(
             @ModelAttribute("userfeed") Mono<UserfeedDTO> userfeed,
+            @ModelAttribute("request") CreateMarkRequest request,
             @PathVariable("classId") UUID classId,
             @PathVariable("subjectId") UUID subjectId,
             @RequestParam(name = "period", required = false) UUID studyPeriodId,
             Model model) {
+        model.addAttribute("request", request);
+
         return headManagerClient.findAllStudentsByClass(classId)
                 .collectList()
                 .doOnNext(students -> model.addAttribute("students", students))
+                .then(userfeed.doOnNext(uf -> model.addAttribute("userfeed", uf)))
                 .then(headManagerClient.getClassById(classId)
                         .doOnNext(c -> model.addAttribute("class", c)))
+                .then(headManagerClient.getAllMarkTypes()
+                        .collectList()
+                        .doOnNext(mts -> model.addAttribute("markTypes", mts)))
+                .then(headManagerClient.getAllWorkTypes()
+                        .collectList()
+                        .doOnNext(wts -> model.addAttribute("workTypes", wts)))
                 .then(headManagerClient.getAllStudyPeriods()
                         .collectList()
                         .doOnNext(sp -> model.addAttribute("studyPeriods", sp)))
@@ -98,6 +113,32 @@ public class MarkController {
                         }));
 
 
+    }
+
+    @PostMapping("/create/{subjectId}/{studentId}/{classId}")
+    public Mono<String> createMark(@PathVariable("subjectId") UUID subjectId,
+                                   @PathVariable("studentId") UUID studentId,
+                                   @PathVariable("classId") UUID classId,
+                                   @ModelAttribute("request") CreateMarkRequest request,
+                                   BindingResult bindingResult,
+                                   Model model) {
+        log.info("Creating mark {}", request);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors()
+                    .stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .toList());
+            model.addAttribute("request", request);
+
+            return Mono.just("marks/for-class");
+        } else {
+            request.setStudentId(studentId);
+            request.setSubjectId(subjectId);
+
+            return headManagerClient.createMark(request)
+                    .thenReturn("redirect:/marks/for-class/%s/%s".formatted(classId, subjectId));
+        }
     }
 
     @ModelAttribute(name = "userfeed", binding = false)

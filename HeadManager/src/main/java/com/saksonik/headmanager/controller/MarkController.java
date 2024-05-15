@@ -10,6 +10,7 @@ import com.saksonik.headmanager.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -76,8 +77,10 @@ public class MarkController {
 
 
     @PostMapping
-    public ResponseEntity<MarkResponse> createMark(@RequestHeader("User-Id") UUID userId,
+    public ResponseEntity<MarkResponse> createMark(JwtAuthenticationToken authenticationToken,
                                                    @RequestBody CreateMarkRequest request) {
+        UUID userId = UUID.fromString(authenticationToken.getToken().getSubject());
+
         User teacher = userService.findUserById(userId);
         User student = userService.findUserById(request.studentId());
         Subject subject = subjectService.findById(request.subjectId());

@@ -52,6 +52,9 @@ public class SecurityConfig {
                         .hasAnyRole("TEACHER", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/marks/{id}")
                         .hasAnyRole("TEACHER", "ADMIN")
+                        //mark-type
+                        .requestMatchers(HttpMethod.GET, "/mark-type/list")
+                        .authenticated()
                         //meeting-schedule
                         .requestMatchers(HttpMethod.GET, "/meeting-schedule/list/{id}")
                         .hasAnyRole("STUDENT", "PARENT", "CLASSROM_TEACHER", "ADMIN")
@@ -66,7 +69,7 @@ public class SecurityConfig {
                         //profile
                         .requestMatchers(HttpMethod.GET, "/profile/{userId}")
                         .authenticated()
-                        //studyPeriod
+                        //study-period
                         .requestMatchers(HttpMethod.GET, "/study-period/list")
                         .authenticated()
                         //subject
@@ -84,6 +87,9 @@ public class SecurityConfig {
                         //userfeed
                         .requestMatchers(HttpMethod.GET, "/userfeed")
                         .permitAll()
+                        //work-type
+                        .requestMatchers(HttpMethod.GET, "/work-type/list")
+                        .authenticated()
                         .anyRequest().denyAll()
                 )
                 .csrf(CsrfConfigurer::disable)

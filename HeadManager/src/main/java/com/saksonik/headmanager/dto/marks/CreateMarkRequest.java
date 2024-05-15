@@ -5,10 +5,10 @@ import java.util.UUID;
 
 public record CreateMarkRequest(
         UUID studentId,
-        LocalDate date,
         UUID subjectId,
         UUID workTypeId,
         UUID markTypeId,
-        String description
+        String description,
+        LocalDate date
 ) {
 }

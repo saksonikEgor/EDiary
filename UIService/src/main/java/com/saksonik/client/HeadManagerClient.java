@@ -4,6 +4,8 @@ import com.saksonik.dto.callSchedule.ScheduledCallDTO;
 import com.saksonik.dto.classes.ClassDTO;
 import com.saksonik.dto.classroom.Classroom;
 import com.saksonik.dto.lessonTimetable.LessonTimetableDTO;
+import com.saksonik.dto.markType.MarkTypeDTO;
+import com.saksonik.dto.marks.CreateMarkRequest;
 import com.saksonik.dto.marks.MarksDTO;
 import com.saksonik.dto.meetings.CreateMeetingRequest;
 import com.saksonik.dto.meetings.MeetingScheduleDTO;
@@ -12,6 +14,7 @@ import com.saksonik.dto.srudyPeriod.StudyPeriodDTO;
 import com.saksonik.dto.subject.SubjectDTO;
 import com.saksonik.dto.user.UserDTO;
 import com.saksonik.dto.userfeed.UserfeedDTO;
+import com.saksonik.dto.workType.WorkTypeDTO;
 import com.saksonik.exception.HeadManagerAPIException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
@@ -210,12 +213,37 @@ public class HeadManagerClient {
                 .bodyToMono(UserfeedDTO.class);
     }
 
+    public Flux<MarkTypeDTO> getAllMarkTypes() {
+        return webClient.get()
+                .uri("/mark-type/list")
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToFlux(MarkTypeDTO.class);
+    }
+
+    public Flux<WorkTypeDTO> getAllWorkTypes() {
+        return webClient.get()
+                .uri("/work-type/list")
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToFlux(WorkTypeDTO.class);
+    }
+
     public Flux<StudyPeriodDTO> getAllStudyPeriods() {
         return webClient.get()
                 .uri("/study-period/list")
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, exceptionFunction)
                 .bodyToFlux(StudyPeriodDTO.class);
+    }
+
+    public Mono<Void> createMark(CreateMarkRequest request) {
+        return webClient.post()
+                .uri("/marks")
+                .bodyValue(request)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToMono(Void.class);
     }
 
 
