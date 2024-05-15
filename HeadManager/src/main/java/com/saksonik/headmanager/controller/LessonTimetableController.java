@@ -21,9 +21,6 @@ public class LessonTimetableController {
     private final UserService userService;
     private final LessonScheduleService lessonScheduleService;
     private final ClassService classService;
-    private final ClassroomService classroomService;
-    private final SubjectService subjectService;
-    private final ScheduledCallService scheduledCallService;
 
     @GetMapping("/for-class/{classId}")
     public ResponseEntity<List<LessonTimetableResponse>> getTimetableByClassForWeek(@PathVariable("classId") UUID classId,

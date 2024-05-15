@@ -30,7 +30,7 @@ public class LessonTimetableController {
     public Mono<String> getTimetableByClassForWeek(@ModelAttribute("userfeed") Mono<UserfeedDTO> userfeed,
                                                    @PathVariable("classId") UUID classId,
                                                    @RequestParam(value = "year", required = false) Integer year,
-                                                   @RequestParam(value = "monty", required = false) Integer month,
+                                                   @RequestParam(value = "month", required = false) Integer month,
                                                    @RequestParam(value = "day", required = false) Integer day,
                                                    Model model) {
         log.info("Getting timetable for classId {}", classId);
@@ -74,7 +74,7 @@ public class LessonTimetableController {
     public Mono<String> getTimetableByTeacherForWeek(@ModelAttribute("userfeed") Mono<UserfeedDTO> userfeed,
                                                      @PathVariable("teacherId") UUID teacherId,
                                                      @RequestParam(value = "year", required = false) Integer year,
-                                                     @RequestParam(value = "monty", required = false) Integer month,
+                                                     @RequestParam(value = "month", required = false) Integer month,
                                                      @RequestParam(value = "day", required = false) Integer day,
                                                      Model model) {
         log.info("Getting timetable for teacherId {}", teacherId);
