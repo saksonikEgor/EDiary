@@ -80,14 +80,9 @@ footer {
     transition: background-color 0.3s;
 }
 
-a:hover {
+.study-period-link:hover {
     background-color: #ddd;
 }
-
-a:active {
-    background-color: #f1b622;
-}
-
 
 
 .form-error {
