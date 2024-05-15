@@ -66,6 +66,9 @@ public class SecurityConfig {
                         //profile
                         .requestMatchers(HttpMethod.GET, "/profile/{userId}")
                         .authenticated()
+                        //studyPeriod
+                        .requestMatchers(HttpMethod.GET, "/study-period/list")
+                        .authenticated()
                         //subject
                         .requestMatchers(HttpMethod.GET, "/subject/{subject}")
                         .authenticated()

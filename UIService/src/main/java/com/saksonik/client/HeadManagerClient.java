@@ -8,6 +8,7 @@ import com.saksonik.dto.marks.MarksDTO;
 import com.saksonik.dto.meetings.CreateMeetingRequest;
 import com.saksonik.dto.meetings.MeetingScheduleDTO;
 import com.saksonik.dto.meetings.UpdateMeetingRequest;
+import com.saksonik.dto.srudyPeriod.StudyPeriodDTO;
 import com.saksonik.dto.subject.SubjectDTO;
 import com.saksonik.dto.user.UserDTO;
 import com.saksonik.dto.userfeed.UserfeedDTO;
@@ -207,6 +208,14 @@ public class HeadManagerClient {
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, exceptionFunction)
                 .bodyToMono(UserfeedDTO.class);
+    }
+
+    public Flux<StudyPeriodDTO> getAllStudyPeriods() {
+        return webClient.get()
+                .uri("/study-period/list")
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToFlux(StudyPeriodDTO.class);
     }
 
 

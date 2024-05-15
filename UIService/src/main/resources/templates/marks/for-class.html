@@ -10,6 +10,20 @@
 <section layout:fragment="content">
     <h1 th:text="'Оценки для класса ' + ${class.name()} + ' по предмету ' + ${subject.name()}"></h1>
 
+    <div class="container-with-center-align">
+        <ul class="study-period-list">
+            <li th:each="studyPeriod : ${studyPeriods}" class="study-period">
+                <div>
+                    <a class="dropdown-item study-period-link" th:href="@{/marks/for-class/{classId}/{subjectId}
+                           (classId=${class.id()},subjectId=${subject.id()},period=${studyPeriod.id()})}"
+                       th:text="${studyPeriod.name()}"
+                       th:classappend="${studyPeriod.id().equals(currentStudyPeriodId) ? 'active' : ''}"></a>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
     <div class="table-responsive">
         <table class="table table-striped table-bordered">
             <thead>
@@ -26,10 +40,10 @@
                     <th:block th:if="${studentIdToDateToMarks.get(student.id()) != null
                 && studentIdToDateToMarks.get(student.id()).get(date) != null}">
                         <p th:each="mark : ${studentIdToDateToMarks.get(student.id()).get(date)}"
-                            class="grade"
-                            th:classappend="${mark.markType == '5' ? 'grade-excellent' : (mark.markType == '4' ? 'grade-excellent'
+                           class="grade"
+                           th:classappend="${mark.markType == '5' ? 'grade-excellent' : (mark.markType == '4' ? 'grade-excellent'
                             : (mark.markType == '3' ? 'grade-good' : 'grade-bad'))}"
-                            th:text="${mark.markType}"></p>
+                           th:text="${mark.markType}"></p>
                     </th:block>
 
                     <div th:unless="${studentIdToDateToMarks.get(student.id()) != null

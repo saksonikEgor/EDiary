@@ -41,6 +41,7 @@ public class MarkController {
         User student = userService.findUserById(studentId);
         List<Mark> marks = markService.findAllByStudentAndStudyPeriod(student, studyPeriod);
         marksDTO.setSubjects(buildSubjectDTOs(marks));
+        marksDTO.setStudyPeriodId(studyPeriodId);
         marksDTO.setStudyPeriodName(studyPeriod.getName());
         marksDTO.setStartPeriod(studyPeriod.getStart());
         marksDTO.setEndPeriod(studyPeriod.getEnd());
@@ -48,26 +49,6 @@ public class MarkController {
         log.info("Getting marks {} for studentId {}", marks, studentId);
         return ResponseEntity.ok(marksDTO);
     }
-
-//    @GetMapping("/for-student/{id}")
-//    public ResponseEntity<MarksDTO> getMarksByStudentForParent(
-//            @RequestHeader("User-Id") UUID userId,
-//            @RequestHeader("Role") String role,
-//            @PathVariable("id") UUID studentId,
-//            @RequestParam(name = "period", required = false) UUID studyPeriodId) {
-//        StudyPeriod studyPeriod = studyPeriodId == null
-//                ? studyPeriodService.findCurrentStudyPeriod()
-//                : studyPeriodService.findById(studyPeriodId);
-//
-//        MarksDTO marksDTO = new MarksDTO();
-//        marksDTO.setRole(role);
-//
-//        User student = userService.findUserById(studentId);
-//        List<Mark> marks = markService.findAllByStudentAndStudyPeriod(student, studyPeriod);
-//        marksDTO.setSubjects(buildSubjectDTOs(marks));
-//
-//        return ResponseEntity.ok(marksDTO);
-//    }
 
     @GetMapping("/for-class/{classId}/{subjectId}")
     public ResponseEntity<MarksDTO> getMarksForClassAndSubject(
@@ -85,6 +66,7 @@ public class MarkController {
         List<Mark> marks = markService.findAllByClassIdAndSubjectAndStudyPeriod(classId, subject, studyPeriod);
         marksDTO.setSubjects(buildSubjectDTOs(marks));
         marksDTO.setStudyPeriodName(studyPeriod.getName());
+        marksDTO.setStudyPeriodId(studyPeriodId);
         marksDTO.setStartPeriod(studyPeriod.getStart());
         marksDTO.setEndPeriod(studyPeriod.getEnd());
 

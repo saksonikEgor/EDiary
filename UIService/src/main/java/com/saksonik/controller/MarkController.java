@@ -31,11 +31,15 @@ public class MarkController {
                 .collectList()
                 .doOnNext(subjects -> model.addAttribute("subjects", subjects))
                 .then(userfeed.doOnNext(uf -> model.addAttribute("userfeed", uf)))
+                .then(headManagerClient.getAllStudyPeriods()
+                        .collectList()
+                        .doOnNext(sp -> model.addAttribute("studyPeriods", sp)))
                 .then(headManagerClient.getMarksForStudentAndPeriod(studentId, studyPeriodId)
                         .flatMap(marks -> {
                             Map<UUID, MarksDTO.SubjectDTO> subjectIdToMarks = new HashMap<>();
                             marks.getSubjects().forEach(s -> subjectIdToMarks.put(s.getId(), s));
                             model.addAttribute("subjectIdToMarks", subjectIdToMarks);
+                            model.addAttribute("currentStudyPeriodId", marks.getStudyPeriodId());
 
                             return headManagerClient.getUserById(studentId)
                                     .doOnNext(student -> model.addAttribute("student", student))
@@ -55,23 +59,28 @@ public class MarkController {
                 .doOnNext(students -> model.addAttribute("students", students))
                 .then(headManagerClient.getClassById(classId)
                         .doOnNext(c -> model.addAttribute("class", c)))
+                .then(headManagerClient.getAllStudyPeriods()
+                        .collectList()
+                        .doOnNext(sp -> model.addAttribute("studyPeriods", sp)))
                 .then(headManagerClient.getMarksForClassAndSubjectAndStudyPeriod(classId, subjectId, studyPeriodId)
                         .flatMap(marks -> {
                             Map<UUID, Map<LocalDate, List<MarksDTO.SubjectDTO.MarkDTO>>> studentIdToDateToMarks
                                     = new HashMap<>();
 
-                            marks.getSubjects()
-                                    .getFirst()
-                                    .getMarks()
-                                    .forEach(m -> {
-                                        var dateToMarks = studentIdToDateToMarks
-                                                .computeIfAbsent(m.getStudentId(), k -> new HashMap<>());
+                            if (!marks.getSubjects().isEmpty()) {
+                                marks.getSubjects()
+                                        .getFirst()
+                                        .getMarks()
+                                        .forEach(m -> {
+                                            var dateToMarks = studentIdToDateToMarks
+                                                    .computeIfAbsent(m.getStudentId(), k -> new HashMap<>());
 
-                                        dateToMarks.computeIfAbsent(m.getDate(), k -> new ArrayList<>())
-                                                .add(m);
-                                    });
-
+                                            dateToMarks.computeIfAbsent(m.getDate(), k -> new ArrayList<>())
+                                                    .add(m);
+                                        });
+                            }
                             model.addAttribute("studentIdToDateToMarks", studentIdToDateToMarks);
+                            model.addAttribute("currentStudyPeriodId", marks.getStudyPeriodId());
 
                             return headManagerClient.findSubjectById(subjectId)
                                     .doOnNext(s -> {

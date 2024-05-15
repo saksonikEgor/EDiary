@@ -10,6 +10,19 @@
 <section layout:fragment="content">
     <h1 th:text="'Оценки ученика ' + ${student.fullName()}"></h1>
 
+    <div class="container-with-center-align">
+        <ul class="study-period-list">
+            <li th:each="studyPeriod : ${studyPeriods}" class="study-period">
+                <div>
+                    <a class="dropdown-item study-period-link" th:href="@{/marks/for-class/{classId}/{subjectId}
+                           (classId=${class.id()},subjectId=${subject.id()},period=${studyPeriod.id()})}"
+                       th:text="${studyPeriod.name()}"
+                       th:classappend="${studyPeriod.id().equals(currentStudyPeriodId) ? 'active' : ''}"></a>
+                </div>
+            </li>
+        </ul>
+    </div>
+
     <div class="table-responsive">
         <table class="table table-striped table-bordered">
             <thead>

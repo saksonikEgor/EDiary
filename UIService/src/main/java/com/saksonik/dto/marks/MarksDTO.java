@@ -11,6 +11,7 @@ import java.util.UUID;
 @Data
 public class MarksDTO {
     private String studyPeriodName;
+    private UUID studyPeriodId;
     private LocalDate startPeriod;
     private LocalDate endPeriod;
     private List<SubjectDTO> subjects;
