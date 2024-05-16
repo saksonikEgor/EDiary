@@ -42,7 +42,9 @@
                        class="grade"
                        th:classappend="${mark.markType == '5' ? 'grade-excellent' : (mark.markType == '4' ? 'grade-excellent'
                             : (mark.markType == '3' ? 'grade-good' : 'grade-bad'))}"
-                       th:text="${mark.markType}"></p>
+                       th:text="${mark.markType}"
+                       data-bs-toggle="tooltip" data-bs-placement="top" th:title="${mark.description + ', '
+                           + mark.workType + ', ' + #temporals.format(mark.date, 'dd MMM yyyy')}"></p>
                 </td>
 
                 <th:block th:if="${subjectIdToMarks.get(subject.id()) != null}">
