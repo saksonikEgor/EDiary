@@ -1,6 +1,5 @@
 package com.saksonik.headmanager.controller;
 
-import com.saksonik.headmanager.dto.markType.MarkTypeDTO;
 import com.saksonik.headmanager.dto.workType.WorkTypeDTO;
 import com.saksonik.headmanager.service.WorkTypeService;
 import lombok.RequiredArgsConstructor;

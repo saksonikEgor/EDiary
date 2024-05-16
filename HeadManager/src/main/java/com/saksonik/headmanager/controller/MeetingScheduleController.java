@@ -1,12 +1,14 @@
 package com.saksonik.headmanager.controller;
 
-import com.saksonik.headmanager.dto.meetings.MeetingScheduleDTO;
 import com.saksonik.headmanager.dto.meetings.CreateMeetingRequest;
 import com.saksonik.headmanager.dto.meetings.MeetingResponse;
+import com.saksonik.headmanager.dto.meetings.MeetingScheduleDTO;
 import com.saksonik.headmanager.dto.meetings.UpdateMeetingRequest;
+import com.saksonik.headmanager.exception.NoAuthorityException;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.Classroom;
 import com.saksonik.headmanager.model.Meeting;
+import com.saksonik.headmanager.model.User;
 import com.saksonik.headmanager.service.ClassService;
 import com.saksonik.headmanager.service.ClassroomService;
 import com.saksonik.headmanager.service.MeetingService;
@@ -14,9 +16,9 @@ import com.saksonik.headmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.UUID;
 
 @Slf4j
@@ -30,13 +32,8 @@ public class MeetingScheduleController {
     private final ClassService classService;
     private final ClassroomService classroomService;
 
-    //TODO  проверить иммет ли юзер права
-    //TODO  добавить post запрос на добавления новых собраний
-    //TODO  подумать мб разрешить этот метод только для админа
     @GetMapping("/list/{id}")
-    public ResponseEntity<MeetingScheduleDTO> getMeetingsScheduleByClass(@PathVariable("id") UUID classId, Principal principal) {
-        log.info("principal = {}", principal);
-
+    public ResponseEntity<MeetingScheduleDTO> getMeetingsScheduleByClass(@PathVariable("id") UUID classId) {
         MeetingScheduleDTO meetingScheduleDTO = new MeetingScheduleDTO();
 
         Class c = classService.findById(classId);
@@ -68,14 +65,20 @@ public class MeetingScheduleController {
                 meeting.getDescription()));
     }
 
-    //TODO  проверить иммет ли юзер права
     @PostMapping
-    public ResponseEntity<MeetingResponse> createMeeting(@RequestBody CreateMeetingRequest request) {
+    public ResponseEntity<MeetingResponse> createMeeting(@RequestBody CreateMeetingRequest request,
+                                                         JwtAuthenticationToken authenticationToken) {
         log.info("Creating meeting {}", request);
 
+        UUID userId = UUID.fromString(authenticationToken.getToken().getSubject());
+        User classroomTeacher = userService.findUserById(userId);
         Class c = classService.findById(request.classId());
-        Classroom classroom = classroomService.findById(request.classroomId());
 
+        if (!classroomTeacher.getClassesForClassroomTeacher().contains(c)) {
+            throw new NoAuthorityException("Classroom teacher is not allowed to create meeting");
+        }
+
+        Classroom classroom = classroomService.findById(request.classroomId());
         Meeting meeting = meetingService.create(request, c, classroom);
 
         return ResponseEntity.ok(new MeetingResponse(
@@ -88,23 +91,42 @@ public class MeetingScheduleController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<MeetingResponse> updateMeeting(@PathVariable("id") UUID meetingId,
-                                                         @RequestBody UpdateMeetingRequest request) {
+                                                         @RequestBody UpdateMeetingRequest request,
+                                                         JwtAuthenticationToken authenticationToken) {
         log.info("Updating meeting {}", request);
+
+        UUID userId = UUID.fromString(authenticationToken.getToken().getSubject());
+        User classroomTeacher = userService.findUserById(userId);
+        Meeting meeting = meetingService.findById(meetingId);
+
+        if (!classroomTeacher.getClassesForClassroomTeacher().contains(meeting.getClazz())) {
+            throw new NoAuthorityException("Classroom teacher is not allowed to update meeting");
+        }
+
 
         Classroom classroom = classroomService.findById(request.classroomId());
 
-        Meeting meeting = meetingService.update(meetingId, request, classroom);
+        Meeting updated = meetingService.update(meetingId, request, classroom);
 
         return ResponseEntity.ok(new MeetingResponse(
-                meeting.getMeetingId(),
-                meeting.getMeetingDateTime(),
-                meeting.getDescription(),
-                meeting.getClazz().getName(),
-                meeting.getClassroom().getName()));
+                updated.getMeetingId(),
+                updated.getMeetingDateTime(),
+                updated.getDescription(),
+                updated.getClazz().getName(),
+                updated.getClassroom().getName()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMeeting(@PathVariable("id") UUID meetingId) {
+    public ResponseEntity<Void> deleteMeeting(@PathVariable("id") UUID meetingId,
+                                              JwtAuthenticationToken authenticationToken) {
+        UUID userId = UUID.fromString(authenticationToken.getToken().getSubject());
+        User classroomTeacher = userService.findUserById(userId);
+        Meeting meeting = meetingService.findById(meetingId);
+
+        if (!classroomTeacher.getClassesForClassroomTeacher().contains(meeting.getClazz())) {
+            throw new NoAuthorityException("Classroom teacher is not allowed to delete meeting");
+        }
+
         meetingService.delete(meetingId);
         return ResponseEntity.ok().build();
     }

@@ -4,6 +4,7 @@ import com.saksonik.headmanager.dto.marks.CreateMarkRequest;
 import com.saksonik.headmanager.dto.marks.MarkResponse;
 import com.saksonik.headmanager.dto.marks.MarksDTO;
 import com.saksonik.headmanager.dto.marks.UpdateMarkRequest;
+import com.saksonik.headmanager.exception.NoAuthorityException;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.*;
 import com.saksonik.headmanager.service.*;
@@ -81,8 +82,15 @@ public class MarkController {
                                                    @RequestBody CreateMarkRequest request) {
         UUID userId = UUID.fromString(authenticationToken.getToken().getSubject());
 
+
         User teacher = userService.findUserById(userId);
         User student = userService.findUserById(request.studentId());
+
+        if (!teacher.getClassesForClassroomTeacher()
+                .contains(student.getStudentDistribution().getClazz())) {
+            throw new NoAuthorityException("Teacher is not allowed to create mark for current student");
+        }
+
         Subject subject = subjectService.findById(request.subjectId());
         WorkType workType = workTypeService.findById(request.workTypeId());
         MarkType markType = markTypeService.findById(request.markTypeId());

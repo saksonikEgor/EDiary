@@ -1,9 +1,7 @@
 package com.saksonik.headmanager.controller;
 
 import com.saksonik.headmanager.dto.srudyPeriod.StudyPeriodDTO;
-import com.saksonik.headmanager.model.StudyPeriod;
 import com.saksonik.headmanager.service.StudyPeriodService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;

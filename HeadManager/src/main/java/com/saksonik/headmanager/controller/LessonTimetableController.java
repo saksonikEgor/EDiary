@@ -2,15 +2,20 @@ package com.saksonik.headmanager.controller;
 
 import com.saksonik.headmanager.dto.lessonTimetable.LessonTimetableResponse;
 import com.saksonik.headmanager.model.Class;
-import com.saksonik.headmanager.model.*;
-import com.saksonik.headmanager.service.*;
+import com.saksonik.headmanager.model.LessonSchedule;
+import com.saksonik.headmanager.model.User;
+import com.saksonik.headmanager.service.ClassService;
+import com.saksonik.headmanager.service.LessonScheduleService;
+import com.saksonik.headmanager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -24,8 +29,8 @@ public class LessonTimetableController {
 
     @GetMapping("/for-class/{classId}")
     public ResponseEntity<List<LessonTimetableResponse>> getTimetableByClassForWeek(@PathVariable("classId") UUID classId,
-                                                                              @RequestParam("start") LocalDate startDate,
-                                                                              @RequestParam("end") LocalDate endDate) {
+                                                                                    @RequestParam("start") LocalDate startDate,
+                                                                                    @RequestParam("end") LocalDate endDate) {
         log.info("Get timetable by class {} for week: {} - {}", classId, startDate, endDate);
 
         Class c = classService.findById(classId);
