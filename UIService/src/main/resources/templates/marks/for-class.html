@@ -43,82 +43,75 @@
                            th:classappend="${mark.markType == '5' ? 'grade-excellent' : (mark.markType == '4' ? 'grade-excellent'
                             : (mark.markType == '3' ? 'grade-good' : 'grade-bad'))}"
                            th:text="${mark.markType}"></p>
-
-
-                        <!-- Trigger the modal with a button -->
-                        <button th:if="${userfeed.roles.contains('ROLE_TEACHER')}"
-                                type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">+
-                        </button>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="myModal" role="dialog">
-                            <div class="modal-dialog">
-
-                                <!-- Modal content-->
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Добавление новой оценки</h5>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form class="needs-validation" method="post"
-                                              th:action="@{/marks/create/{subjectId}/{studentId}/{classId}
-                                              (subjectId=${subject.id()},studentId=${student.id()},classId=${class.id()})}"
-                                              th:object="${request}">
-                                            <div class="form-group" th:text="${'Ученик:' + student.fullName()}"></div>
-                                            <div class="form-group">
-                                                <label for="markTypePicker">Оценка</label>
-                                                <select class="form-select" id="markTypePicker"
-                                                        data-th-value="${request?.markTypeId}"
-                                                        name="markTypeId">
-                                                    <option th:each="markType : ${markTypes}"
-                                                            th:value="${markType.id()}"
-                                                            th:text="${markType.name()}"></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="workTypePicker">Тип работы</label>
-                                                <select class="form-select" id="workTypePicker"
-                                                        data-th-value="${request?.workTypeId}"
-                                                        name="workTypeId">
-                                                    <option th:each="workType : ${workTypes}"
-                                                            th:value="${workType.id()}"
-                                                            th:text="${workType.name()}"></option>
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="inputDate">Дата</label>
-                                                <input id="inputDate" type="date" class="form-control"
-                                                       name="date"
-                                                       th:value="${#temporals.format(request?.date, 'yyyy-MM-dd')}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="exampleFormControlTextarea1">Описание оценки</label>
-                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"
-                                                          name="description"
-                                                          data-th-value="${request?.description}"></textarea>
-                                            </div>
-
-                                            <div data-th-if="${errors}">
-                                                <ul>
-                                                    <li class="form-error" data-th-each="error: ${errors}"
-                                                        data-th-text="${error}"></li>
-                                                </ul>
-                                            </div>
-
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                                Отмена
-                                            </button>
-                                            <button type="submit" class="btn btn-success">Создать</button>
-                                        </form>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
                     </th:block>
 
-                    <div th:unless="${studentIdToDateToMarks.get(student.id()) != null
-                && studentIdToDateToMarks.get(student.id()).get(date) != null}" th:text="'-'"></div>
+                    <!-- Trigger the modal with a button -->
+                    <button th:if="${userfeed.roles.contains('ROLE_TEACHER')}"
+                            type="button" class="btn btn-info btn-lg" data-toggle="modal"
+                            th:attr="data-target='#myModal'+${student.id()} +${date}">+
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" th:id="'myModal'+${student.id()} +${date}" role="dialog">
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Добавление новой оценки</h5>
+                                </div>
+                                <div class="modal-body">
+                                    <form class="needs-validation" method="post"
+                                          th:action="@{/marks/create/{subjectId}/{studentId}/{classId}
+                                              (subjectId=${subject.id()},studentId=${student.id()},classId=${class.id()},
+                                              year=${date.getYear()},month=${date.getMonthValue()},day=${date.getDayOfMonth()})}"
+                                          th:object="${request}">
+                                        <div class="form-group" th:text="${'Предмет:' + subject.name()}"></div>
+                                        <div class="form-group" th:text="${'Дата:' + #temporals.format(date, 'yyyy-MM-dd')}"></div>
+                                        <div class="form-group" th:text="${'Ученик:' + student.fullName()}"></div>
+                                        <div class="form-group">
+                                            <label for="markTypePicker">Оценка</label>
+                                            <select class="form-select" id="markTypePicker"
+                                                    data-th-value="${request?.markTypeId}"
+                                                    name="markTypeId">
+                                                <option th:each="markType : ${markTypes}"
+                                                        th:value="${markType.id()}"
+                                                        th:text="${markType.name()}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="workTypePicker">Тип работы</label>
+                                            <select class="form-select" id="workTypePicker"
+                                                    data-th-value="${request?.workTypeId}"
+                                                    name="workTypeId">
+                                                <option th:each="workType : ${workTypes}"
+                                                        th:value="${workType.id()}"
+                                                        th:text="${workType.name()}"></option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleFormControlTextarea1">Описание оценки</label>
+                                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"
+                                                      name="description"
+                                                      data-th-value="${request?.description}"></textarea>
+                                        </div>
+
+                                        <div data-th-if="${errors}">
+                                            <ul>
+                                                <li class="form-error" data-th-each="error: ${errors}"
+                                                    data-th-text="${error}"></li>
+                                            </ul>
+                                        </div>
+
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                            Отмена
+                                        </button>
+                                        <button type="submit" class="btn btn-success">Создать</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
             </tbody>

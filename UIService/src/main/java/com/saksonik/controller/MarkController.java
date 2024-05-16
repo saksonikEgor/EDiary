@@ -1,12 +1,10 @@
 package com.saksonik.controller;
 
 import com.saksonik.client.HeadManagerClient;
-import com.saksonik.dto.classes.ClassDTO;
 import com.saksonik.dto.marks.CreateMarkRequest;
 import com.saksonik.dto.marks.MarksDTO;
 import com.saksonik.dto.userfeed.UserfeedDTO;
 import com.saksonik.util.DateUtil;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -119,10 +117,14 @@ public class MarkController {
     public Mono<String> createMark(@PathVariable("subjectId") UUID subjectId,
                                    @PathVariable("studentId") UUID studentId,
                                    @PathVariable("classId") UUID classId,
+                                   @RequestParam(value = "year") Integer year,
+                                   @RequestParam(value = "month") Integer month,
+                                   @RequestParam(value = "day") Integer day,
                                    @ModelAttribute("request") CreateMarkRequest request,
                                    BindingResult bindingResult,
                                    Model model) {
         log.info("Creating mark {}", request);
+
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors()
@@ -135,9 +137,10 @@ public class MarkController {
         } else {
             request.setStudentId(studentId);
             request.setSubjectId(subjectId);
+            request.setDate(LocalDate.of(year, month, day));
 
             return headManagerClient.createMark(request)
-                    .thenReturn("redirect:/marks/for-class/%s/%s".formatted(classId, subjectId));
+                    .thenReturn("redirect:/marks/for-class/%s/%s".formatted(classId, request.getSubjectId()));
         }
     }
 
