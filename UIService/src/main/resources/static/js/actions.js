@@ -18,3 +18,8 @@ function getFirstDayOfWeek(year, week) {
         ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
     return ISOweekStart;
 }
+
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+})

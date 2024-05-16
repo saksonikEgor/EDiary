@@ -28,7 +28,7 @@
             <thead>
             <tr class="table-info">
                 <th>Ученик</th>
-                <th th:each="date : ${period}" th:text="${#temporals.format(date, 'dd-MMM')}"></th>
+                <th th:each="date : ${period}" th:text="${#temporals.format(date, 'dd MMM')}"></th>
             </tr>
             </thead>
             <tbody>
@@ -36,20 +36,22 @@
                 <td class="table-success" th:text="${student.fullName()}"></td>
 
                 <td th:each="date : ${period}">
-                    <th:block th:if="${studentIdToDateToMarks.get(student.id()) != null
+                    <div class="marks" th:if="${studentIdToDateToMarks.get(student.id()) != null
                 && studentIdToDateToMarks.get(student.id()).get(date) != null}">
                         <p th:each="mark : ${studentIdToDateToMarks.get(student.id()).get(date)}"
                            class="grade"
                            th:classappend="${mark.markType == '5' ? 'grade-excellent' : (mark.markType == '4' ? 'grade-excellent'
                             : (mark.markType == '3' ? 'grade-good' : 'grade-bad'))}"
-                           th:text="${mark.markType}"></p>
-                    </th:block>
+                           th:text="${mark.markType}"
+                           data-bs-toggle="tooltip" data-bs-placement="top" th:title="${mark.description + ', '
+                           + mark.workType + ', ' + #temporals.format(mark.date, 'dd MMM yyyy')}"></p>
+                    </div>
 
                     <!-- Trigger the modal with a button -->
                     <button th:if="${userfeed.roles.contains('ROLE_TEACHER')}"
-                            type="button" class="btn btn-info btn-lg" data-toggle="modal"
-                            th:attr="data-target='#myModal'+${student.id()} +${date}">+
-                    </button>
+                            type="button" class="plus-button" data-toggle="modal"
+                            th:attr="data-target='#myModal'+${student.id()} +${date}"
+                            data-bs-toggle="tooltip" data-bs-placement="top" title="Добавить оценку">+</button>
 
                     <!-- Modal -->
                     <div class="modal fade" th:id="'myModal'+${student.id()} +${date}" role="dialog">
@@ -66,9 +68,10 @@
                                               (subjectId=${subject.id()},studentId=${student.id()},classId=${class.id()},
                                               year=${date.getYear()},month=${date.getMonthValue()},day=${date.getDayOfMonth()})}"
                                           th:object="${request}">
-                                        <div class="form-group" th:text="${'Предмет:' + subject.name()}"></div>
-                                        <div class="form-group" th:text="${'Дата:' + #temporals.format(date, 'yyyy-MM-dd')}"></div>
-                                        <div class="form-group" th:text="${'Ученик:' + student.fullName()}"></div>
+                                        <div class="form-group" th:text="${'Предмет: ' + subject.name()}"></div>
+                                        <div class="form-group"
+                                             th:text="${'Дата: ' + #temporals.format(date, 'dd-MMM-yyyy')}"></div>
+                                        <div class="form-group" th:text="${'Ученик: ' + student.fullName()}"></div>
                                         <div class="form-group">
                                             <label for="markTypePicker">Оценка</label>
                                             <select class="form-select" id="markTypePicker"

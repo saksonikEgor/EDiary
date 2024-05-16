@@ -19,16 +19,36 @@ footer {
     padding: 20px; /* Отступы внутри footer */
 }
 
+.table {
+    table-layout: auto; /* Автоматическое определение ширины столбцов */
+    width: auto; /* Ширина таблицы зависит от содержания */
+}
 
+.table td {
+    white-space: nowrap; /* Запрещает перенос текста на следующую строку */
+    width: 1%; /* Минимальная ширина, чтобы ячейка занимала только необходимую ширину для текста */
+    font-size: 12px; /* Размер шрифта для всей таблицы */
+
+}
+
+.table th {
+    white-space: nowrap; /* Запрещает перенос текста на следующую строку */
+    width: 1%; /* Минимальная ширина, чтобы ячейка занимала только необходимую ширину для текста */
+    font-size: 14px; /* Размер шрифта для всей таблицы */
+
+}
 
 .grade {
-    width: 25px; /* Ширина квадрата */
-    height: 25px; /* Высота квадрата */
+    width: 15px; /* Ширина квадрата */
+    height: 15px; /* Высота квадрата */
     text-align: center; /* Выравнивание текста по центру */
-    line-height: 25px; /* Высота квадрата, чтобы текст был по центру */
-    font-size: 20px; /* Размер шрифта */
+    line-height: 15px; /* Высота квадрата, чтобы текст был по центру */
+    font-size: 12px; /* Размер шрифта */
     color: white; /* Цвет текста */
-    border-radius: 8px; /* Загругленные края */
+    border-radius: 4px; /* Загругленные края */
+    margin-left: 2px; /* Отступ для кнопки */
+    margin-bottom: 0;
+    margin-top: 3px;
 }
 
 .grade-excellent {
@@ -83,6 +103,35 @@ footer {
 .study-period-link:hover {
     background-color: #ddd;
 }
+
+.plus-button {
+    width: 15px; /* Ширина квадрата */
+    height: 15px; /* Высота квадрата */
+    text-align: center; /* Выравнивание текста по центру */
+    line-height: 15px; /* Высота квадрата, чтобы текст был по центру */
+    font-size: 12px; /* Размер шрифта */
+    color: white; /* Цвет текста */
+    background-color: #007bff; /* Цвет фона кнопки */
+    border: none; /* Убираем границы */
+    border-radius: 4px; /* Загругленные края */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; /* Курсор в виде руки */
+    margin-left: 2px; /* Отступ для кнопки */
+    margin-top: 3px;
+}
+
+.plus-button:hover {
+    background-color: #0056b3; /* Цвет фона кнопки при наведении */
+}
+
+.marks {
+    display: flex;
+    align-items: center; /* Выравнивание по вертикали */
+}
+
+
 
 
 .form-error {
