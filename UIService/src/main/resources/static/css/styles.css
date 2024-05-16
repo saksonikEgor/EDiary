@@ -139,8 +139,8 @@ footer {
 .schedule-container {
     border: 1px solid #ccc; /* Граница контейнера */
     border-radius: 10px; /* Закругленные края */
-    padding: 10px; /* Внутренние отступы */
-    margin: 5px 0; /* Отступы снаружи */
+    padding: 5px; /* Внутренние отступы */
+    margin: 0 0; /* Отступы снаружи */
     background-color: #0dcaf0; /* Фоновый цвет контейнера */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень для контейнера */
 }
@@ -149,7 +149,7 @@ footer {
     display: flex;
     justify-content: space-between; /* Разделение элементов внутри по горизонтали */
     align-items: center; /* Вертикальное выравнивание по центру */
-    padding: 4px 0; /* Отступы сверху и снизу для элементов */
+    padding: 0 0; /* Отступы сверху и снизу для элементов */
     border-bottom: 2px solid black; /* Разделительная линия между элементами */
     color: black;
 }
