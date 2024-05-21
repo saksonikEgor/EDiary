@@ -14,8 +14,8 @@
         <ul class="study-period-list">
             <li th:each="studyPeriod : ${studyPeriods}" class="study-period">
                 <div>
-                    <a class="dropdown-item study-period-link" th:href="@{/marks/for-class/{classId}/{subjectId}
-                           (classId=${class.id()},subjectId=${subject.id()},period=${studyPeriod.id()})}"
+                    <a class="dropdown-item study-period-link" th:href="@{/marks/for-student/{studentId}
+                           (studentId=${student.id()},period=${studyPeriod.id()})}"
                        th:text="${studyPeriod.name()}"
                        th:classappend="${studyPeriod.id().equals(currentStudyPeriodId) ? 'active' : ''}"></a>
                 </div>
@@ -38,13 +38,15 @@
 
                 <td th:if="${subjectIdToMarks.get(subject.id()) == null}">Нет выставленных оценок</td>
                 <td th:unless="${subjectIdToMarks.get(subject.id()) == null}">
-                    <p th:each="mark : ${subjectIdToMarks.get(subject.id()).getMarks()}"
-                       class="grade"
-                       th:classappend="${mark.markType == '5' ? 'grade-excellent' : (mark.markType == '4' ? 'grade-excellent'
+                    <div class="marks">
+                        <p th:each="mark : ${subjectIdToMarks.get(subject.id()).getMarks()}"
+                           class="grade"
+                           th:classappend="${mark.markType == '5' ? 'grade-excellent' : (mark.markType == '4' ? 'grade-excellent'
                             : (mark.markType == '3' ? 'grade-good' : 'grade-bad'))}"
-                       th:text="${mark.markType}"
-                       data-bs-toggle="tooltip" data-bs-placement="top" th:title="${mark.description + ', '
+                           th:text="${mark.markType}"
+                           data-bs-toggle="tooltip" data-bs-placement="top" th:title="${mark.description + ', '
                            + mark.workType + ', ' + #temporals.format(mark.date, 'dd MMM yyyy')}"></p>
+                    </div>
                 </td>
 
                 <th:block th:if="${subjectIdToMarks.get(subject.id()) != null}">

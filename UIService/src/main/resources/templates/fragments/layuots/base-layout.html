@@ -118,7 +118,8 @@
                 </li>
             </ul>
             <!--        Расписание собраний для родителя-->
-            <ul class="navbar-nav mr-auto" th:if="${userfeed != null && userfeed.roles.contains('ROLE_PARENT')}">
+            <ul class="navbar-nav mr-auto" th:if="${(userfeed != null && userfeed.roles.contains('ROLE_PARENT')) ||
+            (userfeed != null && userfeed.roles.contains('ROLE_CLASSROOM_TEACHER'))}">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
@@ -128,23 +129,26 @@
                         <a class="dropdown-item" th:each="child : ${userfeed.children}"
                            th:text="${child.fullName() + ' - ' + child.learningClass().name()}"
                            th:href="@{/meeting-schedule/list/{classId}(classId=${child.learningClass().classId()})}"></a>
-                    </div>
-                </li>
-            </ul>
-            <!--        Расписание собраний для классного руководителя-->
-            <ul class="navbar-nav mr-auto" th:if="${userfeed != null && userfeed.roles.contains('ROLE_CLASSROOM_TEACHER')}">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        Расписание родительских собраний
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" th:each="class : ${userfeed.managedClasses}"
                            th:text="${class.name()}"
                            th:href="@{/meeting-schedule/list/{classId}(classId=${class.classId()})}"></a>
                     </div>
                 </li>
             </ul>
+<!--            &lt;!&ndash;        Расписание собраний для классного руководителя&ndash;&gt;-->
+<!--            <ul class="navbar-nav mr-auto" th:if="${userfeed != null && userfeed.roles.contains('ROLE_CLASSROOM_TEACHER')}">-->
+<!--                <li class="nav-item dropdown">-->
+<!--                    <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"-->
+<!--                       aria-haspopup="true" aria-expanded="false">-->
+<!--                        Расписание родительских собраний-->
+<!--                    </a>-->
+<!--                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">-->
+<!--                        <a class="dropdown-item" th:each="class : ${userfeed.managedClasses}"-->
+<!--                           th:text="${class.name()}"-->
+<!--                           th:href="@{/meeting-schedule/list/{classId}(classId=${class.classId()})}"></a>-->
+<!--                    </div>-->
+<!--                </li>-->
+<!--            </ul>-->
 
 
             <span class="navbar-text" sec:authorize="isAuthenticated()" th:text="${#authentication.getName()}"></span>

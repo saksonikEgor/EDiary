@@ -86,7 +86,7 @@ public class MarkController {
         User teacher = userService.findUserById(userId);
         User student = userService.findUserById(request.studentId());
 
-        if (!teacher.getClassesForClassroomTeacher()
+        if (!teacher.getClassesForTeacher()
                 .contains(student.getStudentDistribution().getClazz())) {
             throw new NoAuthorityException("Teacher is not allowed to create mark for current student");
         }
