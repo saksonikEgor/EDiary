@@ -59,7 +59,7 @@ public class UserService {
     }
 
     public List<User> findAllStudents() {
-        return userRepository.findAllByStudentDistributionIsNotEmpty();
+        return userRepository.findAllByStudentDistributionIsNotNull();
     }
 
     @Transactional

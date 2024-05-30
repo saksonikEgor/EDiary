@@ -5,6 +5,7 @@ import com.saksonik.dto.classes.ClassDTO;
 import com.saksonik.dto.user.UserDTO;
 import com.saksonik.dto.user.UserRegistration;
 import com.saksonik.dto.userfeed.UserfeedDTO;
+import com.saksonik.service.KeycloakUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminController {
     private final HeadManagerClient headManagerClient;
+    private final KeycloakUserService keycloakUserService;
 
     @GetMapping("/users/create")
     public String getCreateUserPage(@ModelAttribute("userfeed") Mono<UserfeedDTO> userfeed,
@@ -71,8 +73,10 @@ public class AdminController {
 
             return "admin/users/create";
         } else {
-            return headManagerClient.createMeeting(meeting)
-                    .thenReturn("redirect:/meeting-schedule/list/%s".formatted(classId));
+            keycloakUserService.createUser(credentials);
+            return "redirect:/admin/users/list";
+//            return headManagerClient.createMeeting(meeting)
+//                    .thenReturn("redirect:/meeting-schedule/list/%s".formatted(classId));
         }
 
     }
