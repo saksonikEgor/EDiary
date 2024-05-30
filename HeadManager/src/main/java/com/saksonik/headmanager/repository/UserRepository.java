@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
   @Override
   @NotNull
   Optional<User> findById(@NotNull UUID uuid);
+
+  List<User> findAllByStudentDistributionIsNotEmpty();
 }

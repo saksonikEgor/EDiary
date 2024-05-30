@@ -1,6 +1,7 @@
 package com.saksonik.headmanager.service;
 
 import com.saksonik.headmanager.dto.profile.CreateProfileRequest;
+import com.saksonik.headmanager.dto.user.UserRegistration;
 import com.saksonik.headmanager.exception.alreadyExist.UserIsAlreadyExistException;
 import com.saksonik.headmanager.exception.notExist.UserNotExistException;
 import com.saksonik.headmanager.model.Class;
@@ -52,6 +53,21 @@ public class UserService {
         user.setUserId(request.userId());
         user.setName(request.name());
         user.setSurname(request.surname());
+        user.setPatronymic(request.patronymic());
+
+        return userRepository.save(user);
+    }
+
+    public List<User> findAllStudents() {
+        return userRepository.findAllByStudentDistributionIsNotEmpty();
+    }
+
+    @Transactional
+    public User create(UserRegistration request) {
+        User user = new User();
+
+        user.setName(request.firstName());
+        user.setSurname(request.lastName());
         user.setPatronymic(request.patronymic());
 
         return userRepository.save(user);

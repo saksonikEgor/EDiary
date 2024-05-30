@@ -33,6 +33,8 @@ public class SecurityConfig {
                         //class
                         .requestMatchers(HttpMethod.GET, "/class/{classId}")
                         .authenticated()
+                        .requestMatchers(HttpMethod.GET, "/class/list")
+                        .authenticated()
                         //classroom
                         .requestMatchers(HttpMethod.GET, "/classroom")
                         .authenticated()
@@ -84,6 +86,8 @@ public class SecurityConfig {
                         .authenticated()
                         .requestMatchers(HttpMethod.GET, "/user/students/{classId}")
                         .authenticated()
+                        .requestMatchers(HttpMethod.GET, "/user/students/list")
+                        .hasRole("ADMIN")
                         //userfeed
                         .requestMatchers(HttpMethod.GET, "/userfeed")
                         .permitAll()

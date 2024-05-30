@@ -117,7 +117,7 @@
                     </a>
                 </li>
             </ul>
-            <!--        Расписание собраний для родителя-->
+            <!--        Расписание собраний для родителя или классного руководителя-->
             <ul class="navbar-nav mr-auto" th:if="${(userfeed != null && userfeed.roles.contains('ROLE_PARENT')) ||
             (userfeed != null && userfeed.roles.contains('ROLE_CLASSROOM_TEACHER'))}">
                 <li class="nav-item dropdown">
@@ -135,20 +135,77 @@
                     </div>
                 </li>
             </ul>
-<!--            &lt;!&ndash;        Расписание собраний для классного руководителя&ndash;&gt;-->
-<!--            <ul class="navbar-nav mr-auto" th:if="${userfeed != null && userfeed.roles.contains('ROLE_CLASSROOM_TEACHER')}">-->
-<!--                <li class="nav-item dropdown">-->
-<!--                    <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"-->
-<!--                       aria-haspopup="true" aria-expanded="false">-->
-<!--                        Расписание родительских собраний-->
-<!--                    </a>-->
-<!--                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">-->
-<!--                        <a class="dropdown-item" th:each="class : ${userfeed.managedClasses}"-->
-<!--                           th:text="${class.name()}"-->
-<!--                           th:href="@{/meeting-schedule/list/{classId}(classId=${class.classId()})}"></a>-->
-<!--                    </div>-->
-<!--                </li>-->
-<!--            </ul>-->
+
+            <!--        Администрирование для админа-->
+            <ul class="navbar-nav mr-auto" th:if="${userfeed != null && userfeed.roles.contains('ROLE_ADMIN')}">
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Администрирование
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Пользователи
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item"
+                               th:href="@{/admin/users/create}">
+                                Создать нового
+                            </a>
+                            <a class="dropdown-item"
+                               th:href="@{/admin/users/edit}">
+                                Изменить существующего
+                            </a>
+                        </div>
+
+                        <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Классы
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item"
+                               th:href="@{/admin/classes/create}">
+                                Создать новый
+                            </a>
+                            <a class="dropdown-item"
+                               th:href="@{/admin/classes/edit}">
+                                Изменить существующий
+                            </a>
+                        </div>
+
+                        <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Расписание занятий
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item"
+                               th:href="@{/admin/lesson-timetable/create}">
+                                Создать новое
+                            </a>
+                            <a class="dropdown-item"
+                               th:href="@{/admin/lesson-timetable/edit}">
+                                Изменить существующее
+                            </a>
+                        </div>
+
+                        <a class="nav-link dropdown-toggle" role="button" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            Расписание звонков
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item"
+                               th:href="@{/templates/admin/callSchedule/create}">
+                                Создать новое
+                            </a>
+                            <a class="dropdown-item"
+                               th:href="@{/templates/admin/callSchedule/edit}">
+                                Изменить существующее
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
 
 
             <span class="navbar-text" sec:authorize="isAuthenticated()" th:text="${#authentication.getName()}"></span>

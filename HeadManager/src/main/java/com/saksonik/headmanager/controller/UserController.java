@@ -1,6 +1,7 @@
 package com.saksonik.headmanager.controller;
 
 import com.saksonik.headmanager.dto.user.UserDTO;
+import com.saksonik.headmanager.dto.user.UserRegistration;
 import com.saksonik.headmanager.model.Class;
 import com.saksonik.headmanager.model.User;
 import com.saksonik.headmanager.service.ClassService;
@@ -33,10 +34,31 @@ public class UserController {
         List<User> students = userService.findAllStudentsByClass(c);
 
         return ResponseEntity.ok(students.stream()
-                .map(s -> {
-                    s.buildFullName();
-                    return new UserDTO(s.getUserId(), s.getFullName());
-                })
+                .peek(User::buildFullName).peek(User::buildFullName)
+                .map(s -> new UserDTO(s.getUserId(), s.getFullName()))
                 .toList());
     }
+
+    @GetMapping("/students/list")
+    public ResponseEntity<List<UserDTO>> getAllStudents() {
+        return ResponseEntity.ok(userService.findAllStudents()
+                .stream()
+                .peek(User::buildFullName)
+                .map(s -> new UserDTO(s.getUserId(), s.getFullName()))
+                .toList());
+    }
+
+//    @PostMapping()
+//    public ResponseEntity<UserDTO> createUser(@RequestBody UserRegistration) {
+//
+//    }
+
+//    @PostMapping
+//    public ResponseEntity<UserDTO> createUser(@RequestBody UserRegistration request) {
+//        userService.create(request);
+//
+//    }
+//
+//    @DeleteMapping("/{userId}")
+//    public ResponseEntity<Void> deleteUser(@PathVariable UUID userId) {}
 }

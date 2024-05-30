@@ -13,6 +13,7 @@ import com.saksonik.dto.meetings.UpdateMeetingRequest;
 import com.saksonik.dto.srudyPeriod.StudyPeriodDTO;
 import com.saksonik.dto.subject.SubjectDTO;
 import com.saksonik.dto.user.UserDTO;
+import com.saksonik.dto.user.UserRegistration;
 import com.saksonik.dto.userfeed.UserfeedDTO;
 import com.saksonik.dto.workType.WorkTypeDTO;
 import com.saksonik.exception.HeadManagerAPIException;
@@ -246,5 +247,39 @@ public class HeadManagerClient {
                 .bodyToMono(Void.class);
     }
 
+    public Flux<ClassDTO> getAllClasses() {
+        return webClient.get()
+                .uri("/class/list")
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToFlux(ClassDTO.class);
+    }
+
+    public Mono<UserDTO> createUser(UserRegistration registration) {
+        return webClient.post()
+                .uri("/user")
+                .bodyValue(registration)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToMono(UserDTO.class);
+    }
+
+    public Mono<Void> deleteUserById(UUID userId) {
+        return webClient.delete()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/user/{userId}")
+                        .build(userId))
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToMono(Void.class);
+    }
+
+    public Flux<UserDTO> findAllStudents() {
+        return webClient.get()
+                .uri("/user/students/list")
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, exceptionFunction)
+                .bodyToFlux(UserDTO.class);
+    }
 
 }
