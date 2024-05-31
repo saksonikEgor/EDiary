@@ -74,7 +74,7 @@ public class AdminController {
             return "admin/users/create";
         } else {
             keycloakUserService.createUser(credentials);
-            return "redirect:/admin/users/list";
+            return "redirect:/";
 //            return headManagerClient.createMeeting(meeting)
 //                    .thenReturn("redirect:/meeting-schedule/list/%s".formatted(classId));
         }

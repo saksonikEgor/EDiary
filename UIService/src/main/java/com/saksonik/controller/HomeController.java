@@ -26,4 +26,19 @@ public class HomeController {
         }
         return Mono.just("home/home-page");
     }
+
+    @GetMapping("/custom-login")
+    public String getLoginForm() {
+        return "auth/login-form";
+    }
+
+    @GetMapping("/custom-verify")
+    public String getVerifyForm() {
+        return "auth/verify-form";
+    }
+
+    @GetMapping("/custom-password")
+    public String getSetPasswordForm() {
+        return "auth/set-password-form";
+    }
 }
