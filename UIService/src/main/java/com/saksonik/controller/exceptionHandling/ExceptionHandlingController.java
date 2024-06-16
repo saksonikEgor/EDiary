@@ -11,6 +11,6 @@ public class ExceptionHandlingController {
     public String handleHeadManagerAPIException(HeadManagerAPIException e, Model model) {
         model.addAttribute("message", e.getMessage());
         model.addAttribute("code", e.getStatusCode());
-        return "errors/base-error";
+        return "errors/error";
     }
 }

@@ -10,37 +10,16 @@ spring:
 
 
 
-#      routes:
-#        - id: head-manager
-#          uri: lb://HEAD-MANAGER
-#          predicates:
-#            - Path=/head-manager/**
-#          filters:
-#            - AuthenticationFilter
-#
-#        - id: notificator
-#          uri: lb://NOTIFICATOR
-#          predicates:
-#            - Path=/notificator/**
-#          filters:
-#            - AuthenticationFilter
-#
-#        - id: authenticator
-#          uri: lb://AUTHENTICATOR
-#          predicates:
-#            - Path=/auth/**
-
-#        - id: user-manager
-#          uri: lb://USER-MANAGER
-#          predicates:
-#            - Path=/auth/**
-      discovery:
-        locator:
-          enabled: true
+      routes:
+        - id: ui-service
+#          uri: lb://UI-SERVICE
+          uri: http://localhost:8081
+          predicates:
+            - Path=/ediary/**
+#      discovery:
+#        locator:
+#          enabled: true
 #          lower-case-service-id: true
-
-jwt:
-  secret: MiAVzqUXy5Tfr1kVIGpPMiAVzqUXy5Tfr1kVIGpP
 
 server:
   port: 8765

@@ -20,8 +20,6 @@
     <modules>
         <module>HeadManager</module>
         <module>Notificator</module>
-        <module>UserManager</module>
-        <module>Authenticator</module>
         <module>DiscoveryServer</module>
         <module>Gateway</module>
         <module>UIService</module>

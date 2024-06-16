@@ -26,6 +26,24 @@ body{
     border-radius: 10px;
     box-shadow: 5px 20px 50px #000;
 }
+.main-429{
+    width: 650px;
+    height: 355px;
+    background: #F75990;
+    overflow: hidden;
+    /*background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;*/
+    border-radius: 10px;
+    box-shadow: 5px 20px 50px #000;
+}
+.main-403{
+    width: 650px;
+    height: 265px;
+    background: #F75990;
+    overflow: hidden;
+    /*background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover;*/
+    border-radius: 10px;
+    box-shadow: 5px 20px 50px #000;
+}
 #chk{
     display: none;
 }
@@ -40,7 +58,7 @@ h1{
     font-size: 2.3em;
     justify-content: center;
     display: flex;
-    margin: 50px;
+    margin: 30px;
     font-weight: bold;
     cursor: pointer;
     transition: .5s ease-in-out;
@@ -51,7 +69,7 @@ h3{
     font-size: 1.5em;
     justify-content: center;
     display: flex;
-    margin: 20px;
+    margin: 15px;
     font-weight: bold;
     cursor: pointer;
     transition: .5s ease-in-out;

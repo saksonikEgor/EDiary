@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<!--      layout:decorate="~{/fragments/layuots/base-layout}"-->
+
+<head>
+    <title>Ошибка</title>
+
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/form-styles.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+<div class="main-verify">
+    <h1 th:text="${'Ошибка ' + code}"></h1>
+
+    <h3 th:text="${message}"></h3>
+
+    <div class="signup">
+        <form>
+            <button>На главную страницу</button>
+        </form>
+    </div>
+</div>
+</body>
+
+</html>

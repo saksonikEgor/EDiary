@@ -18,17 +18,6 @@ spring:
               - openid
               - microprofile-jwt
 
-
-
-keycloak:
-  realm: ediary
-  domain: localhost:8180
-  adminClientId: ui-client
-  adminClientSecret: NCFAsIyNDM2MxTS8IMDE7WGQ6wt2pXlV
-  urls:
-    auth: http://${keycloak.domain}
-
-
 server:
   port: 8081
 
